@@ -1,0 +1,64 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\Barang;
+use Illuminate\Http\Request;
+
+class BarangController extends Controller
+{
+    public function index()
+    {
+        $barang = Barang::all();
+        return view('admin.barang.index', compact('barang'));
+    }
+
+    public function create()
+    {
+        return view('admin.barang.create');
+    }
+
+    public function store(Request $request)
+    {
+        $request->validate([
+            'nama_barang' => 'required|string|max:255',
+            'jumlah'      => 'required|integer|min:0',
+            'status'      => 'required|string|max:50', //misal: 'Tersedia' atau 'Dipinjam'
+            'uppk'        => 'required|string|max:255',
+        ]);
+
+        Barang::create($request->all());
+
+        return redirect()->route('admin.barang.index')->with('success', 'Barang baru berhasil ditambahkan!');
+    }
+
+    public function edit(Barang|int $barang)
+    {
+        $barang = $barang instanceof Barang ? $barang : Barang::findOrFail($barang);
+        return view('admin.barang.edit', compact('barang'));
+    }
+
+    public function update(Request $request, Barang|int $barang)
+    {
+        $barang = $barang instanceof Barang ? $barang : Barang::findOrFail($barang);
+
+        $request->validate([
+            'nama_barang' => 'required|string|max:255',
+            'jumlah'      => 'required|integer|min:0',
+            'status'      => 'required|string|max:50',
+            'uppk'        => 'required|string|max:255',
+        ]);
+
+        $barang->update($request->all());
+
+        return redirect()->route('admin.barang.index')->with('success', 'Data barang berhasil diperbarui!');
+    }
+
+    public function destroy(Barang|int $barang)
+    {
+        $barang = $barang instanceof Barang ? $barang : Barang::findOrFail($barang);
+        $barang->delete();
+
+        return redirect()->route('admin.barang.index')->with('success', 'Barang berhasil dihapus dari database!');
+    }
+}
