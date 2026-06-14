@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BarangController;
+use App\Http\Controllers\PeminjamanBarangController;
 use App\Http\Controllers\PeminjamanRuangController;
 use App\Http\Controllers\RuangController;
 use App\Http\Controllers\UserController;
@@ -10,10 +11,6 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('landing');
 })->name('landing');
-
-// Route::get('/mahasiswa/dashboard', function () {
-//     return view('/mahasiswa/dashboard');
-// })->name('mahasiswa.dashboard');
 
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
@@ -37,6 +34,10 @@ Route::middleware('auth')->group(function () {
         Route::get('/pinjam-ruang', [PeminjamanRuangController::class, 'create'])->name('peminjaman.create');
         Route::post('/pinjam-ruang', [PeminjamanRuangController::class, 'store'])->name('peminjaman.store');
         Route::get('/history-ruang', [PeminjamanRuangController::class, 'historyMahasiswa'])->name('peminjaman.history');
+
+        Route::get('/pinjam-barang', [PeminjamanBarangController::class, 'create'])->name('peminjaman_barang.create');
+        Route::post('/pinjam-barang', [PeminjamanBarangController::class, 'store'])->name('peminjaman_barang.store');
+        Route::get('/history-barang', [PeminjamanBarangController::class, 'historyMahasiswa'])->name('peminjaman_barang.history');
     });
 
     Route::middleware('role:dosen')->prefix('dosen')->name('dosen.')->group(function () {
@@ -44,5 +45,8 @@ Route::middleware('auth')->group(function () {
 
         Route::get('/persetujuan-ruang', [PeminjamanRuangController::class, 'index'])->name('peminjaman.index');
         Route::patch('/persetujuan-ruang/{id}/status', [PeminjamanRuangController::class, 'updateStatus'])->name('peminjaman.updateStatus');
+
+        Route::get('/persetujuan-barang', [PeminjamanBarangController::class, 'index'])->name('peminjaman_barang.index');
+        Route::patch('/persetujuan-barang/{id}/status', [PeminjamanBarangController::class, 'updateStatus'])->name('peminjaman_barang.updateStatus');
     });
 });
