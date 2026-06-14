@@ -21,7 +21,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
     Route::middleware('role:admin')->prefix('admin')->name('admin.')->group(function () {
-        Route::get('/dashboard', function () { return view('admin.dashboard'); })->name('admin.dashboard');
+        Route::get('/dashboard', function () { return view('admin.dashboard'); })->name('dashboard');
 
         Route::resource('users', UserController::class)->only(['index', 'edit', 'update', 'destroy']);
         Route::resource('barang', BarangController::class);
@@ -29,7 +29,7 @@ Route::middleware('auth')->group(function () {
     });
 
     Route::middleware('role:mahasiswa')->prefix('mahasiswa')->name('mahasiswa.')->group(function () {
-        Route::get('/dashboard', function () { return view('mahasiswa.dashboard'); })->name('mahasiswa.dashboard');
+        Route::get('/dashboard', function () { return view('mahasiswa.dashboard'); })->name('dashboard');
 
         Route::get('/pinjam-ruang', [PeminjamanRuangController::class, 'create'])->name('peminjaman.create');
         Route::post('/pinjam-ruang', [PeminjamanRuangController::class, 'store'])->name('peminjaman.store');
@@ -41,7 +41,7 @@ Route::middleware('auth')->group(function () {
     });
 
     Route::middleware('role:dosen')->prefix('dosen')->name('dosen.')->group(function () {
-        Route::get('/dashboard', function () { return view('dosen.dashboard'); })->name('dosen.dashboard');
+        Route::get('/dashboard', function () { return view('dosen.dashboard'); })->name('dashboard');
 
         Route::get('/persetujuan-ruang', [PeminjamanRuangController::class, 'index'])->name('peminjaman.index');
         Route::patch('/persetujuan-ruang/{id}/status', [PeminjamanRuangController::class, 'updateStatus'])->name('peminjaman.updateStatus');
