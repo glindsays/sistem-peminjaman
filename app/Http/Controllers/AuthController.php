@@ -31,11 +31,11 @@ class AuthController extends Controller
             $user = Auth::user();
             
             if ($user->role->nama_role === 'admin') {
-                return redirect()->route('admin.dashboard');
+                return redirect()->route('dashboard');
             } elseif ($user->role->nama_role === 'dosen') {
-                return redirect()->route('dosen.dashboard');
+                return redirect()->route('dashboard');
             } elseif ($user->role->nama_role === 'mahasiswa') {
-                return redirect()->route('mahasiswa.dashboard');
+                return redirect()->route('dashboard');
             }
         }
 
