@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\JadwalApiController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -7,9 +8,6 @@ Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 
-// Route::middleware('auth:sanctum')->prefix('v1')->group(function () {
-    
-    // URL-nya akan menjadi: GET /api/v1/campus/calendar
-//     Route::get('/campus/calendar', [CampusCalendarController::class, 'getCalendarJson']);
-    
-// });
+Route::middleware('auth:sanctum')->prefix('v1')->group(function () {
+    Route::get('/campus/calendar', [JadwalApiController::class, 'checkCalendar']);
+});
