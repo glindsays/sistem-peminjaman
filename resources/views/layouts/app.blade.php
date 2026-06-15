@@ -11,27 +11,15 @@
     
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="bg-background text-on-surface flex flex-col min-h-screen">
+<body class="bg-background text-on-surface antialiased">
 
     @include('partials.navbar')
 
-    <main class="w-full max-w-[1440px] mx-auto flex-grow">
-        @yield('content')
-    </main>
-
-    <footer class="w-full py-8 px-6 md:px-10 bg-surface-container-highest flex flex-col md:flex-row justify-between items-center max-w-[1440px] mx-auto border-t border-border-subtle mt-12">
-        <div class="flex flex-col items-center md:items-start mb-6 md:mb-0">
-            <span class="text-title-md font-title-md font-bold text-primary mb-2">Petra Borrow</span>
-            <p class="text-body-md font-body-md text-on-surface-variant">© 2026 Petra Christian University. All rights reserved.</p>
-        </div>
-        <div class="flex flex-wrap justify-center gap-6">
-            <a class="text-on-surface-variant hover:text-primary transition-colors hover:underline text-sm" href="#">Privacy Policy</a>
-            <a class="text-on-surface-variant hover:text-primary transition-colors hover:underline text-sm" href="#">Terms of Service</a>
-            <a class="text-on-surface-variant hover:text-primary transition-colors text-sm" href="#">Contact BAA</a>
-        </div>
-    </footer>
-
-    @stack('scripts')
+    <div class="pl-0 pt-16 md:pl-64 md:pt-0 min-h-screen flex flex-col transition-all duration-300">
+        <main class="flex-1 p-6 md:p-8">
+            @yield('content')
+        </main>
+    </div>
 
 </body>
 </html>

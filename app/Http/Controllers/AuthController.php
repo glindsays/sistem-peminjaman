@@ -33,7 +33,7 @@ class AuthController extends Controller
             if ($user->role->nama_role === 'admin') {
                 return redirect()->route('admin.dashboard');
             } elseif ($user->role->nama_role === 'dosen') {
-                return redirect()->route('dosendashboard');
+                return redirect()->route('dosen.dashboard');
             } elseif ($user->role->nama_role === 'mahasiswa') {
                 return redirect()->route('mahasiswa.dashboard');
             }
