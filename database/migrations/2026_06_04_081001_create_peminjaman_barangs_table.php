@@ -22,7 +22,7 @@ return new class extends Migration
             $table->time('waktu_selesai');
             $table->date('tgl_peminjaman');
             $table->date('tgl_pengembalian');
-            $table->string('status_izin')->default('pending'); // pending, disetujui, ditolak
+            $table->string('status_izin')->default('Pending'); // Pending, Approved, Rejected
             $table->timestamps();
         });
     }

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BarangController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PeminjamanBarangController;
 use App\Http\Controllers\PeminjamanRuangController;
 use App\Http\Controllers\RuangController;
@@ -21,7 +22,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
     Route::middleware('role:admin')->prefix('admin')->name('admin.')->group(function () {
-        Route::get('/dashboard', function () { return view('admin.dashboard'); })->name('dashboard');
+        Route::get('/dashboard', [DashboardController::class, 'admin'])->name('dashboard');
+        Route::get('/riwayat', [DashboardController::class, 'riwayatAdmin'])->name('riwayat');
 
         Route::resource('users', UserController::class)->only(['index', 'edit', 'update', 'destroy']);
         Route::resource('barang', BarangController::class);
@@ -29,7 +31,8 @@ Route::middleware('auth')->group(function () {
     });
 
     Route::middleware('role:mahasiswa')->prefix('mahasiswa')->name('mahasiswa.')->group(function () {
-        Route::get('/dashboard', function () { return view('mahasiswa.dashboard'); })->name('dashboard');
+        Route::get('/dashboard', [DashboardController::class, 'mahasiswa'])->name('dashboard');
+        Route::get('/riwayat', [DashboardController::class, 'riwayatMahasiswa'])->name('riwayatMahasiswa');
 
         Route::get('/pinjam-ruang', [PeminjamanRuangController::class, 'create'])->name('peminjaman.create');
         Route::post('/pinjam-ruang', [PeminjamanRuangController::class, 'store'])->name('peminjaman.store');
@@ -41,7 +44,8 @@ Route::middleware('auth')->group(function () {
     });
 
     Route::middleware('role:dosen')->prefix('dosen')->name('dosen.')->group(function () {
-        Route::get('/dashboard', function () { return view('dosen.dashboard'); })->name('dashboard');
+        Route::get('/dashboard', [DashboardController::class, 'dosen'])->name('dashboard');
+        Route::get('/riwayat', [DashboardController::class, 'riwayatDosen'])->name('riwayat');
 
         Route::get('/persetujuan-ruang', [PeminjamanRuangController::class, 'index'])->name('peminjaman.index');
         Route::patch('/persetujuan-ruang/{id}/status', [PeminjamanRuangController::class, 'updateStatus'])->name('peminjaman.updateStatus');
