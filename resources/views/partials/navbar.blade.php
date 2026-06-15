@@ -3,10 +3,8 @@
         <span class="material-symbols-outlined text-headline-md">menu</span>
     </button>
     <div class="flex items-center gap-3">
-        <div class="w-8 h-8 bg-primary rounded-xl flex items-center justify-center text-on-primary font-bold text-md">
-            S
-        </div>
-        <span class="font-bold text-title-md text-primary tracking-wide">Sifas</span>
+        <span class="material-symbols-outlined text-headline-md">school</span>
+        <span class="font-bold text-title-md text-primary tracking-wide">Petra Borrow</span>
     </div>
 </div>
 
@@ -17,11 +15,9 @@
     <div>
         <div class="flex items-center justify-between px-2 py-4 mb-6">
             <div class="flex items-center gap-3">
-                <div class="w-9 h-9 bg-primary rounded-xl flex items-center justify-center text-on-primary font-bold text-lg">
-                    S
-                </div>
+                <span class="material-symbols-outlined text-headline-md">school</span>
                 <div class="flex flex-col">
-                    <span class="font-bold text-title-lg text-primary tracking-wide leading-none">Sifas</span>
+                    <span class="font-bold text-title-lg text-primary tracking-wide leading-none">Petra Borrow</span>
                     <span class="text-[10px] text-outline font-medium tracking-wider uppercase mt-1">Fasilitas Kampus</span>
                 </div>
             </div>

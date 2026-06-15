@@ -25,17 +25,26 @@
                 <h1 class="mt-stack-lg text-headline-lg font-bold text-on-surface leading-tight">
                     Smart Resource <br/>Management for <br/>Petra Excellence.
                 </h1>
-                <p class="mt-stack-sm text-body-lg text-on-surface-variant max-w-[320px]">
+                <p class="mt-stack-sm text-body-md text-on-surface-variant max-w-[320px]">
                     Access classrooms, equipment, and laboratory facilities with your university credentials.
                 </p>
             </div>
             
-            <div class="relative z-10">
-                <img alt="Petra Christian University Campus" class="w-full h-48 object-cover rounded-lg shadow-sm border border-border-subtle mb-stack-md" src="https://placehold.co/600x400"/>
-                <div class="flex items-center gap-3">
-                    <div class="h-1 w-12 bg-primary rounded-full"></div>
-                    <div class="h-1 w-4 bg-outline-variant rounded-full"></div>
-                    <div class="h-1 w-4 bg-outline-variant rounded-full"></div>
+            <div class="relative z-10 w-full mb-2">
+                <div class="relative h-48 w-full overflow-hidden rounded-lg shadow-sm border border-border-subtle bg-surface-container-low">
+                    <img class="slide-img absolute inset-0 w-full h-full object-cover transition-opacity duration-700 opacity-100" 
+                         src="{{ asset('images/pcu1.jpg') }}" alt="Petra Campus Slide 1"/>
+                    
+                    <img class="slide-img absolute inset-0 w-full h-full object-cover transition-opacity duration-700 opacity-0" 
+                         src="{{ asset('images/pcu2.jpg') }}" alt="Petra Campus Slide 2"/>
+                    
+                    <img class="slide-img absolute inset-0 w-full h-full object-cover transition-opacity duration-700 opacity-0" 
+                         src="{{ asset('images/rektor.jpg') }}" alt="Rektor"/>
+                </div>  
+                <div class="flex items-center gap-2 mt-4">
+                    <div class="slide-dot h-1 w-12 bg-primary rounded-full transition-all duration-300"></div>
+                    <div class="slide-dot h-1 w-4 bg-outline-variant rounded-full transition-all duration-300"></div>
+                    <div class="slide-dot h-1 w-4 bg-outline-variant rounded-full transition-all duration-300"></div>
                 </div>
             </div>
         </div>
@@ -89,14 +98,6 @@
                     @enderror
                 </div>
 
-                <div class="flex items-center justify-between py-1">
-                    {{-- <label class="flex items-center gap-2 cursor-pointer group">
-                        <input class="peer h-5 w-5 rounded border-outline text-primary focus:ring-primary cursor-pointer transition-all" type="checkbox" name="remember" id="remember"/>
-                        <span class="text-body-md text-on-surface-variant group-hover:text-on-surface transition-colors">Remember Me</span>
-                    </label> --}}
-                    <a class="text-label-md font-bold text-primary hover:underline underline-offset-4" href="#">Forgot Password?</a>
-                </div>
-
                 <button class="w-full bg-primary text-on-primary font-bold py-3.5 rounded-lg shadow-sm hover:brightness-110 active:scale-[0.98] transition-all flex items-center justify-center gap-2" type="submit">
                     Login to Petra Borrow
                     <span class="material-symbols-outlined">arrow_forward</span>
@@ -106,7 +107,12 @@
             <div class="mt-stack-lg pt-stack-md border-t border-border-subtle text-center">
                 <p class="text-body-md text-on-surface-variant">
                     Need technical assistance? 
-                    <a class="text-primary font-bold hover:underline" href="#">Contact BAA</a>
+                    <a class="text-primary font-bold hover:underline inline-flex items-center gap-1" 
+                    href="https://wa.me/6281234067323?text=Halo%20BAA%20Petra%2C%20saya%20butuh%20bantuan%20terkait%20kendala%20sistem%20login%20di%20aplikasi%20Petra%20Borrow." 
+                    target="_blank" 
+                    rel="noopener noreferrer">
+                    Contact BAA
+                    </a>
                 </p>
             </div>
         </div>
@@ -118,7 +124,6 @@
     </div>
 
     <script>
-        // Fungsi pembuka/penutup enkripsi password saat mata diklik
         function togglePassword() {
             const input = document.getElementById('password');
             const icon = document.getElementById('password-toggle-icon');
@@ -131,15 +136,35 @@
             }
         }
 
-        // Efek transisi halus mengikuti kursor mouse untuk background orbs bawaan Stitch
         document.addEventListener('mousemove', (e) => {
             const orbs = document.querySelectorAll('.fixed > div');
             if (orbs.length >= 2) {
                 const x = e.clientX / window.innerWidth;
                 const y = e.clientY / window.innerHeight;
                 orbs[0].style.transform = `translate(${x * 30}px, ${y * 30}px)`;
-                orbs[1].style.transform = `translate(${-x * 30}px, ${-y * 30}px)`;
+                orbs[1].style.transform = `translate(${-x * 30}px, -${y * 30}px)`;
             }
+        });
+
+        document.addEventListener('DOMContentLoaded', function () {
+            let currentSlide = 0;
+            const images = document.querySelectorAll('.slide-img');
+            const dots = document.querySelectorAll('.slide-dot');
+            const totalSlides = images.length;
+
+            function nextSlide() {
+                images[currentSlide].classList.replace('opacity-100', 'opacity-0');
+                dots[currentSlide].classList.replace('w-12', 'w-4');
+                dots[currentSlide].classList.replace('bg-primary', 'bg-outline-variant');
+
+                currentSlide = (currentSlide + 1) % totalSlides;
+
+                images[currentSlide].classList.replace('opacity-0', 'opacity-100');
+                dots[currentSlide].classList.replace('w-4', 'w-12');
+                dots[currentSlide].classList.replace('bg-outline-variant', 'bg-primary');
+            }
+
+            setInterval(nextSlide, 3000);
         });
     </script>
 </body>
