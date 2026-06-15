@@ -13,13 +13,23 @@ class PeminjamanRuangController extends Controller
     public function index()
     {
         $pengajuan = PeminjamanRuang::with(['user', 'ruang'])->latest()->get();
-        return view('dosen.peminjaman_ruang.index', compact('pengajuan'));
+        return view('dosen.ruang.index', compact('pengajuan'));
     }
 
-    public function create()
+    public function create(Request $request)
     {
-        $ruangan = Ruang::where('status', 'Tersedia')->get();
-        return view('mahasiswa.peminjaman_ruang.create', compact('ruangan'));
+        $selectedRuangId = $request->query('ruang_id');
+        
+        $ruangTerpilih = null;
+        if ($selectedRuangId) {
+            $ruangTerpilih = Ruang::where('id', $selectedRuangId)
+                                  ->where('status', 'Tersedia')
+                                  ->first();
+        }
+
+        $semuaRuang = Ruang::where('status', 'Tersedia')->get();
+
+        return view('mahasiswa.ruang.create', compact('ruangTerpilih', 'semuaRuang'));
     }
 
     public function store(Request $request)
@@ -65,13 +75,13 @@ class PeminjamanRuangController extends Controller
             'status_izin'        => 'Pending', 
         ]);
 
-        return redirect()->route('mahasiswa.peminjaman.history')->with('success', 'Pengajuan peminjaman ruang berhasil dikirim! Menunggu persetujuan dosen.');
+        return redirect()->route('mahasiswa.ruang.index')->with('success', 'Pengajuan peminjaman ruang berhasil dikirim! Menunggu persetujuan dosen.');
     }
 
     public function historyMahasiswa()
     {
         $history = PeminjamanRuang::with('ruang')->where('user_id', Auth::id())->latest()->get();
-        return view('mahasiswa.peminjaman_ruang.history', compact('history'));
+        return view('mahasiswa.ruang.history', compact('history'));
     }
 
     public function updateStatus(Request $request, $id)

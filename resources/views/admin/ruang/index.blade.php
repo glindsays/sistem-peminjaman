@@ -3,110 +3,126 @@
 @section('content')
 <div class="space-y-6">
     
-    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div>
-            <h1 class="text-headline-lg font-bold text-on-surface">Manajemen Ruangan Kampus</h1>
-            <p class="text-body-md text-on-surface-variant mt-1">Kelola data inventaris fisik, kapasitas, zonasi lokasi gedung, dan status operasional kelayakan ruangan.</p>
-        </div>
-        <a href="{{ route('admin.ruang.create') }}" class="inline-flex items-center gap-2 bg-primary text-on-primary px-5 py-3 rounded-xl text-body-md font-bold shadow-sm hover:brightness-110 active:scale-[0.98] transition-all shrink-0 justify-center">
-            <span class="material-symbols-outlined text-body-lg">add</span>
-            <span>Tambah Ruangan Baru</span>
-        </a>
+    <div>
+        <h1 class="text-headline-lg font-bold text-on-surface">Katalog Ruangan Kampus</h1>
+        <p class="text-body-md text-on-surface-variant mt-1">Cari ruang kelas, aula, atau laboratorium yang tersedia untuk mendukung kegiatan acara Anda.</p>
     </div>
 
-    @if(session('success'))
-        <div class="flex items-center gap-3 p-4 bg-emerald-50 text-success border border-emerald-200 rounded-xl shadow-xs transition-all animate-fade-in">
-            <span class="material-symbols-outlined text-headline-md">check_circle</span>
-            <span class="text-body-md font-semibold">{{ session('success') }}</span>
-        </div>
-    @endif
+    <div class="bg-surface-container-lowest border border-border-subtle p-4 rounded-xl shadow-soft">
+        <form action="{{ route('mahasiswa.katalog-ruangan') }}" method="GET" id="filterForm" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            
+            <div class="space-y-1.5">
+                <label class="text-label-md font-bold text-on-surface-variant block uppercase tracking-wider">Cari Ruangan</label>
+                <div class="relative group">
+                    <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline group-focus-within:text-primary transition-colors">search</span>
+                    <input type="text" name="search" value="{{ request('search') }}" placeholder="Ketik nama ruangan..." 
+                           class="w-full pl-10 pr-4 py-2.5 bg-surface-container-low border border-border-subtle rounded-lg text-body-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all">
+                </div>
+            </div>
 
-    <div class="bg-surface-container-lowest border border-border-subtle rounded-xl shadow-soft overflow-hidden">
-        <div class="overflow-x-auto">
-            <table class="w-full text-left border-collapse">
-                <thead>
-                    <tr class="border-b border-border-subtle text-label-md text-outline font-bold bg-surface-container-low uppercase tracking-wider">
-                        <th class="p-4 w-16 text-center">No</th>
-                        <th class="p-4">Nama Ruangan</th>
-                        <th class="p-4 w-32 text-center">Kapasitas</th>
-                        <th class="p-4">Lokasi / Gedung</th>
-                        <th class="p-4">Unit Pengelola (UPPK)</th>
-                        <th class="p-4 w-40 text-center">Status</th>
-                        <th class="p-4 w-48 text-center">Aksi Kerja</th>
-                    </tr>
-                </thead>
-                <tbody class="divide-y border-border-subtle text-body-md text-on-surface">
-                    @forelse($ruang as $index => $item)
-                        <tr class="hover:bg-surface-container-low transition-colors duration-150">
-                            <td class="p-4 text-center text-outline font-medium">{{ $index + 1 }}</td>
-                            
-                            <td class="p-4 font-bold text-primary">{{ $item->nama_ruangan }}</td>
-                            
-                            <td class="p-4 text-center font-semibold bg-surface-container-low/40">
-                                {{ $item->kapasitas }} Pemohon
-                            </td>
-                            
-                            <td class="p-4 text-on-surface-variant font-medium">
-                                <div class="flex items-center gap-1.5">
-                                    <span class="material-symbols-outlined text-outline text-body-lg">location_on</span>
-                                    <span>{{ $item->lokasi }}</span>
-                                </div>
-                            </td>
-                            
-                            <td class="p-4 font-medium text-outline-variant">{{ $item->uppk }}</td>
-                            
-                            <td class="p-4 text-center">
-                                @if($item->status == 'tersedia')
-                                    <span class="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-bold bg-emerald-50 text-success rounded-full border border-emerald-200">
-                                        <span class="w-1.5 h-1.5 rounded-full bg-success"></span>
-                                        Tersedia
-                                    </span>
-                                @elseif($item->status == 'dipakai')
-                                    <span class="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-bold bg-primary-low text-primary rounded-full border border-primary-low-variant">
-                                        <span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
-                                        Dipakai
-                                    </span>
-                                @else
-                                    <span class="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-bold bg-amber-50 text-warning rounded-full border border-amber-200">
-                                        <span class="w-1.5 h-1.5 rounded-full bg-warning"></span>
-                                        Perbaikan
-                                    </span>
-                                @endif
-                            </td>
-                            
-                            <td class="p-4 text-center">
-                                <div class="flex items-center justify-center gap-2">
-                                    <a href="{{ route('admin.ruang.edit', $item->id) }}" 
-                                       class="inline-flex items-center gap-1 px-3 py-2 bg-surface-container hover:bg-surface-container-high text-primary rounded-xl text-xs font-semibold shadow-xs transition-all active:scale-95">
-                                        <span class="material-symbols-outlined text-[16px]">edit_square</span>
-                                        <span>Edit</span>
-                                    </a>
+            <div class="space-y-1.5">
+                <label class="text-label-md font-bold text-on-surface-variant block uppercase tracking-wider">Zonasi Gedung</label>
+                <div class="relative">
+                    <select name="lokasi" onchange="document.getElementById('filterForm').submit()" 
+                            class="w-full px-4 py-2.5 bg-surface-container-low border border-border-subtle rounded-lg text-body-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all cursor-pointer appearance-none">
+                        <option value="">-- Semua Gedung --</option>
+                        @foreach($daftarGedung as $gedung)
+                            <option value="{{ $gedung }}" {{ request('lokasi') == $gedung ? 'selected' : '' }}>{{ $gedung }}</option>
+                        @endforeach
+                    </select>
+                    <span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-outline pointer-events-none">arrow_drop_down</span>
+                </div>
+            </div>
 
-                                    <form action="{{ route('admin.ruang.destroy', $item->id) }}" method="POST" class="inline">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" 
-                                                onclick="return confirm('Apakah Anda yakin ingin menghapus ruangan {{ $item->nama_ruangan }}?')"
-                                                class="inline-flex items-center gap-1 px-3 py-2 bg-rose-50 hover:bg-error-container text-danger hover:text-on-error-container border border-rose-200 rounded-xl text-xs font-semibold shadow-xs transition-all active:scale-95 cursor-pointer">
-                                            <span class="material-symbols-outlined text-[16px]">delete</span>
-                                            <span>Hapus</span>
-                                        </button>
-                                    </form>
-                                </div>
-                            </td>
-                        </tr>
-                    @empty
-                        <tr>
-                            <td colspan="7" class="p-12 text-center text-on-surface-variant">
-                                <span class="material-symbols-outlined text-[48px] text-outline block mb-2">room_preferences</span>
-                                <span class="text-body-lg font-medium block">Belum Ada Data Ruangan</span>
-                                <span class="text-label-md text-outline mt-1 block">Silakan tambahkan master data ruangan baru melalui tombol di kanan atas.</span>
-                            </td>
-                        </tr>
-                    @endforelse
-                </tbody>
-            </table>
-        </div>
+            <div class="space-y-1.5">
+                <label class="text-label-md font-bold text-on-surface-variant block uppercase tracking-wider">Status Operasional</label>
+                <div class="relative">
+                    <select name="status" onchange="document.getElementById('filterForm').submit()" 
+                            class="w-full px-4 py-2.5 bg-surface-container-low border border-border-subtle rounded-lg text-body-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all cursor-pointer appearance-none">
+                        <option value="">-- Semua Status --</option>
+                        <option value="Tersedia" {{ request('status') == 'Tersedia' ? 'selected' : '' }}>Tersedia (Bisa Dipinjam)</option>
+                        <option value="Dipakai" {{ request('status') == 'Dipakai' ? 'selected' : '' }}>Sedang Dipakai</option>
+                        <option value="Perbaikan" {{ request('status') == 'Perbaikan' ? 'selected' : '' }}>Perbaikan (Maintenance)</option>
+                    </select>
+                    <span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-outline pointer-events-none">arrow_drop_down</span>
+                </div>
+            </div>
+
+        </form>
     </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-gutter">
+        @forelse($ruang as $item)
+            <div class="bg-surface-container-lowest border border-border-subtle rounded-2xl p-5 shadow-soft flex flex-col justify-between hover:border-primary-fixed-dim hover:shadow-md transition-all duration-200">
+                
+                <div>
+                    <div class="w-12 h-12 rounded-xl bg-primary-low text-primary flex items-center justify-center mb-4">
+                        <span class="material-symbols-outlined text-headline-md">meeting_room</span>
+                    </div>
+
+                    <h3 class="text-title-lg font-bold text-on-surface leading-tight">{{ $item->nama_ruangan }}</h3>
+                    <p class="text-label-md text-outline mt-1 font-medium flex items-center gap-1">
+                        <span class="material-symbols-outlined text-[14px]">corporate_fare</span>
+                        <span>{{ $item->uppk }}</span>
+                    </p>
+
+                    <div class="grid grid-cols-2 gap-2 mt-4 pt-4 border-t border-border-subtle text-body-md text-on-surface-variant">
+                        <div>
+                            <span class="text-label-md text-outline block uppercase tracking-wider">Kapasitas</span>
+                            <span class="font-semibold text-on-surface">{{ $item->kapasitas }} Kursi</span>
+                        </div>
+                        <div>
+                            <span class="text-label-md text-outline block uppercase tracking-wider">Lokasi</span>
+                            <span class="font-semibold text-on-surface truncate block">{{ $item->lokasi }}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-6 pt-4 border-t border-border-subtle flex items-center justify-between gap-3">
+                    <div>
+                        @if($item->status == 'Tersedia')
+                            <span class="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-bold bg-emerald-50 text-success rounded-full border border-emerald-200">Tersedia</span>
+                        @elseif($item->status == 'Dipakai')
+                            <span class="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-bold bg-surface-low text-outline rounded-full border border-border-subtle">Dipakai</span>
+                        @else
+                            <span class="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-bold bg-rose-50 text-danger rounded-full border border-rose-200">Perbaikan</span>
+                        @endif
+                    </div>
+
+                    @if($item->status == 'Tersedia')
+                        <a href="{{ route('mahasiswa.peminjaman.create') }}?ruang_id={{ $item->id }}" 
+                           class="inline-flex items-center gap-1.5 bg-primary text-on-primary px-4 py-2 rounded-xl text-xs font-bold hover:brightness-110 active:scale-95 transition-all">
+                            <span>Pesan Ruang</span>
+                            <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+                        </a>
+                    @else
+                        <button disabled class="inline-flex items-center gap-1.5 bg-surface-low text-outline px-4 py-2 rounded-xl text-xs font-bold opacity-50 cursor-not-allowed">
+                            <span>Tidak Tersedia</span>
+                        </button>
+                    @endif
+                </div>
+
+            </div>
+        @empty
+            <div class="col-span-1 sm:col-span-2 lg:col-span-3 bg-surface-container-low border border-border-subtle p-12 rounded-2xl text-center text-on-surface-variant">
+                <span class="material-symbols-outlined text-[48px] text-outline block mb-2">search_off</span>
+                <span class="text-body-lg font-bold block">Ruangan Tidak Ditemukan</span>
+                <span class="text-label-md text-outline mt-1 block">Cobalah untuk mengubah kata kunci pencarian atau menyetel ulang kombinasi dropdown filter Anda.</span>
+            </div>
+        @endforelse
+    </div>
+
 </div>
+
+<script>
+    let searchInput = document.querySelector('input[name="search"]');
+    let timeout = null;
+
+    searchInput.addEventListener('keyup', function () {
+        clearTimeout(timeout);
+        timeout = setTimeout(function () {
+            document.getElementById('filterForm').submit();
+        }, 600); // delay setengah detik lebih biar gak nge-lag saat mengetik
+    });
+</script>
 @endsection

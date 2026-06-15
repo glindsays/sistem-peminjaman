@@ -34,6 +34,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/dashboard', [DashboardController::class, 'mahasiswa'])->name('dashboard');
         Route::get('/riwayat', [DashboardController::class, 'riwayatMahasiswa'])->name('riwayatMahasiswa');
 
+        Route::get('/katalog-ruangan', [RuangController::class, 'katalogMahasiswa'])->name('ruang.index');
         Route::get('/pinjam-ruang', [PeminjamanRuangController::class, 'create'])->name('peminjaman.create');
         Route::post('/pinjam-ruang', [PeminjamanRuangController::class, 'store'])->name('peminjaman.store');
         Route::get('/history-ruang', [PeminjamanRuangController::class, 'historyMahasiswa'])->name('peminjaman.history');

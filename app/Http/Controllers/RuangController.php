@@ -63,4 +63,28 @@ class RuangController extends Controller
 
         return redirect()->route('admin.ruang.index')->with('success', 'Ruangan berhasil dihapus dari sistem!');
     }
-}
+
+    public function katalogMahasiswa(Request $request)
+    {
+        $query = Ruang::query();
+
+        if ($request->filled('search')) {
+            $query->where('nama_ruangan', 'like', '%' . $request->search . '%');
+        }
+
+        if ($request->filled('lokasi')) {
+            $query->where('lokasi', $request->lokasi);
+        }
+
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        $ruang = $query->get();
+
+        $daftarGedung = Ruang::select('lokasi')->distinct()->pluck('lokasi');
+
+        return view('mahasiswa.ruang.index', compact('ruang', 'daftarGedung'));
+    }
+} 
+
