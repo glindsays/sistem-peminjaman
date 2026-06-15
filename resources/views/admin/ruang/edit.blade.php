@@ -1,46 +1,68 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <title>Edit Data Ruangan</title>
-</head>
-<body>
-    <h1>Ubah Ruangan: {{ $ruang->nama_ruangan }}</h1>
+@extends('layouts.app')
 
-    <form action="{{ route('admin.ruang.update', $ruang->id) }}" method="POST">
-        @csrf
-        @method('PUT')
+@section('content')
+<div class="space-y-6 max-w-2xl">
+    
+    <div class="flex items-center gap-4">
+        <a href="{{ route('admin.ruang.index') }}" class="w-10 h-10 rounded-xl bg-surface-container hover:bg-surface-container-high flex items-center justify-center text-primary transition-colors">
+            <span class="material-symbols-outlined">arrow_back</span>
+        </a>
+        <div>
+            <h1 class="text-headline-lg font-bold text-on-surface">Ubah Ruangan: {{ $ruang->nama_ruangan }}</h1>
+            <p class="text-body-md text-on-surface-variant mt-1">Perbarui konfigurasi data operasional fisik ruangan dari panel admin BAAK.</p>
+        </div>
+    </div>
 
-        <p>
-            <label>Nama Ruangan:</label><br>
-            <input type="text" name="nama_ruangan" value="{{ $ruang->nama_ruangan }}" required>
-        </p>
+    <div class="bg-surface-container-lowest border border-border-subtle rounded-xl p-6 shadow-soft">
+        <form action="{{ route('admin.ruang.update', $ruang->id) }}" method="POST" class="space-y-5">
+            @csrf
+            @method('PUT')
 
-        <p>
-            <label>Kapasitas:</label><br>
-            <input type="number" name="kapasitas" value="{{ $ruang->kapasitas }}" min="1" required>
-        </p>
+            <div class="space-y-2">
+                <label for="nama_ruangan" class="text-label-md font-bold text-on-surface-variant block uppercase tracking-wider">Nama Ruangan</label>
+                <input type="text" name="nama_ruangan" id="nama_ruangan" value="{{ old('nama_ruangan', $ruang->nama_ruangan) }}" class="w-full px-4 py-3 bg-surface-container-low border border-border-subtle rounded-lg text-body-md text-on-surface focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all" required>
+                @error('nama_ruangan') <p class="text-xs text-danger mt-1">{{ $message }}</p> @enderror
+            </div>
 
-        <p>
-            <label>Lokasi / Gedung:</label><br>
-            <input type="text" name="lokasi" value="{{ $ruang->lokasi }}" required>
-        </p>
+            <div class="space-y-2">
+                <label for="kapasitas" class="text-label-md font-bold text-on-surface-variant block uppercase tracking-wider">Kapasitas Maksimal (Orang)</label>
+                <input type="number" name="kapasitas" id="kapasitas" value="{{ old('kapasitas', $ruang->kapasitas) }}" min="1" class="w-full px-4 py-3 bg-surface-container-low border border-border-subtle rounded-lg text-body-md text-on-surface focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all" required>
+                @error('kapasitas') <p class="text-xs text-danger mt-1">{{ $message }}</p> @enderror
+            </div>
 
-        <p>
-            <label>Status Ruangan:</label><br>
-            <select name="status" required>
-                <option value="Tersedia" {{ $ruang->status == 'Tersedia' ? 'selected' : '' }}>Tersedia</option>
-                <option value="Dipakai" {{ $ruang->status == 'Dipakai' ? 'selected' : '' }}>Dipakai</option>
-                <option value="Perbaikan" {{ $ruang->status == 'Perbaikan' ? 'selected' : '' }}>Perbaikan</option>
-            </select>
-        </p>
+            <div class="space-y-2">
+                <label for="lokasi" class="text-label-md font-bold text-on-surface-variant block uppercase tracking-wider">Lokasi / Gedung</label>
+                <input type="text" name="lokasi" id="lokasi" value="{{ old('lokasi', $ruang->lokasi) }}" class="w-full px-4 py-3 bg-surface-container-low border border-border-subtle rounded-lg text-body-md text-on-surface focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all" required>
+                @error('lokasi') <p class="text-xs text-danger mt-1">{{ $message }}</p> @enderror
+            </div>
 
-        <p>
-            <label>Unit Pengelola (UPPK):</label><br>
-            <input type="text" name="uppk" value="{{ $ruang->uppk }}" required>
-        </p>
+            <div class="space-y-2">
+                <label for="status" class="text-label-md font-bold text-on-surface-variant block uppercase tracking-wider">Status Operasional Ruangan</label>
+                <div class="relative">
+                    <select name="status" id="status" class="w-full px-4 py-3 bg-surface-container-low border border-border-subtle rounded-lg text-body-md text-on-surface focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all cursor-pointer appearance-none" required>
+                        <option value="Tersedia" {{ old('status', $ruang->status) == 'tersedia' ? 'selected' : '' }}>Tersedia</option>
+                        <option value="Dipakai" {{ old('status', $ruang->status) == 'dipakai' ? 'selected' : '' }}>Dipakai</option>
+                        <option value="Perbaikan" {{ old('status', $ruang->status) == 'perbaikan' ? 'selected' : '' }}>Perbaikan</option>
+                    </select>
+                    <span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-outline pointer-events-none">arrow_drop_down</span>
+                </div>
+                @error('status') <p class="text-xs text-danger mt-1">{{ $message }}</p> @enderror
+            </div>
 
-        <button type="submit" style="background-color: #007bff; color: white; padding: 6px 12px;">Simpan Perubahan</button>
-        <a href="{{ route('admin.ruang.index') }}">Batal</a>
-    </form>
-</body>
-</html>
+            <div class="space-y-2">
+                <label for="uppk" class="text-label-md font-bold text-on-surface-variant block uppercase tracking-wider">Unit Pengelola (UPPK)</label>
+                <input type="text" name="uppk" id="uppk" value="{{ old('uppk', $ruang->uppk) }}" class="w-full px-4 py-3 bg-surface-container-low border border-border-subtle rounded-lg text-body-md text-on-surface focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all" required>
+                @error('uppk') <p class="text-xs text-danger mt-1">{{ $message }}</p> @enderror
+            </div>
+
+            <div class="flex items-center justify-end gap-3 pt-4 border-t border-border-subtle">
+                <a href="{{ route('admin.ruang.index') }}" class="px-5 py-3 text-body-md font-semibold text-outline hover:text-on-surface transition-colors">Batal</a>
+                <button type="submit" class="bg-primary text-on-primary font-bold px-6 py-3 rounded-lg shadow-sm hover:brightness-110 active:scale-[0.97] transition-all flex items-center gap-2 cursor-pointer">
+                    <span class="material-symbols-outlined text-body-lg">save</span>
+                    <span>Simpan Perubahan</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+@endsection
