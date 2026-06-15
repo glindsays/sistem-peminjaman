@@ -61,4 +61,21 @@ class BarangController extends Controller
 
         return redirect()->route('admin.barang.index')->with('success', 'Barang berhasil dihapus dari database!');
     }
+
+    public function katalogMahasiswa(Request $request)
+    {
+        $query = \App\Models\Barang::query();
+
+        if ($request->filled('search')) {
+            $query->where('nama_barang', 'like', '%' . $request->search . '%');
+        }
+
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        $barang = $query->get();
+
+        return view('mahasiswa.barang.index', compact('barang'));
+    }
 }

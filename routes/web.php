@@ -37,11 +37,10 @@ Route::middleware('auth')->group(function () {
         Route::get('/katalog-ruangan', [RuangController::class, 'katalogMahasiswa'])->name('ruang.index');
         Route::get('/pinjam-ruang', [PeminjamanRuangController::class, 'create'])->name('peminjaman.create');
         Route::post('/pinjam-ruang', [PeminjamanRuangController::class, 'store'])->name('peminjaman.store');
-        Route::get('/history-ruang', [PeminjamanRuangController::class, 'historyMahasiswa'])->name('peminjaman.history');
 
-        Route::get('/pinjam-barang', [PeminjamanBarangController::class, 'create'])->name('peminjaman_barang.create');
-        Route::post('/pinjam-barang', [PeminjamanBarangController::class, 'store'])->name('peminjaman_barang.store');
-        Route::get('/history-barang', [PeminjamanBarangController::class, 'historyMahasiswa'])->name('peminjaman_barang.history');
+        Route::get('/katalog-barang', [BarangController::class, 'katalogMahasiswa'])->name('barang.index');
+        Route::get('/pinjam-barang', [PeminjamanBarangController::class, 'create'])->name('barang.create');
+        Route::post('/pinjam-barang', [PeminjamanBarangController::class, 'store'])->name('barang.store');
     });
 
     Route::middleware('role:dosen')->prefix('dosen')->name('dosen.')->group(function () {

@@ -15,15 +15,22 @@ class PeminjamanBarangController extends Controller
         return view('admin.peminjaman_barang.index', compact('pengajuan'));
     }
 
-    public function create()
+    public function create(Request $request)
     {
-        $barang = Barang::where('status', 'Tersedia')
-                        ->where('jumlah', '>', 0)
-                        ->get();
+        $selectedBarangId = $request->query('barang_id');
 
-        return view('mahasiswa.peminjaman_barang.create', compact('barang'));
+        $barangTerpilih = null;
+        if ($selectedBarangId) {
+            $barangTerpilih = \App\Models\Barang::where('id', $selectedBarangId)
+                                                ->where('status', 'Tersedia')
+                                                ->where('jumlah', '>', 0)
+                                                ->first();
+        }
+
+        $semuaBarang = \App\Models\Barang::where('status', 'Tersedia')->where('jumlah', '>', 0)->get();
+
+        return view('mahasiswa.barang.create', compact('barangTerpilih', 'semuaBarang'));
     }
-
     public function store(Request $request)
     {
         $request->validate([
@@ -53,7 +60,7 @@ class PeminjamanBarangController extends Controller
         ]);
 
         return redirect()
-            ->route('mahasiswa.peminjaman_barang.history')
+            ->route('mahasiswa.barang.index')
             ->with('success', 'Pengajuan peminjaman inventaris barang berhasil dikirim!');
     }
 
@@ -64,7 +71,7 @@ class PeminjamanBarangController extends Controller
             ->latest()
             ->get();
 
-        return view('mahasiswa.peminjaman_barang.history', compact('history'));
+        return view('barang.history', compact('history'));
     }
 
     public function updateStatus(Request $request, $id)
