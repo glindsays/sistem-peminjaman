@@ -86,5 +86,9 @@ class RuangController extends Controller
 
         return view('mahasiswa.ruang.index', compact('ruang', 'daftarGedung'));
     }
+
+    public function __construct() {
+    view()->share('daftarGedung', \App\Models\Ruang::select('uppk')->distinct()->pluck('uppk'));
+}
 } 
 

@@ -14,13 +14,15 @@
     </div>
 
     <div class="flex border-b border-outline-variant gap-2">
-        <a href="?tab=ruang" class="px-5 py-3 text-body-md font-semibold border-b-2 transition-all duration-150 {{ $tabAktif === 'ruang' ? 'border-primary text-primary' : 'border-transparent text-outline hover:text-on-surface' }}">
+        <a href="?tab=ruang" class="px-5 py-3 text-body-md font-semibold border-b-2 transition-all duration-150 
+            {{ $tabAktif === 'ruang' ? 'border-primary text-primary' : 'border-transparent text-outline hover:text-on-surface' }}">
             <div class="flex items-center gap-2">
                 <span class="material-symbols-outlined text-body-lg">meeting_room</span>
                 <span>Antrean Ruangan</span>
             </div>
         </a>
-        <a href="?tab=barang" class="px-5 py-3 text-body-md font-semibold border-b-2 transition-all duration-150 {{ $tabAktif === 'barang' ? 'border-primary text-primary' : 'border-transparent text-outline hover:text-on-surface' }}">
+        <a href="?tab=barang" class="px-5 py-3 text-body-md font-semibold border-b-2 transition-all duration-150 
+            {{ $tabAktif === 'barang' ? 'border-primary text-primary' : 'border-transparent text-outline hover:text-on-surface' }}">
             <div class="flex items-center gap-2">
                 <span class="material-symbols-outlined text-body-lg">inventory_2</span>
                 <span>Antrean Barang</span>

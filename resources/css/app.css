@@ -108,3 +108,16 @@ body {
 .shadow-soft { 
     box-shadow: 0px 4px 20px rgba(0,0,0,0.05); 
 }
+
+input::-ms-reveal,
+input::-ms-clear {
+    display: none !important;
+}
+
+input::-webkit-credentials-auto-fill-button {
+    visibility: hidden;
+    display: none !important;
+    pointer-events: none;
+    position: absolute;
+    right: 0;
+}

@@ -4,7 +4,7 @@
 <div class="space-y-6">
     
     <div>
-        <h1 class="text-headline-lg font-bold text-on-surface">Overview Dashboard Dosen</h1>
+        <h1 class="text-headline-lg font-bold text-on-surface">Dashboard</h1>
         <p class="text-body-md text-on-surface-variant mt-1">Selamat datang, Admin. Periksa dan berikan validasi persetujuan izin peminjaman di bawah ini.</p>
     </div>
 
