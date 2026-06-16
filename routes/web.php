@@ -13,6 +13,9 @@ use App\Http\Controllers\LandingController; // Tambahkan ini di deretan "use" pa
 
 Route::get('/', [LandingController::class, 'index'])->name('landing');
 
+Route::get('/auth/google', [AuthController::class, 'redirectToGoogle'])->name('login.google');
+Route::get('/auth/google/callback', [AuthController::class, 'handleGoogleCallback']);
+
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
     Route::post('/login', [AuthController::class, 'login']);

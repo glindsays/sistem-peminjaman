@@ -50,14 +50,13 @@
             </div>
         </div>
 
-        <!-- Bagian Form Login -->
-        <div class="flex flex-col justify-center p-6 md:p-16 bg-surface-container-lowest">
-            <div class="mb-8 md:mb-stack-lg">
-                <h2 class="text-2xl md:text-headline-md font-bold text-on-surface">Welcome Back</h2>
-                <p class="text-sm md:text-body-md text-on-surface-variant mt-1">Please enter your university details to continue.</p>
+        <div class="flex flex-col justify-center p-stack-lg md:p-16 bg-surface-container-lowest">
+            <div class="mb-stack-lg">
+                <h2 class="text-headline-md font-bold text-on-surface">Welcome Back</h2>
+                <p class="text-body-md text-on-surface-variant mt-1">Please enter your university details to continue.</p>
             </div>
 
-            <form action="{{ route('login') }}" method="POST" class="space-y-6 md:space-y-stack-md">
+            <form action="{{ route('login') }}" method="POST" class="space-y-stack-md">
                 @csrf
 
                 <div class="space-y-2">
@@ -112,11 +111,11 @@
                 </button>
             </form>
 
-            <div class="mt-8 md:mt-stack-lg pt-6 md:pt-stack-md border-t border-border-subtle text-center">
-                <p class="text-xs md:text-body-md text-on-surface-variant">
+            <div class="mt-stack-lg pt-stack-md border-t border-border-subtle text-center">
+                <p class="text-body-md text-on-surface-variant">
                     Need technical assistance? 
                     <a class="text-primary font-bold hover:underline inline-flex items-center gap-1" 
-                    href="https://wa.me/6281234067323?text=Halo%20BAA%20Petra%2C%20saya%20butuh%20bantuan%20terkait%20kendala%20sistem%20login%20di%20aplikasi%20SIFAS." 
+                    href="https://wa.me/6281234067323?text=Halo%20BAA%20Petra%2C%20saya%20butuh%20bantuan%20terkait%20kendala%20sistem%20login%20di%20aplikasi%20Petra%20Borrow." 
                     target="_blank" 
                     rel="noopener noreferrer">
                     Contact BAA
@@ -162,6 +161,7 @@
             const totalSlides = images.length;
 
             function nextSlide() {
+                if (images.length === 0) return;
                 images[currentSlide].classList.replace('opacity-100', 'opacity-0');
                 dots[currentSlide].classList.replace('w-12', 'w-4');
                 dots[currentSlide].classList.replace('bg-primary', 'bg-outline-variant');
