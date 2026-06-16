@@ -2,169 +2,180 @@
 <html lang="id" class="scroll-smooth">
 <head>
     <meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>SIFAS | Sistem Peminjaman Kampus</title>
-    
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
-    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <title>SIFAS | Portal Fasilitas Kampus</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="bg-gray-50 text-gray-800 font-['Inter'] flex flex-col min-h-screen">
+<body class="bg-gray-50 text-slate-900 font-['Inter'] flex flex-col min-h-screen overflow-x-hidden">
 
-    <!-- Navbar -->
     <nav class="bg-slate-900 text-white py-4 px-6 md:px-12 flex justify-between items-center shadow-md sticky top-0 z-50">
         <a href="{{ route('landing') }}" class="flex items-center gap-3">
-            <span class="material-symbols-outlined text-3xl">domain</span>
-            <span class="font-bold text-xl tracking-wide">SIFAS PETRA</span>
+            <span class="material-symbols-outlined text-2xl md:text-3xl">domain</span>
+            <span class="font-bold text-lg md:text-xl tracking-wide">SIFAS PETRA</span>
         </a>
         @auth
-            <a href="{{ route(auth()->user()->role->nama_role . '.dashboard') }}" class="bg-blue-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-blue-700 transition-all text-sm">
-                Dashboard
-            </a>
+            <a href="{{ route(auth()->user()->role->nama_role . '.dashboard') }}" class="bg-blue-600 text-white px-4 py-2 md:px-6 rounded-lg font-semibold hover:bg-blue-700 text-sm">Dashboard</a>
         @else
-            <a href="{{ route('login') }}" class="bg-white text-slate-900 px-6 py-2 rounded-lg font-semibold hover:bg-gray-200 transition-all text-sm">
-                Login
-            </a>
+            <a href="{{ route('login') }}" class="bg-white text-slate-900 px-4 py-2 md:px-6 rounded-lg font-semibold hover:bg-gray-200 text-sm">Login</a>
         @endauth
     </nav>
 
-    <!-- Hero & Search Section -->
-    <section class="bg-slate-800 text-white py-20 px-6 md:px-12 text-center relative overflow-hidden">
-        <div class="max-w-4xl mx-auto relative z-10">
-            <span class="inline-block bg-slate-700 text-gray-200 px-4 py-1.5 rounded-full text-xs font-semibold mb-6 tracking-wider">
-                OFFICIAL CAMPUS RESOURCE PORTAL
-            </span>
-            <h1 class="text-4xl md:text-5xl font-bold mb-6 leading-tight">
-                Sistem Peminjaman <span class="text-blue-400">Ruang & Barang</span>
-            </h1>
-            <p class="text-gray-300 text-lg mb-10 max-w-2xl mx-auto">
-                Kelola dan cek ketersediaan fasilitas Universitas Kristen Petra secara real-time untuk kebutuhan akademik dan kegiatan kampus.
-            </p>
-
-            <!-- Search Bar Form (Live Filter) -->
-            <form id="searchForm" class="bg-white p-2 rounded-xl flex flex-col md:flex-row gap-2 shadow-lg max-w-3xl mx-auto">
-                <div class="flex-1 flex items-center bg-gray-50 rounded-lg px-4 border border-gray-200">
-                    <span class="material-symbols-outlined text-gray-400">search</span>
-                    <input type="text" id="searchInput" placeholder="Ketik nama ruang atau barang..." class="w-full bg-transparent border-none px-3 py-3 text-gray-800 focus:outline-none focus:ring-0">
-                </div>
-                <select id="filterKategori" class="px-4 py-3 bg-gray-50 border border-gray-200 text-gray-700 rounded-lg focus:outline-none font-medium">
-                    <option value="semua">Semua Kategori</option>
-                    <option value="ruang">Ruangan</option>
-                    <option value="barang">Barang</option>
-                </select>
-                <!-- Tombol disembunyikan/dijadikan visual saja karena filter sudah live -->
-                <button type="button" class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg font-semibold transition-colors flex items-center justify-center cursor-default opacity-90">
-                    Filter Aktif
-                </button>
-            </form>
+    <section id="hero-section" class="relative text-white py-20 md:py-24 px-6 text-center bg-cover bg-center bg-no-repeat w-full" data-bg="{{ asset('images/pcu3.png') }}">
+        <div class="absolute inset-0 bg-slate-900/75 z-0"></div>
+        <div class="relative z-10 w-full max-w-2xl mx-auto">
+            <h1 class="text-3xl md:text-5xl font-bold mb-4 md:mb-6 leading-tight">Sistem Peminjaman <br class="hidden md:block"> <span class="text-blue-400">Ruang & Barang</span></h1>
+            <p class="text-gray-200 text-base md:text-lg">Cek ketersediaan dan pinjam fasilitas UK Petra untuk kebutuhan perkuliahan dan kegiatan kampus.</p>
         </div>
     </section>
 
-    <!-- Katalog Grid -->
-    <section class="py-16 px-6 md:px-12 max-w-7xl mx-auto flex-1 w-full">
-        <div class="flex justify-between items-end mb-8">
-            <div>
-                <h2 class="text-2xl font-bold text-slate-900">Katalog Fasilitas</h2>
-                <p class="text-gray-500 mt-1">Status ketersediaan real-time</p>
+    <main class="py-8 md:py-12 px-6 md:px-12 max-w-7xl mx-auto w-full flex-1">
+        <h2 class="text-xl md:text-2xl font-bold text-slate-900 mb-6">Cek Ketersediaan Fasilitas</h2>
+
+        <div class="mb-8 border-b border-gray-200 pb-4">
+            <div class="flex gap-6 mb-6">
+                <button onclick="switchTab('ruang')" id="btnRuang" class="cursor-pointer pb-2 font-bold text-blue-600 border-b-2 border-blue-600">Ruangan</button>
+                <button onclick="switchTab('barang')" id="btnBarang" class="cursor-pointer pb-2 font-bold text-gray-500 hover:text-gray-800 border-b-2 border-transparent">Barang</button>
             </div>
-            <div class="hidden md:flex gap-4">
-                <div class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-green-500"></span><span class="text-sm font-medium">Tersedia</span></div>
-                <div class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-red-500"></span><span class="text-sm font-medium">Tidak Tersedia</span></div>
+            <div class="flex flex-col md:flex-row gap-3 w-full">
+                <input type="text" id="searchInput" placeholder="Cari nama..." class="px-4 py-2 border rounded-lg w-full md:flex-1">
+                <select id="filterGedung" class="px-4 py-2 border rounded-lg w-full md:w-auto">
+                    <option value="">Semua Gedung</option>
+                    @foreach($fasilitas->where('kategori', 'ruang')->pluck('lokasi')->filter()->unique() as $gedung)
+                        <option value="{{ strtolower($gedung) }}">{{ $gedung }}</option>
+                    @endforeach
+                </select>
+                <select id="filterUPPK" class="px-4 py-2 border rounded-lg hidden w-full md:w-auto">
+                    <option value="">Semua UPPK</option>
+                    @foreach($fasilitas->where('kategori', 'barang')->pluck('uppk')->filter()->unique() as $uppk)
+                        <option value="{{ strtolower($uppk) }}">{{ $uppk }}</option>
+                    @endforeach
+                </select>
             </div>
         </div>
 
-        <div id="fasilitasContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div id="fasilitasContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 min-h-[400px] items-start w-full">
             @foreach($fasilitas as $item)
-            <!-- Atribut data-nama dan data-kategori ditambahkan untuk keperluan Live Filter JS -->
-            <div class="fasilitas-card bg-white border border-gray-200 rounded-2xl p-5 shadow-sm hover:shadow-md transition-all flex flex-col" 
+            <div class="fasilitas-card bg-white border border-gray-200 rounded-2xl p-4 md:p-5 shadow-sm hover:shadow-md transition-all flex-col hidden w-full overflow-hidden" 
                  data-nama="{{ strtolower($item->nama) }}" 
-                 data-kategori="{{ strtolower($item->kategori) }}">
+                 data-kategori="{{ strtolower($item->kategori) }}"
+                 data-filter="{{ strtolower($item->kategori == 'ruang' ? ($item->lokasi ?? '') : ($item->uppk ?? '')) }}">
                 
                 <div class="flex justify-between items-start mb-4">
-                    <div class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-600">
+                    <div class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-600 shrink-0">
                         <span class="material-symbols-outlined">{{ $item->kategori == 'ruang' ? 'meeting_room' : 'inventory_2' }}</span>
                     </div>
-                    
-                    <!-- Perbaikan Kondisi Status (Case-Insensitive) -->
-                    @if(strtolower($item->status) == 'tersedia' || strtolower($item->status) == 'tersedia (sebagian)')
-                        <span class="bg-green-100 text-green-700 text-xs px-3 py-1 rounded-full font-bold capitalize">{{ $item->status }}</span>
-                    @else
-                        <span class="bg-red-100 text-red-700 text-xs px-3 py-1 rounded-full font-bold capitalize">{{ $item->status }}</span>
-                    @endif
+                    <span class="{{ strtolower($item->status) == 'tersedia' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700' }} text-[10px] md:text-xs px-2 py-1 md:px-3 rounded-full font-bold capitalize whitespace-nowrap">{{ $item->status }}</span>
                 </div>
                 
-                <h3 class="font-bold text-lg mb-1 text-slate-900">{{ $item->nama }}</h3>
-                <p class="text-sm text-gray-500 mb-6">{{ $item->lokasi }}</p>
+                <h3 class="font-bold text-base md:text-lg mb-1 text-slate-900 break-words">{{ $item->nama }}</h3>
+                <p class="text-xs md:text-sm text-gray-500 mb-4 md:mb-6 font-medium truncate">{{ $item->kategori == 'ruang' ? ($item->lokasi ?? 'Lokasi tidak tersedia') : ($item->uppk ?? 'UPPK Umum') }}</p>
                 
-                <div class="border-t border-gray-100 pt-3 flex flex-col gap-1 mt-auto">
-                    <span class="text-xs font-bold text-gray-400 uppercase tracking-wider">{{ $item->kategori }}</span>
-                    <span class="text-sm font-semibold text-slate-700">
-                        Kapasitas/Stok: <span class="font-bold">{{ $item->jumlah_kapasitas }}</span>
-                    </span>
+                <div class="border-t border-gray-100 pt-3 mt-auto">
+                    <span class="text-xs md:text-sm font-semibold text-slate-700">Stok: <span class="font-bold">{{ $item->jumlah_kapasitas }}</span></span>
                 </div>
             </div>
             @endforeach
         </div>
 
-        <!-- State jika pencarian tidak ditemukan -->
-        <div id="emptyState" class="hidden text-center py-16 bg-gray-50 rounded-2xl border border-dashed border-gray-300">
-            <span class="material-symbols-outlined text-5xl text-gray-400 mb-3">search_off</span>
-            <h3 class="text-lg font-bold text-gray-600">Tidak Ditemukan</h3>
-            <p class="text-gray-500">Fasilitas yang Anda cari tidak tersedia di sistem.</p>
-        </div>
-    </section>
+        <div id="paginationContainer" class="mt-8 md:mt-12 flex flex-wrap justify-center items-center gap-2 w-full"></div>
+    </main>
 
-    <!-- Footer -->
-    <footer class="bg-slate-900 text-gray-400 py-8 text-center text-sm border-t border-slate-800 mt-auto">
+    <footer class="bg-slate-900 text-gray-400 py-6 md:py-8 text-center text-xs md:text-sm border-t mt-auto">
         <p>&copy; {{ date('Y') }} SIFAS - Universitas Kristen Petra. Kelompok 4.</p>
     </footer>
 
-    <!-- JavaScript untuk Live Filtering -->
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const searchInput = document.getElementById('searchInput');
-            const filterKategori = document.getElementById('filterKategori');
-            const cards = document.querySelectorAll('.fasilitas-card');
-            const emptyState = document.getElementById('emptyState');
+        let currentPage = 1;
+        const itemsPerPage = 16;
+        let filteredCards = [];
 
-            function filterFasilitas() {
-                const keyword = searchInput.value.toLowerCase();
-                const kategori = filterKategori.value.toLowerCase();
-                let hasVisibleCards = false;
+        function switchTab(kategori) {
+            document.getElementById('btnRuang').className = kategori === 'ruang' ? 'cursor-pointer pb-2 font-bold text-blue-600 border-b-2 border-blue-600' : 'cursor-pointer pb-2 font-bold text-gray-500 hover:text-gray-800 border-b-2 border-transparent';
+            document.getElementById('btnBarang').className = kategori === 'barang' ? 'cursor-pointer pb-2 font-bold text-blue-600 border-b-2 border-blue-600' : 'cursor-pointer pb-2 font-bold text-gray-500 hover:text-gray-800 border-b-2 border-transparent';
+            
+            document.getElementById('filterGedung').classList.toggle('hidden', kategori !== 'ruang');
+            document.getElementById('filterUPPK').classList.toggle('hidden', kategori !== 'barang');
+            
+            document.getElementById('searchInput').value = '';
+            document.getElementById('filterGedung').value = '';
+            document.getElementById('filterUPPK').value = '';
+            
+            filterItems();
+        }
 
-                cards.forEach(card => {
-                    const cardNama = card.getAttribute('data-nama');
-                    const cardKategori = card.getAttribute('data-kategori');
+        function filterItems() {
+            const val = document.getElementById('searchInput').value.toLowerCase();
+            const activeTab = document.getElementById('btnRuang').className.includes('text-blue-600') ? 'ruang' : 'barang';
+            const filterVal = (activeTab === 'ruang' ? document.getElementById('filterGedung').value : document.getElementById('filterUPPK').value).toLowerCase();
 
-                    const matchesKeyword = cardNama.includes(keyword);
-                    const matchesKategori = (kategori === 'semua' || cardKategori === kategori);
-
-                    if (matchesKeyword && matchesKategori) {
-                        card.style.display = 'flex';
-                        hasVisibleCards = true;
-                    } else {
-                        card.style.display = 'none';
-                    }
-                });
-
-                // Menampilkan tampilan kosong jika tidak ada kartu yang cocok
-                if (hasVisibleCards) {
-                    emptyState.classList.add('hidden');
+            filteredCards = [];
+            document.querySelectorAll('.fasilitas-card').forEach(card => {
+                const matchTab = card.getAttribute('data-kategori') === activeTab;
+                const matchSearch = card.getAttribute('data-nama').includes(val);
+                const matchFilter = filterVal === '' || card.getAttribute('data-filter').includes(filterVal);
+                
+                if (matchTab && matchSearch && matchFilter) {
+                    filteredCards.push(card);
                 } else {
-                    emptyState.classList.remove('hidden');
+                    card.style.display = 'none'; 
                 }
-            }
-
-            // Event listener untuk input ketikan dan pilihan dropdown
-            searchInput.addEventListener('input', filterFasilitas);
-            filterKategori.addEventListener('change', filterFasilitas);
-
-            // Mencegah form di-submit dengan enter
-            document.getElementById('searchForm').addEventListener('submit', function(e) {
-                e.preventDefault();
             });
-        });
+
+            currentPage = 1; 
+            renderPagination();
+        }
+
+        function renderPagination() {
+            const totalPages = Math.ceil(filteredCards.length / itemsPerPage);
+            const startIndex = (currentPage - 1) * itemsPerPage;
+            const endIndex = startIndex + itemsPerPage;
+
+            filteredCards.forEach((card, index) => {
+                if (index >= startIndex && index < endIndex) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+
+            const pagContainer = document.getElementById('paginationContainer');
+            pagContainer.innerHTML = '';
+
+            if (totalPages > 0) {
+                const btnPrev = document.createElement('button');
+                btnPrev.innerHTML = '&laquo;';
+                btnPrev.disabled = currentPage === 1;
+                btnPrev.className = `px-3 py-1 md:px-4 md:py-2 border rounded-lg transition-colors text-sm md:text-base ${currentPage === 1 ? 'bg-gray-50 text-gray-300 cursor-not-allowed' : 'bg-white text-blue-600 hover:bg-blue-50'}`;
+                btnPrev.onclick = () => { if(currentPage > 1) { currentPage--; renderPagination(); window.scrollTo(0, document.getElementById('fasilitasContainer').offsetTop - 100); } };
+                pagContainer.appendChild(btnPrev);
+
+                for (let i = 1; i <= totalPages; i++) {
+                    const btn = document.createElement('button');
+                    btn.innerText = i;
+                    btn.className = `px-3 py-1 md:px-4 md:py-2 border rounded-lg transition-colors text-sm md:text-base ${currentPage === i ? 'bg-blue-600 text-white font-bold' : 'bg-white text-blue-600 hover:bg-blue-50'}`;
+                    btn.onclick = () => { currentPage = i; renderPagination(); window.scrollTo(0, document.getElementById('fasilitasContainer').offsetTop - 100); };
+                    pagContainer.appendChild(btn);
+                }
+
+                const btnNext = document.createElement('button');
+                btnNext.innerHTML = '&raquo;';
+                btnNext.disabled = currentPage === totalPages;
+                btnNext.className = `px-3 py-1 md:px-4 md:py-2 border rounded-lg transition-colors text-sm md:text-base ${currentPage === totalPages ? 'bg-gray-50 text-gray-300 cursor-not-allowed' : 'bg-white text-blue-600 hover:bg-blue-50'}`;
+                btnNext.onclick = () => { if(currentPage < totalPages) { currentPage++; renderPagination(); window.scrollTo(0, document.getElementById('fasilitasContainer').offsetTop - 100); } };
+                pagContainer.appendChild(btnNext);
+            }
+        }
+
+        document.getElementById('searchInput').addEventListener('input', filterItems);
+        document.getElementById('filterGedung').addEventListener('change', filterItems);
+        document.getElementById('filterUPPK').addEventListener('change', filterItems);
+
+        const hero = document.getElementById('hero-section');
+        hero.style.backgroundImage = `url('${hero.dataset.bg}')`;
+        
+        switchTab('ruang'); 
     </script>
 </body>
 </html>

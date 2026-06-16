@@ -37,7 +37,7 @@
                     </div>
                     <div>
                         <span class="text-label-md text-outline block uppercase tracking-wider">Unit Penanggung Jawab</span>
-                        <span class="text-body-md font-medium text-outline-variant block mt-0.5">{{ $ruangTerpilih->uppk }}</span>
+                        <span class="text-body-lg font-medium text-on-surface block mt-0.5">UPPK {{ $ruangTerpilih->uppk }}</span>
                     </div>
                     <div class="p-3 bg-emerald-50 text-success border border-emerald-200 rounded-xl text-xs font-semibold flex items-center gap-1.5">
                         <span class="w-2 h-2 rounded-full bg-success"></span>

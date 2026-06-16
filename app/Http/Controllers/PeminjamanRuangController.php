@@ -13,7 +13,7 @@ class PeminjamanRuangController extends Controller
     public function index()
     {
         $pengajuan = PeminjamanRuang::with(['user', 'ruang'])->latest()->get();
-        return view('dosen.ruang.index', compact('pengajuan'));
+        return view('dosen.peminjaman_ruang.index', compact('pengajuan'));
     }
 
     public function create(Request $request)
@@ -39,43 +39,41 @@ class PeminjamanRuangController extends Controller
             'nama_acara'         => 'required|string|max:255',
             'nama_penyelenggara' => 'required|string|max:255',
             'tgl_peminjaman'     => 'required|date|after_or_equal:today',
-            'waktu_mulai'        => 'required|date_format:H:i|after_or_equal:07:00|before_or_equal:22:00',
-            'waktu_selesai'      => 'required|date_format:H:i|after:waktu_mulai|before_or_equal:22:00',
+            'waktu_mulai'        => 'required|date_format:H:i',
+            'waktu_selesai'      => 'required|date_format:H:i|after:waktu_mulai',
         ]);
 
-        $isLibur = HariLibur::where('tanggal', $request->tgl_peminjaman)->first();
-        if ($isLibur) {
-            return back()->withInput()->withErrors([
-                'tgl_peminjaman' => "Gagal! Tanggal tersebut adalah hari libur nasional/kampus ({$isLibur->keterangan})."
-            ]);
+        // Cek Hari Libur
+        if (HariLibur::where('tanggal', $request->tgl_peminjaman)->exists()) {
+            return back()->withInput()->withErrors(['tgl_peminjaman' => "Tanggal tersebut adalah hari libur."]);
         }
 
+        // Cek Status Ruangan (hanya boleh pinjam jika status Tersedia)
+        $ruang = Ruang::findOrFail($request->ruang_id);
+        if (strtolower($ruang->status) !== 'tersedia') {
+            return back()->withErrors(['ruang_id' => 'Ruangan ini sedang dalam perbaikan dan tidak dapat dipinjam.']);
+        }
+
+        // Cek Bentrok Jadwal
         $isBentrok = PeminjamanRuang::where('ruang_id', $request->ruang_id)
             ->where('tgl_peminjaman', $request->tgl_peminjaman)
-            ->where('status_izin', '!=', 'Ditolak') 
+            ->where('status_izin', '!=', 'Ditolak')
             ->where(function ($query) use ($request) {
                 $query->where('waktu_mulai', '<', $request->waktu_selesai)
                       ->where('waktu_selesai', '>', $request->waktu_mulai);
             })->exists();
 
         if ($isBentrok) {
-            return back()->withInput()->withErrors([
-                'waktu_mulai' => 'Gagal! Ruangan tersebut sudah dipesan oleh ormawa lain di jam dan tanggal yang sama.'
-            ]);
+            return back()->withInput()->withErrors(['waktu_mulai' => 'Maaf, ruangan sudah dipesan pada jam tersebut.']);
         }
 
         PeminjamanRuang::create([
-            'user_id'            => Auth::id(),
-            'ruang_id'           => $request->ruang_id,
-            'nama_acara'         => $request->nama_acara,
-            'nama_penyelenggara' => $request->nama_penyelenggara,
-            'tgl_peminjaman'     => $request->tgl_peminjaman,
-            'waktu_mulai'        => $request->waktu_mulai,
-            'waktu_selesai'      => $request->waktu_selesai,
-            'status_izin'        => 'Pending', 
+            'user_id' => Auth::id(),
+            'status_izin' => 'Pending',
+            ...$request->only(['ruang_id', 'nama_acara', 'nama_penyelenggara', 'tgl_peminjaman', 'waktu_mulai', 'waktu_selesai'])
         ]);
 
-        return redirect()->route('mahasiswa.ruang.index')->with('success', 'Pengajuan peminjaman ruang berhasil dikirim! Menunggu persetujuan dosen.');
+        return redirect()->route('mahasiswa.ruang.index')->with('success', 'Pengajuan berhasil!');
     }
 
     public function historyMahasiswa()

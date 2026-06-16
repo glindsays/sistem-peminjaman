@@ -41,7 +41,6 @@
                             class="w-full px-4 py-2.5 bg-surface-container-low border border-border-subtle rounded-lg text-body-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all cursor-pointer appearance-none">
                         <option value="">-- Semua Status --</option>
                         <option value="tersedia" {{ request('status') == 'tersedia' ? 'selected' : '' }}>Tersedia (Bisa Dipinjam)</option>
-                        <option value="dipakai" {{ request('status') == 'dipakai' ? 'selected' : '' }}>Sedang Dipakai</option>
                         <option value="perbaikan" {{ request('status') == 'perbaikan' ? 'selected' : '' }}>Perbaikan (Maintenance)</option>
                     </select>
                     <span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-outline pointer-events-none">arrow_drop_down</span>
@@ -63,7 +62,7 @@
                     <h3 class="text-title-lg font-bold text-on-surface leading-tight">{{ $item->nama_ruangan }}</h3>
                     <p class="text-label-md text-outline mt-1 font-medium flex items-center gap-1">
                         <span class="material-symbols-outlined text-[14px]">corporate_fare</span>
-                        <span>{{ $item->uppk }}</span>
+                        <span>UPPK {{ $item->uppk }}</span>
                     </p>
 
                     <div class="grid grid-cols-2 gap-2 mt-4 pt-4 border-t border-border-subtle text-body-md text-on-surface-variant">
@@ -82,8 +81,6 @@
                     <div>
                         @if($item->status == 'tersedia')
                             <span class="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-bold bg-emerald-50 text-success rounded-full border border-emerald-200">Tersedia</span>
-                        @elseif($item->status == 'dipakai')
-                            <span class="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-bold bg-surface-low text-outline rounded-full border border-border-subtle">Dipakai</span>
                         @else
                             <span class="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-bold bg-rose-50 text-danger rounded-full border border-rose-200">Perbaikan</span>
                         @endif

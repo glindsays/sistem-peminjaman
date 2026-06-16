@@ -40,8 +40,7 @@
                 <div class="relative">
                     <select name="status" id="status" class="w-full px-4 py-3 bg-surface-container-low border border-border-subtle rounded-lg text-body-md text-on-surface focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all cursor-pointer appearance-none" required>
                         <option value="Tersedia" {{ old('status') == 'Tersedia' ? 'selected' : '' }}>Tersedia (Siap Digunakan)</option>
-                        <option value="Dipakai" {{ old('status') == 'Dipakai' ? 'selected' : '' }}>Dipakai (Sedang Berlangsung Kuliah/Event)</option>
-                        <option value="Perbaikan" {{ old('status') == 'Perbaikan' ? 'selected' : '' }}>Perbaikan (Maintenance Kendala Fisik)</option>
+                        <option value="Perbaikan" {{ old('status') == 'Perbaikan' ? 'selected' : '' }}>Tidak Tersedia (Perbaikan))</option>
                     </select>
                     <span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-outline pointer-events-none">arrow_drop_down</span>
                 </div>

@@ -4,13 +4,37 @@ namespace App\Http\Controllers;
 
 use App\Models\Ruang;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class RuangController extends Controller
 {
-    public function index()
+    public function __construct() {
+        // Menggunakan 'uppk' sebagai zonasi gedung sesuai kode view kamu
+        view()->share('daftarGedung', Ruang::select('uppk')->distinct()->pluck('uppk'));
+    }
+
+    public function index(Request $request)
     {
-        $ruang = Ruang::all();
-        return view('admin.ruang.index', compact('ruang'));
+        $query = Ruang::query();
+        
+        // Filter pencarian dan gedung
+        if ($request->filled('search')) $query->where('nama_ruangan', 'like', '%' . $request->search . '%');
+        if ($request->filled('lokasi')) $query->where('uppk', $request->lokasi);
+        
+        // Filter status
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        $ruang = $query->get();
+
+        // Jika user adalah admin, arahkan ke view admin
+        if (Auth::user()->role_id == 1) { // Sesuaikan jika role_id admin bukan 1
+            return view('admin.ruang.index', compact('ruang'));
+        }
+
+        // Jika mahasiswa, arahkan ke katalog mahasiswa
+        return view('mahasiswa.ruang.index', compact('ruang'));
     }
 
     public function create()
@@ -24,7 +48,7 @@ class RuangController extends Controller
             'nama_ruangan' => 'required|string|max:255',
             'kapasitas'    => 'required|integer|min:1',
             'lokasi'       => 'required|string|max:255',
-            'status'       => 'required|string|max:50', // 'Tersedia', 'Dipakai', 'Perbaikan'
+            'status'       => 'required|string|max:50',
             'uppk'         => 'required|string|max:255',
         ]);
 
@@ -33,16 +57,13 @@ class RuangController extends Controller
         return redirect()->route('admin.ruang.index')->with('success', 'Ruangan baru berhasil didaftarkan!');
     }
 
-    public function edit(Ruang|int $ruang)
+    public function edit(Ruang $ruang)
     {
-        $ruang = $ruang instanceof Ruang ? $ruang : Ruang::findOrFail($ruang);
         return view('admin.ruang.edit', compact('ruang'));
     }
 
-    public function update(Request $request, Ruang|int $ruang)
+    public function update(Request $request, Ruang $ruang)
     {
-        $ruang = $ruang instanceof Ruang ? $ruang : Ruang::findOrFail($ruang);
-
         $request->validate([
             'nama_ruangan' => 'required|string|max:255',
             'kapasitas'    => 'required|integer|min:1',
@@ -56,39 +77,9 @@ class RuangController extends Controller
         return redirect()->route('admin.ruang.index')->with('success', 'Data ruangan berhasil diperbarui!');
     }
 
-    public function destroy(Ruang|int $ruang)
+    public function destroy(Ruang $ruang)
     {
-        $ruang = $ruang instanceof Ruang ? $ruang : Ruang::findOrFail($ruang);
         $ruang->delete();
-
-        return redirect()->route('admin.ruang.index')->with('success', 'Ruangan berhasil dihapus dari sistem!');
+        return redirect()->route('admin.ruang.index')->with('success', 'Ruangan berhasil dihapus!');
     }
-
-    public function katalogMahasiswa(Request $request)
-    {
-        $query = Ruang::query();
-
-        if ($request->filled('search')) {
-            $query->where('nama_ruangan', 'like', '%' . $request->search . '%');
-        }
-
-        if ($request->filled('lokasi')) {
-            $query->where('lokasi', $request->lokasi);
-        }
-
-        if ($request->filled('status')) {
-            $query->where('status', $request->status);
-        }
-
-        $ruang = $query->get();
-
-        $daftarGedung = Ruang::select('lokasi')->distinct()->pluck('lokasi');
-
-        return view('mahasiswa.ruang.index', compact('ruang', 'daftarGedung'));
-    }
-
-    public function __construct() {
-    view()->share('daftarGedung', \App\Models\Ruang::select('uppk')->distinct()->pluck('uppk'));
 }
-} 
-

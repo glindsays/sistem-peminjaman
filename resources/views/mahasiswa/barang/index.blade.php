@@ -14,9 +14,9 @@
             <div class="md:col-span-2 space-y-1.5">
                 <label class="text-label-md font-bold text-on-surface-variant block uppercase tracking-wider">Cari Nama Barang</label>
                 <div class="relative group">
-                    <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline group-focus-within:text-secondary transition-colors">search</span>
+                    <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline group-focus-within:text-primary transition-colors">search</span>
                     <input type="text" name="search" value="{{ request('search') }}" placeholder="Ketik nama printer, proyektor, kabel roll..." 
-                           class="w-full pl-10 pr-4 py-2.5 bg-surface-container-low border border-border-subtle rounded-lg text-body-md focus:outline-none focus:ring-2 focus:ring-secondary focus:border-transparent transition-all">
+                           class="w-full pl-10 pr-4 py-2.5 bg-surface-container-low border border-border-subtle rounded-lg text-body-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all">
                 </div>
             </div>
 
@@ -24,7 +24,7 @@
                 <label class="text-label-md font-bold text-on-surface-variant block uppercase tracking-wider">Status Ketersediaan</label>
                 <div class="relative">
                     <select name="status" onchange="document.getElementById('filterBarangForm').submit()" 
-                            class="w-full px-4 py-2.5 bg-surface-container-low border border-border-subtle rounded-lg text-body-md focus:outline-none focus:ring-2 focus:ring-secondary focus:border-transparent transition-all cursor-pointer appearance-none">
+                            class="w-full px-4 py-2.5 bg-surface-container-low border border-border-subtle rounded-lg text-body-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all cursor-pointer appearance-none">
                         <option value="">-- Semua Status --</option>
                         <option value="tersedia" {{ request('status') == 'tersedia' ? 'selected' : '' }}>Tersedia (Stok Ready)</option>
                         <option value="tidak tersedia" {{ request('status') == 'tidak tersedia' ? 'selected' : '' }}>Tidak Tersedia (Habis/Rusak)</option>
@@ -38,10 +38,10 @@
 
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-gutter">
         @forelse($barang as $item)
-            <div class="bg-surface-container-lowest border border-border-subtle rounded-2xl p-5 shadow-soft flex flex-col justify-between hover:border-secondary-fixed-dim hover:shadow-md transition-all duration-200">
+            <div class="bg-surface-container-lowest border border-border-subtle rounded-2xl p-5 shadow-soft flex flex-col justify-between hover:border-primary-fixed-dim hover:shadow-md transition-all duration-200">
                 
                 <div>
-                    <div class="w-12 h-12 rounded-xl bg-secondary-fixed text-on-secondary-fixed-variant flex items-center justify-center mb-4">
+                    <div class="w-12 h-12 rounded-xl bg-primary-low text-primary flex items-center justify-center mb-4">
                         <span class="material-symbols-outlined text-headline-md">inventory_2</span>
                     </div>
 
@@ -54,7 +54,7 @@
                     <div class="mt-4 pt-4 border-t border-border-subtle grid grid-cols-1 text-body-md">
                         <div class="bg-surface-container-low p-2.5 rounded-xl flex justify-between items-center">
                             <span class="text-label-md text-outline font-medium uppercase tracking-wider">Kapasitas Stok</span>
-                            <span class="font-bold text-secondary text-body-lg">{{ $item->jumlah }} Unit</span>
+                            <span class="font-bold text-primary text-body-lg">{{ $item->jumlah }} Unit</span>
                         </div>
                     </div>
                 </div>
@@ -62,15 +62,15 @@
                 <div class="mt-6 pt-4 border-t border-border-subtle flex items-center justify-between gap-3">
                     <div>
                         @if($item->status == 'tersedia' && $item->jumlah > 0)
-                            <span class="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-bold bg-emerald-50 text-success rounded-full border border-emerald-200">Ready</span>
+                            <span class="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-bold bg-emerald-50 text-success rounded-full border border-emerald-200">Tersedia</span>
                         @else
-                            <span class="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-bold bg-rose-50 text-danger rounded-full border border-rose-200">Kosong</span>
+                            <span class="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-bold bg-rose-50 text-danger rounded-full border border-rose-200">Tidak Tersedia</span>
                         @endif
                     </div>
 
                     @if($item->status == 'tersedia' && $item->jumlah > 0)
                         <a href="{{ route('mahasiswa.barang.create') }}?barang_id={{ $item->id }}" 
-                           class="inline-flex items-center gap-1.5 bg-secondary text-white px-4 py-2 rounded-xl text-xs font-bold hover:brightness-110 active:scale-95 transition-all">
+                           class="inline-flex items-center gap-1.5 bg-primary text-on-primary px-4 py-2 rounded-xl text-xs font-bold hover:brightness-110 active:scale-95 transition-all">
                             <span>Ajukan Pinjam</span>
                             <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
                         </a>

@@ -12,7 +12,7 @@ class PeminjamanBarangController extends Controller
     public function index()
     {
         $pengajuan = PeminjamanBarang::with(['user', 'barang'])->latest()->get();
-        return view('admin.peminjaman_barang.index', compact('pengajuan'));
+        return view('dosen.peminjaman_barang.index', compact('pengajuan'));
     }
 
     public function create(Request $request)
@@ -34,40 +34,37 @@ class PeminjamanBarangController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'barang_id'          => 'required|exists:barang,id',
-            'jumlah_barang'      => 'required|integer|min:1',
-            'nama_acara'         => 'required|string|max:255',
-            'nama_penyelenggara' => 'required|string|max:255',
-            'waktu_mulai'        => 'required|date_format:H:i|after_or_equal:07:00|before_or_equal:22:00',
-            'waktu_selesai'      => 'required|date_format:H:i|after:waktu_mulai|before_or_equal:22:00',
-            'tgl_peminjaman'     => 'required|date|after_or_equal:today',
-            'tgl_pengembalian'   => 'required|date|after_or_equal:tgl_peminjaman',
+            'barang_id' => 'required|exists:barang,id',
+            'jumlah_barang' => 'required|integer|min:1',
+            'tgl_peminjaman' => 'required|date',
+            'tgl_pengembalian' => 'required|date|after_or_equal:tgl_peminjaman',
         ]);
 
         $barang = Barang::findOrFail($request->barang_id);
 
-        if ($request->jumlah_barang > $barang->jumlah) {
-            return back()->withInput()->withErrors([
-                'jumlah_barang' => "Gagal mengajukan! Stok harian yang tersedia untuk {$barang->nama_barang} sisa {$barang->jumlah} pcs."
-            ]);
+        // Cek apakah barang sedang dalam maintenance (status bukan Tersedia)
+        if (strtolower($barang->status) !== 'tersedia') {
+            return back()->withErrors(['barang_id' => 'Barang ini sedang dalam perbaikan.']);
+        }
+
+        // Cek stok: Hitung jumlah barang yang sedang dipinjam di rentang tanggal tersebut
+        $dipinjam = PeminjamanBarang::where('barang_id', $request->barang_id)
+            ->where('status_izin', 'Disetujui')
+            ->where('tgl_peminjaman', '<=', $request->tgl_pengembalian)
+            ->where('tgl_pengembalian', '>=', $request->tgl_peminjaman)
+            ->sum('jumlah_barang');
+
+        if (($request->jumlah_barang + $dipinjam) > $barang->jumlah) {
+            return back()->withInput()->withErrors(['jumlah_barang' => "Stok tidak mencukupi. Sisa tersedia: " . ($barang->jumlah - $dipinjam)]);
         }
 
         PeminjamanBarang::create([
-            'user_id'            => Auth::id(),
-            'barang_id'          => $request->barang_id,
-            'jumlah_barang'      => $request->jumlah_barang,
-            'nama_acara'         => $request->nama_acara,
-            'nama_penyelenggara' => $request->nama_penyelenggara,
-            'waktu_mulai'        => $request->waktu_mulai,     
-            'waktu_selesai'      => $request->waktu_selesai,
-            'tgl_peminjaman'     => $request->tgl_peminjaman,
-            'tgl_pengembalian'   => $request->tgl_pengembalian,
-            'status_izin'        => 'Pending',
+            'user_id' => Auth::id(),
+            'status_izin' => 'Pending',
+            ...$request->all()
         ]);
 
-        return redirect()
-            ->route('mahasiswa.dashboard')
-            ->with('success', 'Pengajuan peminjaman inventaris barang berhasil dikirim!');
+        return redirect()->route('mahasiswa.barang.index')->with('success', 'Pengajuan barang dikirim!');
     }
 
     public function historyMahasiswa()
