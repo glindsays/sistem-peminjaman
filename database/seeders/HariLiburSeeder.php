@@ -34,7 +34,7 @@ class HariLiburSeeder extends Seeder
         HariLibur::create([
             'tanggal' => '2026-07-07',
             'keterangan' => 'Study Plan Cancellation (Batas Akhir Pembatalan Matakuliah)',
-            'tipe_blokir' => 'blokid_akademik',
+            'tipe_blokir' => 'blokir_akademik',
         ]);
 
         HariLibur::create([

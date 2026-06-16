@@ -21,7 +21,7 @@ class RuangSeeder extends Seeder
                     Ruang::create([
                         'nama_ruangan' => "Q.{$floor}0{$i}{$suffix}",
                         'kapasitas' => rand(70, 200), 
-                        'lokasi' => "Gedung Q Lantai {$floor}",
+                        'lokasi' => 'Gedung Q',
                         'status' => 'tersedia',
                         'uppk' => 'Q',
                     ]);
@@ -32,7 +32,7 @@ class RuangSeeder extends Seeder
         Ruang::create([
             'nama_ruangan' => 'Amphitheater Q',
             'kapasitas' => 400,
-            'lokasi' => 'Gedung Q Lantai 1',
+            'lokasi' => 'Gedung Q',
             'status' => 'tersedia',
             'uppk' => 'Q',
         ]);
@@ -40,7 +40,7 @@ class RuangSeeder extends Seeder
         Ruang::create([
             'nama_ruangan' => 'Auditorium Q',
             'kapasitas' => 1500,
-            'lokasi' => 'Gedung Q Lantai 4',
+            'lokasi' => 'Gedung Q',
             'status' => 'tersedia',
             'uppk' => 'Q',
         ]);
@@ -51,7 +51,7 @@ class RuangSeeder extends Seeder
             Ruang::create([
                 'nama_ruangan' => "P.20{$i}",
                 'kapasitas' => 100,
-                'lokasi' => 'Gedung P Lantai 2',
+                'lokasi' => 'Gedung P',
                 'status' => 'tersedia',
                 'uppk' => 'P',
             ]);
@@ -63,7 +63,7 @@ class RuangSeeder extends Seeder
                 Ruang::create([
                     'nama_ruangan' => "P.{$floor}{$roomNumber}",
                     'kapasitas' => 100,
-                    'lokasi' => "Gedung P Lantai {$floor}",
+                    'lokasi' => 'Gedung P',
                     'status' => 'tersedia',
                     'uppk' => 'P',
                 ]);
@@ -74,7 +74,7 @@ class RuangSeeder extends Seeder
             Ruang::create([
                 'nama_ruangan' => "P.70{$i}",
                 'kapasitas' => 150,
-                'lokasi' => 'Gedung P Lantai 7',
+                'lokasi' => 'Gedung P',
                 'status' => 'tersedia',
                 'uppk' => 'P',
             ]);
@@ -86,7 +86,7 @@ class RuangSeeder extends Seeder
             Ruang::create([
                 'nama_ruangan' => "W.30{$i}",
                 'kapasitas' => 60,
-                'lokasi' => 'Gedung W Lantai 3',
+                'lokasi' => 'Gedung W',
                 'status' => 'tersedia',
                 'uppk' => 'W',
             ]);
@@ -96,7 +96,7 @@ class RuangSeeder extends Seeder
         Ruang::create([
             'nama_ruangan' => 'Auditorium W',
             'kapasitas' => 700,
-            'lokasi' => 'Gedung W Lantai 2',
+            'lokasi' => 'Gedung W',
             'status' => 'tersedia',
             'uppk' => 'W',
         ]);
@@ -109,7 +109,7 @@ class RuangSeeder extends Seeder
                 Ruang::create([
                     'nama_ruangan' => "T.{$floor}{$roomNumber}",
                     'kapasitas' => rand(70, 200),
-                    'lokasi' => "Gedung T Lantai {$floor}",
+                    'lokasi' => 'Gedung T',
                     'status' => 'tersedia',
                     'uppk' => 'T',
                 ]);
@@ -120,7 +120,7 @@ class RuangSeeder extends Seeder
             Ruang::create([
                 'nama_ruangan' => "AVT.50{$i}",
                 'kapasitas' => 1000, 
-                'lokasi' => 'Gedung T Lantai 5',
+                'lokasi' => 'Gedung T',
                 'status' => 'tersedia',
                 'uppk' => 'T', 
             ]);

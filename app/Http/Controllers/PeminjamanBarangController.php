@@ -38,7 +38,10 @@ class PeminjamanBarangController extends Controller
             'jumlah_barang'      => 'required|integer|min:1',
             'nama_acara'         => 'required|string|max:255',
             'nama_penyelenggara' => 'required|string|max:255',
+            'waktu_mulai'        => 'required|date_format:H:i|after_or_equal:07:00|before_or_equal:22:00',
+            'waktu_selesai'      => 'required|date_format:H:i|after:waktu_mulai|before_or_equal:22:00',
             'tgl_peminjaman'     => 'required|date|after_or_equal:today',
+            'tgl_pengembalian'   => 'required|date|after_or_equal:tgl_peminjaman',
         ]);
 
         $barang = Barang::findOrFail($request->barang_id);
@@ -55,12 +58,15 @@ class PeminjamanBarangController extends Controller
             'jumlah_barang'      => $request->jumlah_barang,
             'nama_acara'         => $request->nama_acara,
             'nama_penyelenggara' => $request->nama_penyelenggara,
+            'waktu_mulai'        => $request->waktu_mulai,     
+            'waktu_selesai'      => $request->waktu_selesai,
             'tgl_peminjaman'     => $request->tgl_peminjaman,
+            'tgl_pengembalian'   => $request->tgl_pengembalian,
             'status_izin'        => 'Pending',
         ]);
 
         return redirect()
-            ->route('mahasiswa.barang.index')
+            ->route('mahasiswa.dashboard')
             ->with('success', 'Pengajuan peminjaman inventaris barang berhasil dikirim!');
     }
 
