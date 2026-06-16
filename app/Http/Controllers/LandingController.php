@@ -41,7 +41,7 @@ class LandingController extends Controller
         }
 
         // Gabungkan data agar tampil di satu grid
-        $fasilitas = $ruangan->merge($barang);
+        $fasilitas = $ruangan->concat($barang);
 
         return view('landing', compact('fasilitas'));
     }
