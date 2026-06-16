@@ -7,10 +7,27 @@ use Illuminate\Http\Request;
 
 class RuangController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $ruang = Ruang::all();
-        return view('admin.ruang.index', compact('ruang'));
+        $query = Ruang::query();
+
+        if ($request->filled('search')) {
+            $query->where('nama_ruangan', 'like', '%' . $request->search . '%');
+        }
+
+        if ($request->filled('lokasi')) {
+            $query->where('lokasi', $request->lokasi);
+        }
+
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        $ruang = $query->get();
+
+        $daftarGedung = Ruang::select('lokasi')->distinct()->pluck('lokasi');
+
+        return view('admin.ruang.index', compact('ruang', 'daftarGedung'));
     }
 
     public function create()

@@ -9,7 +9,7 @@
     </div>
 
     <div class="bg-surface-container-lowest border border-border-subtle p-4 rounded-xl shadow-soft">
-        <form action="{{ route('mahasiswa.katalog-ruangan') }}" method="GET" id="filterForm" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <form action="{{ route('admin.ruang.index') }}" method="GET" id="filterForm" class="grid grid-cols-1 md:grid-cols-3 gap-4">
             
             <div class="space-y-1.5">
                 <label class="text-label-md font-bold text-on-surface-variant block uppercase tracking-wider">Cari Ruangan</label>
