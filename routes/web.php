@@ -9,9 +9,9 @@ use App\Http\Controllers\RuangController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('landing');
-})->name('landing');
+use App\Http\Controllers\LandingController; // Tambahkan ini di deretan "use" paling atas
+
+Route::get('/', [LandingController::class, 'index'])->name('landing');
 
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
