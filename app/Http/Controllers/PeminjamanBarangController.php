@@ -11,7 +11,7 @@ class PeminjamanBarangController extends Controller
 {
     public function index()
     {
-        $pengajuan = PeminjamanBarang::with(['user', 'barang'])->latest()->get();
+        $pengajuan = PeminjamanBarang::with(['user', 'barang'])->latest()->paginate(10)->withQueryString();
         return view('dosen.peminjaman_barang.index', compact('pengajuan'));
     }
 

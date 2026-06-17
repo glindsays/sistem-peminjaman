@@ -11,9 +11,35 @@
         <div class="flex gap-3 bg-surface-container-low p-2 rounded-xl border border-border-subtle shrink-0">
             <div class="px-4 py-2 bg-surface-container-lowest rounded-lg shadow-xs text-center min-w-[80px]">
                 <span class="text-label-md text-outline block font-medium uppercase">Total</span>
-                <span class="text-title-lg font-bold text-on-surface">{{ $users->count() }}</span>
+                <span class="text-title-lg font-bold text-on-surface">{{ $users->total() }}</span>
             </div>
         </div>
+    </div>
+
+    <div class="bg-surface-container-lowest border border-border-subtle p-4 rounded-xl shadow-soft">
+        <form action="{{ route('admin.users.index') }}" method="GET" id="filterForm" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="md:col-span-2 space-y-1.5">
+                <label class="text-label-md font-bold text-on-surface-variant block uppercase tracking-wider">Cari Pengguna</label>
+                <div class="relative group">
+                    <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline group-focus-within:text-primary transition-colors">search</span>
+                    <input type="text" name="search" value="{{ request('search') }}" placeholder="Ketik nama atau email..."
+                           class="w-full pl-10 pr-4 py-2.5 bg-surface-container-low border border-border-subtle rounded-lg text-body-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all">
+                </div>
+            </div>
+            <div class="space-y-1.5">
+                <label class="text-label-md font-bold text-on-surface-variant block uppercase tracking-wider">Filter Role</label>
+                <div class="relative">
+                    <select name="role" onchange="document.getElementById('filterForm').submit()"
+                            class="w-full px-4 py-2.5 bg-surface-container-low border border-border-subtle rounded-lg text-body-md appearance-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary">
+                        <option value="">-- Semua Role --</option>
+                        @foreach($daftarRole as $role)
+                            <option value="{{ $role->nama_role }}" {{ request('role') == $role->nama_role ? 'selected' : '' }}>{{ ucfirst($role->nama_role) }}</option>
+                        @endforeach
+                    </select>
+                    <span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-outline pointer-events-none">arrow_drop_down</span>
+                </div>
+            </div>
+        </form>
     </div>
 
     @if(session('success'))
@@ -37,9 +63,9 @@
                     </tr>
                 </thead>
                 <tbody class="divide-y border-border-subtle text-body-md text-on-surface">
-                    @foreach($users as $index => $user)
+                        @forelse($users as $index => $user)
                         <tr class="hover:bg-surface-container-low transition-colors duration-150">
-                            <td class="p-4 text-center text-outline font-medium">{{ $index + 1 }}</td>
+                            <td class="p-4 text-center text-outline font-medium">{{ $users->firstItem() + $index }}</td>
                             
                             <td class="p-4">
                                 <div class="flex items-center gap-3">
@@ -104,10 +130,33 @@
                                 </div>
                             </td>
                         </tr>
-                    @endforeach
+                    @empty
+                        <tr>
+                            <td colspan="6" class="p-12 text-center text-on-surface-variant">
+                                <span class="material-symbols-outlined text-[48px] text-outline block mb-2">person_search</span>
+                                <span class="text-body-lg font-bold block">Pengguna Tidak Ditemukan</span>
+                                <span class="text-label-md text-outline mt-1 block">Coba ubah kata kunci pencarian atau filter role.</span>
+                            </td>
+                        </tr>
+                    @endforelse
                 </tbody>
             </table>
         </div>
     </div>
+
+    @if($users->hasPages())
+    <div class="flex justify-center">
+        {{ $users->links() }}
+    </div>
+    @endif
 </div>
+
+<script>
+    let searchInput = document.querySelector('input[name="search"]');
+    let timeout = null;
+    searchInput.addEventListener('keyup', function () {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => document.getElementById('filterForm').submit(), 600);
+    });
+</script>
 @endsection

@@ -90,6 +90,12 @@
 
 </div>
 
+    @if($pengajuan->hasPages())
+    <div class="flex justify-center">
+        {{ $pengajuan->links() }}
+    </div>
+    @endif
+
 <div id="app-data" data-success="{{ session('success') }}" data-error="{{ session('error') }}" class="hidden"></div>
 
 <script>

@@ -97,7 +97,7 @@
                 <div class="space-y-2">
                     <label for="tgl_peminjaman" class="text-label-md font-bold text-on-surface-variant block uppercase tracking-wider">Tanggal Pelaksanaan</label>
                     <div class="relative">
-                        <input type="date" name="tgl_peminjaman" id="tgl_peminjaman" value="{{ old('tgl_peminjaman') }}" min="{{ date('Y-12-d') }}" class="w-full px-4 py-3 bg-surface-container-low border border-border-subtle rounded-lg text-body-md text-on-surface focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all" required>
+                        <input type="date" name="tgl_peminjaman" id="tgl_peminjaman" value="{{ old('tgl_peminjaman') }}" min="{{ date('Y-m-d') }}" class="w-full px-4 py-3 bg-surface-container-low border border-border-subtle rounded-lg text-body-md text-on-surface focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all" required>
                     </div>
                     @error('tgl_peminjaman') <p class="text-xs text-danger mt-1">{{ $message }}</p> @enderror
                 </div>

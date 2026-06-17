@@ -130,7 +130,7 @@
                 <p class="text-body-md text-on-surface-variant">
                     Need technical assistance? 
                     <a class="text-primary font-bold hover:underline inline-flex items-center gap-1" 
-                       href="https://wa.me/6281234067323?text=Halo%20BAA%20Petra%2C%20saya%20butuh%20bantuan%20terkait%20kendala%20sistem%20login%20di%20aplikasi%20Petra%20Borrow." 
+                       href="https://wa.me/6281234067323?text=Halo%20BAA%20Petra%2C%20saya%20butuh%20bantuan%20terkait%20kendala%20sistem%20login%20di%20aplikasi%20SIFAS." 
                        target="_blank" 
                        rel="noopener noreferrer">
                         Contact BAA

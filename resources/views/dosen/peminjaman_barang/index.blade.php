@@ -9,7 +9,8 @@
     </div>
 
     <div class="bg-surface-container-lowest border border-border-subtle rounded-2xl shadow-soft overflow-hidden">
-        <div class="overflow-x-auto">
+        {{-- Desktop Table --}}
+        <div class="hidden md:block overflow-x-auto">
             <table class="w-full text-left border-collapse">
                 <thead class="bg-surface-container-low text-label-md text-outline uppercase tracking-wider border-b border-border-subtle">
                     <tr>
@@ -87,9 +88,61 @@
                 </tbody>
             </table>
         </div>
+
+        {{-- Mobile Cards --}}
+        <div class="md:hidden divide-y divide-border-subtle">
+            @forelse($pengajuan as $p)
+                <div class="p-4 space-y-3">
+                    <div class="flex items-start justify-between gap-2">
+                        <div>
+                            <div class="font-bold text-on-surface">{{ $p->user->name }}</div>
+                            <div class="text-label-md text-outline">{{ $p->user->email }}</div>
+                        </div>
+                        @if($p->status_izin == 'Pending')
+                            <span class="inline-block px-2.5 py-1 text-xs font-bold bg-amber-50 text-warning rounded-full border border-amber-200 shrink-0">Pending</span>
+                        @elseif($p->status_izin == 'Disetujui')
+                            <span class="inline-block px-2.5 py-1 text-xs font-bold bg-emerald-50 text-success rounded-full border border-emerald-200 shrink-0">Disetujui</span>
+                        @else
+                            <span class="inline-block px-2.5 py-1 text-xs font-bold bg-rose-50 text-danger rounded-full border border-rose-200 shrink-0">Ditolak</span>
+                        @endif
+                    </div>
+                    <div class="bg-surface-container-low rounded-xl p-3 space-y-1.5 text-body-md">
+                        <div><span class="text-outline text-label-md uppercase tracking-wider">Barang</span><div class="font-bold text-on-surface">{{ $p->barang->nama_barang }}</div><div class="text-label-md font-bold text-primary">{{ $p->jumlah_barang }} Unit</div></div>
+                        <div><span class="text-outline text-label-md uppercase tracking-wider">Acara</span><div class="font-semibold text-on-surface">{{ $p->nama_acara }}</div><div class="text-label-md text-outline">{{ $p->nama_penyelenggara }}</div></div>
+                        <div><span class="text-outline text-label-md uppercase tracking-wider">Jadwal</span><div class="font-semibold text-on-surface">{{ \Carbon\Carbon::parse($p->tgl_peminjaman)->format('d M Y') }} &ndash; {{ \Carbon\Carbon::parse($p->tgl_pengembalian)->format('d M Y') }}</div></div>
+                    </div>
+                    @if($p->status_izin == 'Pending')
+                        <div class="flex gap-2">
+                            <form action="{{ route('dosen.peminjaman_barang.updateStatus', $p->id) }}" method="POST" class="flex-1">
+                                @csrf @method('PATCH')
+                                <input type="hidden" name="status_izin" value="Disetujui">
+                                <button type="button" onclick="confirmAction(event, 'Approve', 'Setujui peminjaman barang ini?')" class="w-full px-3 py-2 rounded-lg bg-emerald-50 text-success hover:bg-emerald-600 hover:text-white font-bold text-xs transition-colors">Approve</button>
+                            </form>
+                            <form action="{{ route('dosen.peminjaman_barang.updateStatus', $p->id) }}" method="POST" class="flex-1">
+                                @csrf @method('PATCH')
+                                <input type="hidden" name="status_izin" value="Ditolak">
+                                <button type="button" onclick="confirmAction(event, 'Reject', 'Tolak peminjaman barang ini?')" class="w-full px-3 py-2 rounded-lg bg-rose-50 text-danger hover:bg-rose-600 hover:text-white font-bold text-xs transition-colors">Reject</button>
+                            </form>
+                        </div>
+                    @else
+                        <span class="text-xs text-outline font-medium italic bg-surface-container-low px-3 py-1.5 rounded-lg block text-center">Selesai Review</span>
+                    @endif
+                </div>
+            @empty
+                <div class="px-6 py-12 text-center text-on-surface-variant">
+                    <span class="font-bold text-body-lg block">Belum Ada Pengajuan Masuk</span>
+                </div>
+            @endforelse
+        </div>
     </div>
 
 </div>
+
+    @if($pengajuan->hasPages())
+    <div class="flex justify-center">
+        {{ $pengajuan->links() }}
+    </div>
+    @endif
 
 <div id="app-data" data-success="{{ session('success') }}" data-error="{{ session('error') }}" class="hidden"></div>
 

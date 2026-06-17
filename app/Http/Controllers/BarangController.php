@@ -23,7 +23,7 @@ class BarangController extends Controller
             $query->where('status', $request->status);
         }
 
-        $barang = $query->get();
+        $barang = $query->paginate(10)->withQueryString();
         $daftarUPPK = \App\Models\Barang::select('uppk')->distinct()->pluck('uppk');
 
         return view('admin.barang.index', compact('barang', 'daftarUPPK'));
@@ -90,7 +90,7 @@ class BarangController extends Controller
             $query->where('status', $request->status);
         }
 
-        $barang = $query->get();
+        $barang = $query->paginate(16)->withQueryString();
 
         return view('mahasiswa.barang.index', compact('barang'));
     }

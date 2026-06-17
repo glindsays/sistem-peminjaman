@@ -76,7 +76,7 @@
                                         <span>Proses</span>
                                     </a>
                                 @else
-                                    <span class="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-bold rounded-full border {{ $ruang->status_izin == 'Approved' ? 'bg-emerald-50 text-success border-emerald-200' : 'bg-rose-50 text-danger border-rose-200' }}">
+                                    <span class="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-bold rounded-full border {{ $ruang->status_izin == 'Disetujui' ? 'bg-emerald-50 text-success border-emerald-200' : 'bg-rose-50 text-danger border-rose-200' }}">
                                         {{ $ruang->status_izin }}
                                     </span>
                                 @endif
@@ -138,7 +138,7 @@
                                         <span>Proses</span>
                                     </a>
                                 @else
-                                    <span class="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-bold rounded-full border {{ $barang->status_izin == 'Approved' ? 'bg-emerald-50 text-success border-emerald-200' : 'bg-rose-50 text-danger border-rose-200' }}">
+                                    <span class="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-bold rounded-full border {{ $barang->status_izin == 'Disetujui' ? 'bg-emerald-50 text-success border-emerald-200' : 'bg-rose-50 text-danger border-rose-200' }}">
                                         {{ $barang->status_izin }}
                                     </span>
                                 @endif

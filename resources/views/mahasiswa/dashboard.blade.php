@@ -96,15 +96,15 @@
                                         <span class="w-1.5 h-1.5 rounded-full bg-warning animate-pulse"></span>
                                         Pending
                                     </span>
-                                @elseif($riwayat->status_izin == 'Approved')
+                                @elseif($riwayat->status_izin == 'Disetujui')
                                     <span class="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-bold bg-emerald-50 text-success rounded-full border border-emerald-200">
                                         <span class="w-1.5 h-1.5 rounded-full bg-success"></span>
-                                        Approved
+                                        Disetujui
                                     </span>
                                 @else
                                     <span class="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-bold bg-rose-50 text-danger rounded-full border border-rose-200">
                                         <span class="w-1.5 h-1.5 rounded-full bg-danger"></span>
-                                        Rejected
+                                        Ditolak
                                     </span>
                                 @endif
                             </td>

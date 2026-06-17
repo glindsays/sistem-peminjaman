@@ -109,6 +109,12 @@
         @endforelse
     </div>
 
+    @if($ruang->hasPages())
+    <div class="flex justify-center">
+        {{ $ruang->links() }}
+    </div>
+    @endif
+
 </div>
 
 <script>

@@ -57,45 +57,134 @@
         </form>
     </div>
 
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-gutter">
-        @forelse($ruang as $item)
-            @php $status = strtolower($item->status); @endphp
-            <div class="bg-surface-container-lowest border border-border-subtle rounded-2xl p-5 shadow-soft flex flex-col justify-between hover:border-primary-fixed-dim hover:shadow-md transition-all">
-                <div>
-                    <div class="w-12 h-12 rounded-xl bg-primary-low text-primary flex items-center justify-center mb-1">
-                        <span class="material-symbols-outlined text-headline-md">meeting_room</span>
-                    </div>
-                    
-                    <h3 class="text-title-lg font-bold text-on-surface mb-1">{{ $item->nama_ruangan }}</h3>
-                    <p class="text-label-md text-outline font-medium flex items-center gap-1">
-                        <span class="material-symbols-outlined text-[14px]">corporate_fare</span> <span>UPPK {{ $item->uppk }}</span>
-                    </p>
+    <div class="bg-surface-container-lowest border border-border-subtle rounded-xl shadow-soft overflow-hidden">
+        {{-- Desktop Table --}}
+        <div class="hidden md:block overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="border-b border-border-subtle text-label-md text-outline font-bold bg-surface-container-low uppercase tracking-wider">
+                        <th class="p-4 w-16 text-center">No</th>
+                        <th class="p-4">Nama Ruangan</th>
+                        <th class="p-4">Lokasi</th>
+                        <th class="p-4 w-32 text-center">Kapasitas</th>
+                        <th class="p-4">Unit Pengelola (UPPK)</th>
+                        <th class="p-4 w-44 text-center">Status</th>
+                        <th class="p-4 w-48 text-center">Aksi Kerja</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y border-border-subtle text-body-md text-on-surface">
+                    @forelse($ruang as $index => $item)
+                        <tr class="hover:bg-surface-container-low transition-colors duration-150">
+                            <td class="p-4 text-center text-outline font-medium">{{ $index + 1 }}</td>
+                            <td class="p-4 font-bold text-primary text-body-lg">{{ $item->nama_ruangan }}</td>
+                            <td class="p-4 font-medium text-outline-variant">{{ $item->lokasi }}</td>
+                            <td class="p-4 text-center font-bold bg-surface-container-low/40 text-on-surface">{{ $item->kapasitas }} Org</td>
+                            <td class="p-4 font-medium text-outline-variant">
+                                <div class="flex items-center gap-1.5">
+                                    <span class="material-symbols-outlined text-[18px] text-outline">corporate_fare</span>
+                                    <span>{{ $item->uppk }}</span>
+                                </div>
+                            </td>
+                            <td class="p-4 text-center">
+                                @if(strtolower($item->status) == 'tersedia')
+                                    <span class="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-bold bg-emerald-50 text-success rounded-full border border-emerald-200">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-success"></span> Tersedia
+                                    </span>
+                                @elseif(strtolower($item->status) == 'perbaikan')
+                                    <span class="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-bold bg-amber-50 text-warning rounded-full border border-amber-200">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-warning"></span> Perbaikan
+                                    </span>
+                                @else
+                                    <span class="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-bold bg-rose-50 text-danger rounded-full border border-rose-200">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-danger"></span> {{ $item->status }}
+                                    </span>
+                                @endif
+                            </td>
+                            <td class="p-4 text-center">
+                                <div class="flex items-center justify-center gap-2">
+                                    <a href="{{ route('admin.ruang.edit', $item->id) }}" class="inline-flex items-center gap-1 px-3 py-2 bg-surface-container hover:bg-surface-container-high text-primary rounded-xl text-xs font-semibold shadow-xs transition-all active:scale-95">
+                                        <span class="material-symbols-outlined text-[16px]">edit_square</span> Edit
+                                    </a>
+                                    <form action="{{ route('admin.ruang.destroy', $item->id) }}" method="POST" class="inline">
+                                        @csrf @method('DELETE')
+                                        <button type="submit" onclick="return confirm('Apakah Anda yakin ingin menghapus ruangan ini?')" class="inline-flex items-center gap-1 px-3 py-2 bg-rose-50 hover:bg-error-container text-danger hover:text-on-error-container border border-rose-200 rounded-xl text-xs font-semibold shadow-xs transition-all active:scale-95 cursor-pointer">
+                                            <span class="material-symbols-outlined text-[16px]">delete</span> Hapus
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="7" class="p-12 text-center text-on-surface-variant">
+                                <span class="material-symbols-outlined text-[48px] text-outline block mb-2">meeting_room</span>
+                                <span class="text-body-lg font-bold block">Ruangan Tidak Ditemukan</span>
+                                <span class="text-label-md text-outline mt-1 block">Coba ubah kata kunci pencarian atau filter yang aktif.</span>
+                            </td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
 
-                    <div class="grid grid-cols-2 gap-2 mt-4 text-body-md text-on-surface-variant">
+        {{-- Mobile Cards --}}
+        <div class="md:hidden divide-y divide-border-subtle">
+            @forelse($ruang as $index => $item)
+                <div class="p-4 space-y-3">
+                    <div class="flex items-start justify-between gap-2">
                         <div>
-                            <span class="text-label-md text-outline block uppercase tracking-wider">Kapasitas</span>
-                            <span class="font-semibold text-on-surface">{{ $item->kapasitas }} Orang</span>
+                            <div class="font-bold text-on-surface">{{ $item->nama_ruangan }}</div>
+                            <div class="text-label-md text-outline flex items-center gap-1 mt-0.5">
+                                <span class="material-symbols-outlined text-[13px]">corporate_fare</span> {{ $item->uppk }}
+                            </div>
                         </div>
-                        <div>
-                            <span class="text-label-md text-outline block uppercase tracking-wider">Lokasi</span>
-                            <span class="font-semibold text-on-surface truncate block">{{ $item->lokasi }}</span>
-                        </div>
+                        @if(strtolower($item->status) == 'tersedia')
+                            <span class="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-bold bg-emerald-50 text-success rounded-full border border-emerald-200 shrink-0">Tersedia</span>
+                        @elseif(strtolower($item->status) == 'perbaikan')
+                            <span class="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-bold bg-amber-50 text-warning rounded-full border border-amber-200 shrink-0">Perbaikan</span>
+                        @else
+                            <span class="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-bold bg-rose-50 text-danger rounded-full border border-rose-200 shrink-0">{{ $item->status }}</span>
+                        @endif
+                    </div>
+                    <div class="bg-surface-container-low rounded-xl px-3 py-2 text-label-md flex gap-4">
+                        <div><span class="text-outline uppercase tracking-wider">Kapasitas</span><div class="font-bold text-on-surface">{{ $item->kapasitas }} Org</div></div>
+                        <div><span class="text-outline uppercase tracking-wider">Lokasi</span><div class="font-semibold text-on-surface">{{ $item->lokasi }}</div></div>
+                    </div>
+                    <div class="flex gap-2">
+                        <a href="{{ route('admin.ruang.edit', $item->id) }}" class="flex-1 inline-flex items-center justify-center gap-1 px-3 py-2 bg-surface-container hover:bg-surface-container-high text-primary rounded-xl text-xs font-semibold transition-all">
+                            <span class="material-symbols-outlined text-[16px]">edit_square</span> Edit
+                        </a>
+                        <form action="{{ route('admin.ruang.destroy', $item->id) }}" method="POST" class="flex-1">
+                            @csrf @method('DELETE')
+                            <button type="submit" onclick="return confirm('Hapus ruangan ini?')" class="w-full inline-flex items-center justify-center gap-1 px-3 py-2 bg-rose-50 text-danger border border-rose-200 rounded-xl text-xs font-semibold transition-all cursor-pointer">
+                                <span class="material-symbols-outlined text-[16px]">delete</span> Hapus
+                            </button>
+                        </form>
                     </div>
                 </div>
-
-                <div class="mt-4 pt-3 border-t border-border-subtle flex items-center justify-between">
-                    @if(strtolower($item->status) == 'tersedia')
-                        <span class="px-2 py-0.5 text-[10px] font-bold bg-emerald-50 text-success rounded-full border border-emerald-200 uppercase">Tersedia</span>
-                    @else
-                        <span class="px-2 py-0.5 text-[10px] font-bold bg-rose-50 text-warning rounded-full border border-rose-200 uppercase">Perbaikan</span>
-                    @endif
-                    
-                    <a href="{{ route('admin.ruang.edit', $item->id) }}" class="text-primary font-bold text-xs hover:underline">Edit</a>
+            @empty
+                <div class="p-12 text-center text-on-surface-variant">
+                    <span class="material-symbols-outlined text-[48px] text-outline block mb-2">meeting_room</span>
+                    <span class="text-body-lg font-bold block">Ruangan Tidak Ditemukan</span>
+                    <span class="text-label-md text-outline mt-1 block">Coba ubah kata kunci pencarian atau filter yang aktif.</span>
                 </div>
-            </div>
-        @empty
-            <div class="col-span-full p-12 text-center text-on-surface-variant">Data tidak ditemukan.</div>
-        @endforelse
+            @endforelse
+        </div>
     </div>
+
+    @if($ruang->hasPages())
+    <div class="flex justify-center">
+        {{ $ruang->links() }}
+    </div>
+    @endif
 </div>
+
+<script>
+    let searchInput = document.querySelector('input[name="search"]');
+    let timeout = null;
+    searchInput.addEventListener('keyup', function () {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => document.getElementById('filterForm').submit(), 600);
+    });
+</script>
 @endsection

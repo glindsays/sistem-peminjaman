@@ -17,12 +17,12 @@ class DashboardController extends Controller
         $userId = Auth::id();
 
         $pendingRuang = PeminjamanRuang::where('user_id', $userId)->where('status_izin', 'Pending')->count();
-        $approvedRuang = PeminjamanRuang::where('user_id', $userId)->where('status_izin', 'Approved')->count();
-        $rejectedRuang = PeminjamanRuang::where('user_id', $userId)->where('status_izin', 'Rejected')->count();
+        $approvedRuang = PeminjamanRuang::where('user_id', $userId)->where('status_izin', 'Disetujui')->count();
+        $rejectedRuang = PeminjamanRuang::where('user_id', $userId)->where('status_izin', 'Ditolak')->count();
 
         $pendingBarang = PeminjamanBarang::where('user_id', $userId)->where('status_izin', 'Pending')->count();
-        $approvedBarang = PeminjamanBarang::where('user_id', $userId)->where('status_izin', 'Approved')->count();
-        $rejectedBarang = PeminjamanBarang::where('user_id', $userId)->where('status_izin', 'Rejected')->count();
+        $approvedBarang = PeminjamanBarang::where('user_id', $userId)->where('status_izin', 'Disetujui')->count();
+        $rejectedBarang = PeminjamanBarang::where('user_id', $userId)->where('status_izin', 'Ditolak')->count();
 
         $totalPending = $pendingRuang + $pendingBarang;
         $totalApproved = $approvedRuang + $approvedBarang;
@@ -88,12 +88,12 @@ class DashboardController extends Controller
     public function dosen()
     {
         $pendingRuang = PeminjamanRuang::where('status_izin', 'Pending')->count();
-        $approvedRuang = PeminjamanRuang::where('status_izin', 'Approved')->count();
-        $rejectedRuang = PeminjamanRuang::where('status_izin', 'Rejected')->count();
+        $approvedRuang = PeminjamanRuang::where('status_izin', 'Disetujui')->count();
+        $rejectedRuang = PeminjamanRuang::where('status_izin', 'Ditolak')->count();
 
         $pendingBarang = PeminjamanBarang::where('status_izin', 'Pending')->count();
-        $approvedBarang = PeminjamanBarang::where('status_izin', 'Approved')->count();
-        $rejectedBarang = PeminjamanBarang::where('status_izin', 'Rejected')->count();
+        $approvedBarang = PeminjamanBarang::where('status_izin', 'Disetujui')->count();
+        $rejectedBarang = PeminjamanBarang::where('status_izin', 'Ditolak')->count();
 
         $totalPending = $pendingRuang + $pendingBarang;
         $totalApproved = $approvedRuang + $approvedBarang;

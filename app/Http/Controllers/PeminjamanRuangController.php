@@ -12,7 +12,7 @@ class PeminjamanRuangController extends Controller
 {
     public function index()
     {
-        $pengajuan = PeminjamanRuang::with(['user', 'ruang'])->latest()->get();
+        $pengajuan = PeminjamanRuang::with(['user', 'ruang'])->latest()->paginate(10)->withQueryString();
         return view('dosen.peminjaman_ruang.index', compact('pengajuan'));
     }
 
