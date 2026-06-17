@@ -1,0 +1,49 @@
+name: Auto Deploy Website on Push
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  admin-app:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Use Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '22'
+
+    - name: Use PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.3'
+
+    - name: Installing Composer
+      run: |
+        curl -sS https://getcomposer.org/installer | php
+        sudo mv composer.phar /usr/local/bin/composer
+
+    - name: Installing PHP dependencies
+      run: composer install
+
+    - name: Installing Node dependencies
+      run: |
+        npm i
+        npm run build
+      
+    - name: Deploying project
+      uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+      with:
+        server: ${{ secrets.FTP_SERVER }}
+        username: ${{ secrets.FTP_USERNAME }}
+        password: ${{ secrets.FTP_PASSWORD }}
+        exclude: |
+          **/.git*
+          **/.git*/**
+          **/.env.example
+          **/.editorconfig
