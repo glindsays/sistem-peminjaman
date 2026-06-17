@@ -7,10 +7,26 @@ use Illuminate\Http\Request;
 
 class BarangController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $barang = Barang::all();
-        return view('admin.barang.index', compact('barang'));
+        $query = \App\Models\Barang::query();
+
+        if ($request->filled('search')) {
+            $query->where('nama_barang', 'like', '%' . $request->search . '%');
+        }
+
+        if ($request->filled('uppk')) {
+            $query->where('uppk', $request->uppk);
+        }
+
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        $barang = $query->get();
+        $daftarUPPK = \App\Models\Barang::select('uppk')->distinct()->pluck('uppk');
+
+        return view('admin.barang.index', compact('barang', 'daftarUPPK'));
     }
 
     public function create()

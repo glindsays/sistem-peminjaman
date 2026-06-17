@@ -4,7 +4,7 @@
     </button>
     <div class="flex items-center gap-3">
         <span class="material-symbols-outlined text-headline-md">school</span>
-        <span class="font-bold text-title-md text-primary tracking-wide">Petra Borrow</span>
+        <span class="font-bold text-title-md text-primary tracking-wide">SIFAS</span>
     </div>
 </div>
 
@@ -17,7 +17,7 @@
             <div class="flex items-center gap-3">
                 <span class="material-symbols-outlined text-headline-md">school</span>
                 <div class="flex flex-col">
-                    <span class="font-bold text-title-lg text-primary tracking-wide leading-none">Petra Borrow</span>
+                    <span class="font-bold text-title-lg text-primary tracking-wide leading-none">SIFAS</span>
                     <span class="text-[10px] text-outline font-medium tracking-wider uppercase mt-1">Fasilitas Kampus</span>
                 </div>
             </div>

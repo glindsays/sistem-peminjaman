@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8"/>
     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-    <title>Petra Borrow | Login</title>
+    <title>SIFAS | Login</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght=400;600;700;800;900&display=swap" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
@@ -20,7 +20,7 @@
             <div class="relative z-10">
                 <div class="flex items-center gap-2 text-primary">
                     <span class="material-symbols-outlined text-headline-md">school</span>
-                    <span class="text-title-lg font-bold">Petra Borrow</span>
+                    <span class="text-title-lg font-bold">SIFAS</span>
                 </div>
                 <h1 class="mt-stack-lg text-headline-lg font-bold text-on-surface leading-tight">
                     Smart Resource <br/>Management for <br/>Petra Excellence.
@@ -89,7 +89,8 @@
                                placeholder="••••••••" 
                                required 
                                type="password"/>
-                        <button class="absolute right-3 top-1/2 -translate-y-1/2 text-outline hover:text-on-surface transition-colors" onclick="togglePassword()" type="button">
+                        
+                        <button class="absolute inset-y-0 right-0 pr-3 flex items-center text-outline hover:text-on-surface transition-colors" onclick="togglePassword()" type="button">
                             <span class="material-symbols-outlined" id="password-toggle-icon">visibility</span>
                         </button>
                     </div>
@@ -99,7 +100,7 @@
                 </div>
 
                 <button class="w-full bg-primary text-on-primary font-bold py-3.5 rounded-lg shadow-sm hover:brightness-110 active:scale-[0.98] transition-all flex items-center justify-center gap-2" type="submit">
-                    Login to Petra Borrow
+                    Login to SIFAS
                     <span class="material-symbols-outlined">arrow_forward</span>
                 </button>
             </form>

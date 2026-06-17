@@ -1,328 +1,181 @@
 <!DOCTYPE html>
-<html class="light" lang="en">
+<html lang="id" class="scroll-smooth">
 <head>
     <meta charset="utf-8"/>
-    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-    
-    <title>@yield('title', 'Petra Borrow | Sistem Peminjaman Kampus')</title>
-    
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet"/>
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
-    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <title>SIFAS | Portal Fasilitas Kampus</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="bg-background text-on-surface flex flex-col min-h-screen">
-    <section class="relative overflow-hidden py-24 px-margin-desktop grid-pattern min-h-[716px] flex flex-col justify-center">
-        <div class="max-w-3xl relative z-10">
-            <span class="inline-block bg-primary-container text-on-primary-container px-4 py-1.5 rounded-full font-label-md text-label-md mb-6 animate-fade-in">
-                OFFICIAL CAMPUS RESOURCE PORTAL
-            </span>
-            <h1 class="font-display-lg text-display-lg text-on-background mb-8 leading-[1.1]">
-                Campus Room & Equipment <br/><span class="text-primary">Borrowing System</span>
-            </h1>
-            <p class="text-body-lg font-body-lg text-on-surface-variant mb-10 max-w-xl">
-                Streamlined facility management for Petra Christian University. Reserve specialized laboratories, study rooms, and high-end equipment with real-time availability tracking.
-            </p>
-            <div class="flex flex-wrap gap-4">
-                <button class="bg-primary text-on-primary px-8 py-4 rounded-xl font-title-md text-title-md shadow-soft hover:shadow-lg transition-all active:scale-95">
-                    Borrow Now
-                </button>
-                <button class="bg-surface-container-lowest text-primary border border-primary px-8 py-4 rounded-xl font-title-md text-title-md hover:bg-surface-container-low transition-all">
-                    Check Availability
-                </button>
-            </div>
-        </div>
-        <div class="absolute right-0 top-1/2 -translate-y-1/2 w-1/2 h-[500px] hidden lg:block opacity-20 pointer-events-none">
-            <div class="w-full h-full bg-primary rounded-l-[100px] rotate-12 blur-3xl"></div>
+<body class="bg-gray-50 text-slate-900 font-['Inter'] flex flex-col min-h-screen overflow-x-hidden">
+
+    <nav class="bg-slate-900 text-white py-4 px-6 md:px-12 flex justify-between items-center shadow-md sticky top-0 z-50">
+        <a href="{{ route('landing') }}" class="flex items-center gap-3">
+            <span class="material-symbols-outlined text-2xl md:text-3xl">domain</span>
+            <span class="font-bold text-lg md:text-xl tracking-wide">SIFAS PETRA</span>
+        </a>
+        @auth
+            <a href="{{ route(auth()->user()->role->nama_role . '.dashboard') }}" class="bg-blue-600 text-white px-4 py-2 md:px-6 rounded-lg font-semibold hover:bg-blue-700 text-sm">Dashboard</a>
+        @else
+            <a href="{{ route('login') }}" class="bg-white text-slate-900 px-4 py-2 md:px-6 rounded-lg font-semibold hover:bg-gray-200 text-sm">Login</a>
+        @endauth
+    </nav>
+
+    <section id="hero-section" class="relative text-white py-20 md:py-24 px-6 text-center bg-cover bg-center bg-no-repeat w-full" data-bg="{{ asset('images/pcu3.png') }}">
+        <div class="absolute inset-0 bg-slate-900/75 z-0"></div>
+        <div class="relative z-10 w-full max-w-2xl mx-auto">
+            <h1 class="text-3xl md:text-5xl font-bold mb-4 md:mb-6 leading-tight">Sistem Peminjaman <br class="hidden md:block"> <span class="text-blue-400">Ruang & Barang</span></h1>
+            <p class="text-gray-200 text-base md:text-lg">Cek ketersediaan dan pinjam fasilitas UK Petra untuk kebutuhan perkuliahan dan kegiatan kampus.</p>
         </div>
     </section>
 
-    <section class="px-margin-desktop py-stack-lg">
-        <div class="flex justify-between items-end mb-8">
-            <div>
-                <h2 class="font-headline-lg text-headline-lg text-on-background">Resource Availability</h2>
-                <p class="font-body-md text-body-md text-on-surface-variant">Live monthly status overview of all campus facilities</p>
-            </div>
-            <div class="flex gap-4">
-                <div class="flex items-center gap-2">
-                    <span class="w-3 h-3 rounded-full bg-success"></span>
-                    <span class="text-label-md font-label-md">Available</span>
-                </div>
-                <div class="flex items-center gap-2">
-                    <span class="w-3 h-3 rounded-full bg-danger"></span>
-                    <span class="text-label-md font-label-md">Occupied</span>
-                </div>
-            </div>
-        </div>
-        <div class="grid grid-cols-1 md:grid-cols-12 gap-gutter">
-            <div class="md:col-span-8 bg-surface-container-lowest rounded-3xl shadow-soft p-stack-md border border-border-subtle">
-                <div class="flex justify-between items-center mb-6">
-                    <h3 class="font-title-lg text-title-lg">November 2024</h3>
-                    <div class="flex gap-2">
-                        <button class="p-2 hover:bg-surface-container-low rounded-lg border border-border-subtle">
-                            <span class="material-symbols-outlined">chevron_left</span>
-                        </button>
-                        <button class="p-2 hover:bg-surface-container-low rounded-lg border border-border-subtle">
-                            <span class="material-symbols-outlined">chevron_right</span>
-                        </button>
-                    </div>
-                </div>
-                <div class="grid grid-cols-7 gap-2">
-                    <div class="text-center py-2 font-label-md text-label-md text-on-surface-variant">MON</div>
-                    <div class="text-center py-2 font-label-md text-label-md text-on-surface-variant">TUE</div>
-                    <div class="text-center py-2 font-label-md text-label-md text-on-surface-variant">WED</div>
-                    <div class="text-center py-2 font-label-md text-label-md text-on-surface-variant">THU</div>
-                    <div class="text-center py-2 font-label-md text-label-md text-on-surface-variant">FRI</div>
-                    <div class="text-center py-2 font-label-md text-label-md text-on-surface-variant">SAT</div>
-                    <div class="text-center py-2 font-label-md text-label-md text-on-surface-variant">SUN</div>
-                    <div class="h-24"></div>
-                    <div class="h-24"></div>
-                    <div class="h-24"></div>
-                    <div class="h-24 bg-success/10 border border-success/20 rounded-xl p-2 flex flex-col justify-between group cursor-pointer hover:bg-success/20 transition-colors">
-                        <span class="font-label-md text-label-md">1</span>
-                        <div class="space-y-1">
-                            <div class="w-full h-1 bg-success rounded-full"></div>
-                            <div class="w-full h-1 bg-success rounded-full"></div>
-                        </div>
-                    </div>
-                    <div class="h-24 bg-danger/10 border border-danger/20 rounded-xl p-2 flex flex-col justify-between group cursor-pointer hover:bg-danger/20 transition-colors">
-                        <span class="font-label-md text-label-md">2</span>
-                        <div class="space-y-1">
-                            <div class="w-2/3 h-1 bg-danger rounded-full"></div>
-                        </div>
-                    </div>
-                    <div class="h-24 bg-success/10 border border-success/20 rounded-xl p-2 flex flex-col justify-between cursor-pointer">
-                        <span class="font-label-md text-label-md">3</span>
-                        <div class="space-y-1"><div class="w-full h-1 bg-success rounded-full"></div></div>
-                    </div>
-                    <div class="h-24 bg-success/10 border border-success/20 rounded-xl p-2 flex flex-col justify-between cursor-pointer">
-                        <span class="font-label-md text-label-md">4</span>
-                        <div class="space-y-1"><div class="w-full h-1 bg-success rounded-full"></div></div>
-                    </div>
-                    
-                    <script>
-                        for(let i=5; i<=30; i++) {
-                            const status = Math.random() > 0.3 ? 'success' : 'danger';
-                            document.write(`
-                                <div class="h-24 bg-${status}/10 border border-${status}/20 rounded-xl p-2 flex flex-col justify-between cursor-pointer hover:bg-${status}/20 transition-colors">
-                                    <span class="font-label-md text-label-md">${i}</span>
-                                    <div class="space-y-1"><div class="w-${Math.random() > 0.5 ? 'full' : '2/3'} h-1 bg-${status} rounded-full"></div></div>
-                                </div>
-                            `);
-                        }
-                    </script>
-                </div>
-            </div>
-            
-            <div class="md:col-span-4 flex flex-col gap-6">
-                <div class="bg-primary text-on-primary rounded-3xl p-stack-md shadow-soft">
-                    <div class="flex items-center gap-2 mb-4">
-                        <span class="material-symbols-outlined">analytics</span>
-                        <span class="font-title-md text-title-md">System Statistics</span>
-                    </div>
-                    <div class="grid grid-cols-2 gap-4">
-                        <div>
-                            <p class="text-on-primary/70 font-label-md text-label-md">ACTIVE RESERVATIONS</p>
-                            <p class="text-3xl font-bold">142</p>
-                        </div>
-                        <div>
-                            <p class="text-on-primary/70 font-label-md text-label-md">RESOURCES FREE</p>
-                            <p class="text-3xl font-bold">28</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="flex-1 bg-surface-container-high rounded-3xl p-stack-md border border-border-subtle overflow-hidden">
-                    <h4 class="font-title-md text-title-md mb-4 flex items-center gap-2">
-                        <span class="material-symbols-outlined text-primary">schedule</span>
-                        Live Traffic
-                    </h4>
-                    <div class="space-y-4">
-                        <div class="flex items-center gap-4 bg-surface-container-lowest p-3 rounded-2xl border border-border-subtle">
-                            <div class="w-10 h-10 rounded-full bg-secondary-container flex items-center justify-center text-secondary">
-                                <span class="material-symbols-outlined">meeting_room</span>
-                            </div>
-                            <div>
-                                <p class="font-title-md text-title-md">AV Room 204</p>
-                                <p class="text-label-md text-on-surface-variant">Occupied until 14:00</p>
-                            </div>
-                            <span class="ml-auto w-2 h-2 rounded-full bg-danger animate-pulse"></span>
-                        </div>
-                        <div class="flex items-center gap-4 bg-surface-container-lowest p-3 rounded-2xl border border-border-subtle">
-                            <div class="w-10 h-10 rounded-full bg-secondary-container flex items-center justify-center text-secondary">
-                                <span class="material-symbols-outlined">videocam</span>
-                            </div>
-                            <div>
-                                <p class="font-title-md text-title-md">Sony A7 IV Kit</p>
-                                <p class="text-label-md text-on-surface-variant">Available for pickup</p>
-                            </div>
-                            <span class="ml-auto w-2 h-2 rounded-full bg-success"></span>
-                        </div>
-                        <div class="flex items-center gap-4 bg-surface-container-lowest p-3 rounded-2xl border border-border-subtle">
-                            <div class="w-10 h-10 rounded-full bg-secondary-container flex items-center justify-center text-secondary">
-                                <span class="material-symbols-outlined">laptop_mac</span>
-                            </div>
-                            <div>
-                                <p class="font-title-md text-title-md">iMac Studio Lab</p>
-                                <p class="text-label-md text-on-surface-variant">2 seats available</p>
-                            </div>
-                            <span class="ml-auto w-2 h-2 rounded-full bg-success"></span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+    <main class="py-8 md:py-12 px-6 md:px-12 max-w-7xl mx-auto w-full flex-1">
+        <h2 class="text-xl md:text-2xl font-bold text-slate-900 mb-6">Cek Ketersediaan Fasilitas</h2>
 
-    <section class="px-margin-desktop py-stack-lg bg-surface-container-low/50">
-        <div class="flex justify-between items-center mb-10">
-            <div>
-                <h2 class="font-headline-lg text-headline-lg text-on-background">Featured Facilities</h2>
-                <p class="font-body-md text-body-md text-on-surface-variant">Browse our premium spaces and top-tier equipment</p>
+        <div class="mb-8 border-b border-gray-200 pb-4">
+            <div class="flex gap-6 mb-6">
+                <button onclick="switchTab('ruang')" id="btnRuang" class="cursor-pointer pb-2 font-bold text-blue-600 border-b-2 border-blue-600">Ruangan</button>
+                <button onclick="switchTab('barang')" id="btnBarang" class="cursor-pointer pb-2 font-bold text-gray-500 hover:text-gray-800 border-b-2 border-transparent">Barang</button>
             </div>
-            <button class="text-primary font-bold flex items-center gap-2 hover:translate-x-1 transition-transform">
-                View Catalog <span class="material-symbols-outlined">arrow_forward</span>
-            </button>
+            <div class="flex flex-col md:flex-row gap-3 w-full">
+                <input type="text" id="searchInput" placeholder="Cari nama..." class="px-4 py-2 border rounded-lg w-full md:flex-1">
+                <select id="filterGedung" class="px-4 py-2 border rounded-lg w-full md:w-auto">
+                    <option value="">Semua Gedung</option>
+                    @foreach($fasilitas->where('kategori', 'ruang')->pluck('lokasi')->filter()->unique() as $gedung)
+                        <option value="{{ strtolower($gedung) }}">{{ $gedung }}</option>
+                    @endforeach
+                </select>
+                <select id="filterUPPK" class="px-4 py-2 border rounded-lg hidden w-full md:w-auto">
+                    <option value="">Semua UPPK</option>
+                    @foreach($fasilitas->where('kategori', 'barang')->pluck('uppk')->filter()->unique() as $uppk)
+                        <option value="{{ strtolower($uppk) }}">{{ $uppk }}</option>
+                    @endforeach
+                </select>
+            </div>
         </div>
-        
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-gutter mb-stack-lg">
-            <div class="bg-surface-container-lowest rounded-3xl overflow-hidden shadow-soft group border border-border-subtle">
-                <div class="h-56 relative overflow-hidden">
-                    <img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" src="https://placehold.co/600x400" alt="Multimedia Laboratory"/>
-                    <div class="absolute top-4 left-4 bg-success text-on-primary px-3 py-1 rounded-full text-label-md font-label-md">Available</div>
-                </div>
-                <div class="p-6">
-                    <p class="text-label-md font-label-md text-primary mb-1 uppercase tracking-wider">Multimedia Laboratory</p>
-                    <h3 class="font-title-lg text-title-lg mb-4">Space-X Studio 402</h3>
-                    <div class="flex items-center gap-4 text-on-surface-variant font-body-md text-body-md">
-                        <span class="flex items-center gap-1"><span class="material-symbols-outlined text-sm">groups</span> 12 Pax</span>
-                        <span class="flex items-center gap-1"><span class="material-symbols-outlined text-sm">location_on</span> Building Q, 4F</span>
+
+        <div id="fasilitasContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 min-h-[400px] items-start w-full">
+            @foreach($fasilitas as $item)
+            <div class="fasilitas-card bg-white border border-gray-200 rounded-2xl p-4 md:p-5 shadow-sm hover:shadow-md transition-all flex-col hidden w-full overflow-hidden" 
+                 data-nama="{{ strtolower($item->nama) }}" 
+                 data-kategori="{{ strtolower($item->kategori) }}"
+                 data-filter="{{ strtolower($item->kategori == 'ruang' ? ($item->lokasi ?? '') : ($item->uppk ?? '')) }}">
+                
+                <div class="flex justify-between items-start mb-4">
+                    <div class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-600 shrink-0">
+                        <span class="material-symbols-outlined">{{ $item->kategori == 'ruang' ? 'meeting_room' : 'inventory_2' }}</span>
                     </div>
+                    <span class="{{ strtolower($item->status) == 'tersedia' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700' }} text-[10px] md:text-xs px-2 py-1 md:px-3 rounded-full font-bold capitalize whitespace-nowrap">{{ $item->status }}</span>
+                </div>
+                
+                <h3 class="font-bold text-base md:text-lg mb-1 text-slate-900 break-words">{{ $item->nama }}</h3>
+                <p class="text-xs md:text-sm text-gray-500 mb-4 md:mb-6 font-medium truncate">{{ $item->kategori == 'ruang' ? ($item->lokasi ?? 'Lokasi tidak tersedia') : ($item->uppk ?? 'UPPK Umum') }}</p>
+                
+                <div class="border-t border-gray-100 pt-3 mt-auto">
+                    <span class="text-xs md:text-sm font-semibold text-slate-700">Stok: <span class="font-bold">{{ $item->jumlah_kapasitas }}</span></span>
                 </div>
             </div>
-            <div class="bg-surface-container-lowest rounded-3xl overflow-hidden shadow-soft group border border-border-subtle">
-                <div class="h-56 relative overflow-hidden">
-                    <img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" src="https://placehold.co/600x400" alt="Quiet Zone"/>
-                    <div class="absolute top-4 left-4 bg-danger text-on-primary px-3 py-1 rounded-full text-label-md font-label-md">Occupied</div>
-                </div>
-                <div class="p-6">
-                    <p class="text-label-md font-label-md text-primary mb-1 uppercase tracking-wider">Quiet Zone</p>
-                    <h3 class="font-title-lg text-title-lg mb-4">Focus Capsule 10A</h3>
-                    <div class="flex items-center gap-4 text-on-surface-variant font-body-md text-body-md">
-                        <span class="flex items-center gap-1"><span class="material-symbols-outlined text-sm">groups</span> 2 Pax</span>
-                        <span class="flex items-center gap-1"><span class="material-symbols-outlined text-sm">location_on</span> Library, 2F</span>
-                    </div>
-                </div>
-            </div>
-            <div class="bg-surface-container-lowest rounded-3xl overflow-hidden shadow-soft group border border-border-subtle">
-                <div class="h-56 relative overflow-hidden">
-                    <img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" src="https://placehold.co/600x400" alt="Conference Hall"/>
-                    <div class="absolute top-4 left-4 bg-success text-on-primary px-3 py-1 rounded-full text-label-md font-label-md">Available</div>
-                </div>
-                <div class="p-6">
-                    <p class="text-label-md font-label-md text-primary mb-1 uppercase tracking-wider">Conference Hall</p>
-                    <h3 class="font-title-lg text-title-lg mb-4">Grand Auditorium Q</h3>
-                    <div class="flex items-center gap-4 text-on-surface-variant font-body-md text-body-md">
-                        <span class="flex items-center gap-1"><span class="material-symbols-outlined text-sm">groups</span> 250 Pax</span>
-                        <span class="flex items-center gap-1"><span class="material-symbols-outlined text-sm">location_on</span> Building Q, 1F</span>
-                    </div>
-                </div>
-            </div>
+            @endforeach
         </div>
-        
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-gutter">
-            <div class="bg-surface-container-lowest p-4 rounded-3xl border border-border-subtle hover:border-primary transition-all cursor-pointer group">
-                <div class="aspect-square rounded-2xl bg-surface-container mb-4 flex items-center justify-center">
-                    <span class="material-symbols-outlined text-4xl text-primary group-hover:scale-110 transition-transform">photo_camera</span>
-                </div>
-                <h4 class="font-title-md text-title-md">DSLR Camera Kit</h4>
-                <p class="text-label-md text-on-surface-variant mb-2">Sony Alpha Series</p>
-                <div class="flex justify-between items-center">
-                    <span class="text-label-md font-bold text-success">5 In Stock</span>
-                    <span class="material-symbols-outlined text-on-surface-variant">add_circle</span>
-                </div>
-            </div>
-            <div class="bg-surface-container-lowest p-4 rounded-3xl border border-border-subtle hover:border-primary transition-all cursor-pointer group">
-                <div class="aspect-square rounded-2xl bg-surface-container mb-4 flex items-center justify-center">
-                    <span class="material-symbols-outlined text-4xl text-primary group-hover:scale-110 transition-transform">mic</span>
-                </div>
-                <h4 class="font-title-md text-title-md">Podcast Gear</h4>
-                <p class="text-label-md text-on-surface-variant mb-2">Shure SM7B + Rodecaster</p>
-                <div class="flex justify-between items-center">
-                    <span class="text-label-md font-bold text-success">2 In Stock</span>
-                    <span class="material-symbols-outlined text-on-surface-variant">add_circle</span>
-                </div>
-            </div>
-            <div class="bg-surface-container-lowest p-4 rounded-3xl border border-border-subtle hover:border-primary transition-all cursor-pointer group">
-                <div class="aspect-square rounded-2xl bg-surface-container mb-4 flex items-center justify-center">
-                    <span class="material-symbols-outlined text-4xl text-primary group-hover:scale-110 transition-transform">laptop_mac</span>
-                </div>
-                <h4 class="font-title-md text-title-md">MacBook Pro 16"</h4>
-                <p class="text-label-md text-on-surface-variant mb-2">M2 Max / 32GB RAM</p>
-                <div class="flex justify-between items-center">
-                    <span class="text-label-md font-bold text-danger">Out of Stock</span>
-                    <span class="material-symbols-outlined text-on-surface-variant">info</span>
-                </div>
-            </div>
-            <div class="bg-surface-container-lowest p-4 rounded-3xl border border-border-subtle hover:border-primary transition-all cursor-pointer group">
-                <div class="aspect-square rounded-2xl bg-surface-container mb-4 flex items-center justify-center">
-                    <span class="material-symbols-outlined text-4xl text-primary group-hover:scale-110 transition-transform">lightbulb</span>
-                </div>
-                <h4 class="font-title-md text-title-md">Studio Lighting</h4>
-                <p class="text-label-md text-on-surface-variant mb-2">Godox Softbox Kit</p>
-                <div class="flex justify-between items-center">
-                    <span class="text-label-md font-bold text-success">8 In Stock</span>
-                    <span class="material-symbols-outlined text-on-surface-variant">add_circle</span>
-                </div>
-            </div>
-        </div>
-    </section>
 
-    <section class="px-margin-desktop py-stack-lg text-center">
-        <div class="bg-inverse-surface text-inverse-on-surface rounded-[48px] p-stack-lg relative overflow-hidden">
-            <div class="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none grid-pattern"></div>
-            <div class="relative z-10 max-w-2xl mx-auto">
-                <h2 class="font-headline-lg text-headline-lg mb-4">Ready to start your project?</h2>
-                <p class="font-body-lg text-body-lg mb-8 opacity-80">Access world-class facilities and equipment at Petra Christian University. Your creative and academic journey starts here.</p>
-                <button class="bg-primary-fixed text-on-primary-fixed px-10 py-4 rounded-2xl font-title-md text-title-md hover:scale-105 transition-transform active:scale-95">
-                    Log In with Petra ID
-                </button>
-            </div>
-        </div>
-    </section>
+        <div id="paginationContainer" class="mt-8 md:mt-12 flex flex-wrap justify-center items-center gap-2 w-full"></div>
+    </main>
 
-    <button class="md:hidden fixed bottom-6 right-6 w-14 h-14 bg-primary text-on-primary rounded-full shadow-lg flex items-center justify-center z-[100] active:scale-90 transition-transform">
-        <span class="material-symbols-outlined">add</span>
-    </button>
-</body>
-
-
+    <footer class="bg-slate-900 text-gray-400 py-6 md:py-8 text-center text-xs md:text-sm border-t mt-auto">
+        <p>&copy; {{ date('Y') }} SIFAS - Universitas Kristen Petra. Kelompok 4.</p>
+    </footer>
 
     <script>
-        // Micro-interactions and atmospheric effects
-        document.addEventListener('mousemove', (e) => {
-            const blobs = document.querySelectorAll('.hero-blob');
-            const x = (window.innerWidth - e.pageX) / 20;
-            const y = (window.innerHeight - e.pageY) / 20;
-            blobs.forEach(blob => {
-                blob.style.transform = `translate(${x}px, ${y}px)`;
-            });
-        });
+        let currentPage = 1;
+        const itemsPerPage = 16;
+        let filteredCards = [];
 
-        // Simple scroll reveal
-        const observerOptions = { threshold: 0.1 };
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('opacity-100', 'translate-y-0');
-                    entry.target.classList.remove('opacity-0', 'translate-y-10');
+        function switchTab(kategori) {
+            document.getElementById('btnRuang').className = kategori === 'ruang' ? 'cursor-pointer pb-2 font-bold text-blue-600 border-b-2 border-blue-600' : 'cursor-pointer pb-2 font-bold text-gray-500 hover:text-gray-800 border-b-2 border-transparent';
+            document.getElementById('btnBarang').className = kategori === 'barang' ? 'cursor-pointer pb-2 font-bold text-blue-600 border-b-2 border-blue-600' : 'cursor-pointer pb-2 font-bold text-gray-500 hover:text-gray-800 border-b-2 border-transparent';
+            
+            document.getElementById('filterGedung').classList.toggle('hidden', kategori !== 'ruang');
+            document.getElementById('filterUPPK').classList.toggle('hidden', kategori !== 'barang');
+            
+            document.getElementById('searchInput').value = '';
+            document.getElementById('filterGedung').value = '';
+            document.getElementById('filterUPPK').value = '';
+            
+            filterItems();
+        }
+
+        function filterItems() {
+            const val = document.getElementById('searchInput').value.toLowerCase();
+            const activeTab = document.getElementById('btnRuang').className.includes('text-blue-600') ? 'ruang' : 'barang';
+            const filterVal = (activeTab === 'ruang' ? document.getElementById('filterGedung').value : document.getElementById('filterUPPK').value).toLowerCase();
+
+            filteredCards = [];
+            document.querySelectorAll('.fasilitas-card').forEach(card => {
+                const matchTab = card.getAttribute('data-kategori') === activeTab;
+                const matchSearch = card.getAttribute('data-nama').includes(val);
+                const matchFilter = filterVal === '' || card.getAttribute('data-filter').includes(filterVal);
+                
+                if (matchTab && matchSearch && matchFilter) {
+                    filteredCards.push(card);
+                } else {
+                    card.style.display = 'none'; 
                 }
             });
-        }, observerOptions);
 
-        document.querySelectorAll('section').forEach(section => {
-            section.classList.add('transition-all', 'duration-700', 'opacity-0', 'translate-y-10');
-            observer.observe(section);
-        });
+            currentPage = 1; 
+            renderPagination();
+        }
+
+        function renderPagination() {
+            const totalPages = Math.ceil(filteredCards.length / itemsPerPage);
+            const startIndex = (currentPage - 1) * itemsPerPage;
+            const endIndex = startIndex + itemsPerPage;
+
+            filteredCards.forEach((card, index) => {
+                if (index >= startIndex && index < endIndex) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+
+            const pagContainer = document.getElementById('paginationContainer');
+            pagContainer.innerHTML = '';
+
+            if (totalPages > 0) {
+                const btnPrev = document.createElement('button');
+                btnPrev.innerHTML = '&laquo;';
+                btnPrev.disabled = currentPage === 1;
+                btnPrev.className = `px-3 py-1 md:px-4 md:py-2 border rounded-lg transition-colors text-sm md:text-base ${currentPage === 1 ? 'bg-gray-50 text-gray-300 cursor-not-allowed' : 'bg-white text-blue-600 hover:bg-blue-50'}`;
+                btnPrev.onclick = () => { if(currentPage > 1) { currentPage--; renderPagination(); window.scrollTo(0, document.getElementById('fasilitasContainer').offsetTop - 100); } };
+                pagContainer.appendChild(btnPrev);
+
+                for (let i = 1; i <= totalPages; i++) {
+                    const btn = document.createElement('button');
+                    btn.innerText = i;
+                    btn.className = `px-3 py-1 md:px-4 md:py-2 border rounded-lg transition-colors text-sm md:text-base ${currentPage === i ? 'bg-blue-600 text-white font-bold' : 'bg-white text-blue-600 hover:bg-blue-50'}`;
+                    btn.onclick = () => { currentPage = i; renderPagination(); window.scrollTo(0, document.getElementById('fasilitasContainer').offsetTop - 100); };
+                    pagContainer.appendChild(btn);
+                }
+
+                const btnNext = document.createElement('button');
+                btnNext.innerHTML = '&raquo;';
+                btnNext.disabled = currentPage === totalPages;
+                btnNext.className = `px-3 py-1 md:px-4 md:py-2 border rounded-lg transition-colors text-sm md:text-base ${currentPage === totalPages ? 'bg-gray-50 text-gray-300 cursor-not-allowed' : 'bg-white text-blue-600 hover:bg-blue-50'}`;
+                btnNext.onclick = () => { if(currentPage < totalPages) { currentPage++; renderPagination(); window.scrollTo(0, document.getElementById('fasilitasContainer').offsetTop - 100); } };
+                pagContainer.appendChild(btnNext);
+            }
+        }
+
+        document.getElementById('searchInput').addEventListener('input', filterItems);
+        document.getElementById('filterGedung').addEventListener('change', filterItems);
+        document.getElementById('filterUPPK').addEventListener('change', filterItems);
+
+        const hero = document.getElementById('hero-section');
+        hero.style.backgroundImage = `url('${hero.dataset.bg}')`;
+        
+        switchTab('ruang'); 
     </script>
-
+</body>
 </html>

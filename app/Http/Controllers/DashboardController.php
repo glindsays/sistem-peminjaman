@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\PeminjamanRuang;
 use App\Models\PeminjamanBarang;
+use App\Models\Ruang;
+use App\Models\Barang;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
@@ -145,19 +148,17 @@ class DashboardController extends Controller
 
     public function admin()
     {
+        // Statistik untuk 4 Card
         $pendingRuang = PeminjamanRuang::where('status_izin', 'Pending')->count();
-        $approvedRuang = PeminjamanRuang::where('status_izin', 'Approved')->count();
-        $rejectedRuang = PeminjamanRuang::where('status_izin', 'Rejected')->count();
-
         $pendingBarang = PeminjamanBarang::where('status_izin', 'Pending')->count();
-        $approvedBarang = PeminjamanBarang::where('status_izin', 'Approved')->count();
-        $rejectedBarang = PeminjamanBarang::where('status_izin', 'Rejected')->count();
-
         $totalPending = $pendingRuang + $pendingBarang;
-        $totalApproved = $approvedRuang + $approvedBarang;
-        $totalRejected = $rejectedRuang + $rejectedBarang;
-        $totalPengajuan = $totalPending + $totalApproved + $totalRejected;
 
+        // Tambahan untuk Card sesuai proposal
+        $totalRuangan = Ruang::count();
+        $totalBarang = Barang::count();
+        $totalUser = User::count();
+
+        // Data untuk Tabel Antrean (logika lamamu)
         $antreanRuang = PeminjamanRuang::with(['user', 'ruang'])
             ->orderBy('created_at', 'desc')
             ->get()
@@ -184,7 +185,13 @@ class DashboardController extends Controller
             })
             ->take(5);
 
-        return view('admin.dashboard', compact('totalPengajuan','totalPending','totalApproved','totalRejected','antreanMasuk'));
+        return view('admin.dashboard', compact(
+            'totalPending', 
+            'totalRuangan', 
+            'totalBarang', 
+            'totalUser', 
+            'antreanMasuk'
+        ));
     }
 
     public function riwayatAdmin(Request $request)

@@ -9,9 +9,9 @@ use App\Http\Controllers\RuangController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('landing');
-})->name('landing');
+use App\Http\Controllers\LandingController; // Tambahkan ini di deretan "use" paling atas
+
+Route::get('/', [LandingController::class, 'index'])->name('landing');
 
 Route::get('/auth/google', [AuthController::class, 'redirectToGoogle'])->name('login.google');
 Route::get('/auth/google/callback', [AuthController::class, 'handleGoogleCallback']);
@@ -37,7 +37,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/dashboard', [DashboardController::class, 'mahasiswa'])->name('dashboard');
         Route::get('/riwayat', [DashboardController::class, 'riwayatMahasiswa'])->name('riwayatMahasiswa');
 
-        Route::get('/katalog-ruangan', [RuangController::class, 'katalogMahasiswa'])->name('ruang.index');
+        Route::get('/katalog-ruangan', [RuangController::class, 'index'])->name('ruang.index');
         Route::get('/pinjam-ruang', [PeminjamanRuangController::class, 'create'])->name('peminjaman.create');
         Route::post('/pinjam-ruang', [PeminjamanRuangController::class, 'store'])->name('peminjaman.store');
 
