@@ -66,18 +66,15 @@ class AuthController extends Controller
     public function handleGoogleCallback()
     {
         try {
-            // Kode kembali jadi standar bawaan Socialite, dijamin anti-error!
             $googleUser = Socialite::driver('google')->user();
             $email = $googleUser->getEmail();
 
-            // Validasi domain email Petra
             if (!Str::endsWith($email, ['@petra.ac.id', '@john.petra.ac.id'])) {
                 return redirect()->route('login')->withErrors([
                     'email' => 'Akses ditolak! Anda wajib login menggunakan Email Resmi Universitas Kristen Petra.'
                 ]);
             }
 
-            // Tentukan Role berdasarkan Email
             $roleName = 'mahasiswa'; 
             
             if ($email === 'baa@petra.ac.id') {
@@ -91,7 +88,6 @@ class AuthController extends Controller
             $role = Role::where('nama_role', $roleName)->first();
             $roleId = $role ? $role->id : 2; 
 
-            // Auto-register jika user belum ada di DB
             $user = User::firstOrCreate(
                 ['email' => $email],
                 [
@@ -102,10 +98,8 @@ class AuthController extends Controller
                 ]
             );
 
-            // Loginkan user ke session Laravel
             Auth::login($user);
 
-            // Redirect ke dashboard masing-masing role
             if ($roleName === 'admin') {
                 return redirect()->route('admin.dashboard');
             } elseif ($roleName === 'dosen') {

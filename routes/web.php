@@ -34,6 +34,8 @@ Route::middleware('auth')->group(function () {
     });
 
     Route::middleware('role:mahasiswa')->prefix('mahasiswa')->name('mahasiswa.')->group(function () {
+        Route::get('/ajax/campus/calendar', [App\Http\Controllers\Api\JadwalApiController::class, 'checkCalendar']);
+        
         Route::get('/dashboard', [DashboardController::class, 'mahasiswa'])->name('dashboard');
         Route::get('/riwayat', [DashboardController::class, 'riwayatMahasiswa'])->name('riwayatMahasiswa');
 

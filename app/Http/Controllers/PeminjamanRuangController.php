@@ -7,6 +7,7 @@ use App\Models\Ruang;
 use App\Models\HariLibur;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
 
 class PeminjamanRuangController extends Controller
 {
@@ -43,10 +44,26 @@ class PeminjamanRuangController extends Controller
             'waktu_selesai'      => 'required|date_format:H:i|after:waktu_mulai',
         ]);
 
-        // Cek Hari Libur
-        if (HariLibur::where('tanggal', $request->tgl_peminjaman)->exists()) {
-            return back()->withInput()->withErrors(['tgl_peminjaman' => "Tanggal tersebut adalah hari libur."]);
-        }
+        // $apiUrl = url('/api/v1/campus/calendar');
+    
+        // try {
+        //     $response = Http::withToken(env('INTERNAL_API_TOKEN'))
+        //         ->get($apiUrl, [
+        //             'tanggal' => $request->tgl_peminjaman
+        //         ]);
+                
+        //     if ($response->successful()) {
+        //         $apiData = $response->json();
+                
+        //         if (isset($apiData['bisa_pinjam_fasilitas']) && $apiData['bisa_pinjam_fasilitas'] === false) {
+        //             return back()->withInput()->withErrors([
+        //                 'tgl_peminjaman' => $apiData['keterangan']
+        //             ]);
+        //         }
+        //     }
+        // } catch (\Exception $e) {
+        //     return back()->withInput()->withErrors(['tgl_peminjaman' => 'Gagal terhubung ke API Kalender Kampus.']);
+        // }
 
         // Cek Status Ruangan (hanya boleh pinjam jika status Tersedia)
         $ruang = Ruang::findOrFail($request->ruang_id);
