@@ -31,7 +31,7 @@ class DashboardController extends Controller
 
         $riwayatRuang = PeminjamanRuang::where('user_id', $userId)
             ->with('ruang')
-            ->orderBy('tgl_peminjaman', 'desc')
+            ->latest()
             ->take(5)
             ->get()
             ->map(function ($item) {
@@ -42,7 +42,7 @@ class DashboardController extends Controller
 
         $riwayatBarang = PeminjamanBarang::where('user_id', $userId)
             ->with('barang')
-            ->orderBy('tgl_peminjaman', 'desc')
+            ->latest()
             ->take(5)
             ->get()
             ->map(function ($item) {
@@ -52,7 +52,7 @@ class DashboardController extends Controller
             });
 
         $riwayatGabungan = $riwayatRuang->concat($riwayatBarang)
-            ->sortByDesc('tgl_peminjaman')
+            ->sortByDesc('created_at')
             ->take(5);
 
         return view('mahasiswa.dashboard', compact(

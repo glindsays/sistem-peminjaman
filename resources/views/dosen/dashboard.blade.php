@@ -56,7 +56,6 @@
         <div class="p-gutter border-b border-border-subtle flex justify-between items-center bg-surface-muted">
             <div>
                 <h3 class="text-title-lg font-bold text-on-surface">Antrean Validasi Peminjaman</h3>
-                <p class="text-label-md text-outline mt-0.5">Pengajuan berstatus 'Pending' otomatis diprioritaskan tampil di atas.</p>
             </div>
             <a href="{{ route('dosen.riwayat') }}" class="text-sm bg-surface-container hover:bg-surface-container-high text-primary font-semibold px-4 py-2 rounded-xl transition-colors flex items-center gap-1">
                 <span>Lihat Semua</span>
@@ -74,7 +73,8 @@
                         <th class="p-4">Fasilitas</th>
                         <th class="p-4">Acara & Penyelenggara</th>
                         <th class="p-4">Waktu Sesi</th>
-                        <th class="p-4 text-center">Status / Aksi</th>
+                        <th class="p-4 text-center">Status</th>
+                        <th class="p-4 text-center">Aksi</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y border-border-subtle text-body-md text-on-surface">
@@ -117,20 +117,49 @@
 
                             <td class="p-4 text-center">
                                 @if($antrean->status_izin == 'Pending')
-                                    <a href="#" class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold bg-warning text-white rounded-xl shadow-sm hover:brightness-105 active:scale-95 transition-all">
-                                        <span class="material-symbols-outlined text-[14px] animate-pulse">rate_review</span>
-                                        <span>Proses Izin</span>
-                                    </a>
+                                    <span class="inline-block px-2.5 py-1 text-xs font-bold bg-amber-50 text-warning rounded-full border border-amber-200">Pending</span>
+                                @elseif($antrean->status_izin == 'Disetujui')
+                                    <span class="inline-block px-2.5 py-1 text-xs font-bold bg-emerald-50 text-success rounded-full border border-emerald-200">Disetujui</span>
                                 @else
-                                    <span class="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-bold rounded-full border {{ $antrean->status_izin == 'Disetujui' ? 'bg-emerald-50 text-success border-emerald-200' : 'bg-rose-50 text-danger border-rose-200' }}">
-                                        {{ $antrean->status_izin }}
-                                    </span>
+                                    <span class="inline-block px-2.5 py-1 text-xs font-bold bg-rose-50 text-danger rounded-full border border-rose-200">Ditolak</span>
+                                @endif
+                            </td>
+
+                            <td class="p-4 text-center">
+                                @if($antrean->status_izin == 'Pending')
+                                    <div class="flex items-center justify-center gap-2">
+                                        @if($antrean->tipe == 'Ruangan')
+                                            <form action="{{ route('dosen.peminjaman.updateStatus', $antrean->id) }}" method="POST">
+                                                @csrf @method('PATCH')
+                                                <input type="hidden" name="status_izin" value="Disetujui">
+                                                <button type="button" onclick="confirmAction(event, 'Approve', 'Setujui peminjaman ruangan ini?')" class="px-3 py-1.5 rounded-lg bg-emerald-50 text-success hover:bg-emerald-600 hover:text-white font-bold text-xs transition-colors shadow-sm">Approve</button>
+                                            </form>
+                                            <form action="{{ route('dosen.peminjaman.updateStatus', $antrean->id) }}" method="POST">
+                                                @csrf @method('PATCH')
+                                                <input type="hidden" name="status_izin" value="Ditolak">
+                                                <button type="button" onclick="confirmAction(event, 'Reject', 'Tolak peminjaman ruangan ini?')" class="px-3 py-1.5 rounded-lg bg-rose-50 text-danger hover:bg-rose-600 hover:text-white font-bold text-xs transition-colors shadow-sm">Reject</button>
+                                            </form>
+                                        @else
+                                            <form action="{{ route('dosen.peminjaman_barang.updateStatus', $antrean->id) }}" method="POST">
+                                                @csrf @method('PATCH')
+                                                <input type="hidden" name="status_izin" value="Disetujui">
+                                                <button type="button" onclick="confirmAction(event, 'Approve', 'Setujui peminjaman barang ini?')" class="px-3 py-1.5 rounded-lg bg-emerald-50 text-success hover:bg-emerald-600 hover:text-white font-bold text-xs transition-colors shadow-sm">Approve</button>
+                                            </form>
+                                            <form action="{{ route('dosen.peminjaman_barang.updateStatus', $antrean->id) }}" method="POST">
+                                                @csrf @method('PATCH')
+                                                <input type="hidden" name="status_izin" value="Ditolak">
+                                                <button type="button" onclick="confirmAction(event, 'Reject', 'Tolak peminjaman barang ini?')" class="px-3 py-1.5 rounded-lg bg-rose-50 text-danger hover:bg-rose-600 hover:text-white font-bold text-xs transition-colors shadow-sm">Reject</button>
+                                            </form>
+                                        @endif
+                                    </div>
+                                @else
+                                    <span class="text-xs text-outline font-medium italic bg-surface-container-low px-3 py-1.5 rounded-lg">Selesai Review</span>
                                 @endif
                             </td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="7" class="p-12 text-center text-on-surface-variant">
+                            <td colspan="8" class="p-12 text-center text-on-surface-variant">
                                 <span class="material-symbols-outlined text-[48px] text-outline block mb-2">done_all</span>
                                 <span class="text-body-lg font-medium block">Semua antrean bersih!</span>
                                 <span class="text-label-md text-outline mt-1 block">Saat ini tidak ada pengajuan baru dari mahasiswa yang perlu divalidasi.</span>
@@ -143,4 +172,22 @@
     </div>
 
 </div>
+
+<script>
+    function confirmAction(event, actionType, message) {
+        event.preventDefault();
+        const form = event.target.closest('form');
+        Swal.fire({
+            title: 'Konfirmasi',
+            text: message,
+            icon: actionType === 'Approve' ? 'question' : 'warning',
+            showCancelButton: true,
+            confirmButtonColor: actionType === 'Approve' ? '#10b981' : '#ef4444',
+            cancelButtonColor: '#6b7280',
+            confirmButtonText: 'Ya, Lanjutkan',
+            cancelButtonText: 'Batal',
+            customClass: { popup: 'rounded-2xl', confirmButton: 'rounded-xl font-bold', cancelButton: 'rounded-xl font-bold' }
+        }).then((result) => { if (result.isConfirmed) form.submit(); });
+    }
+</script>
 @endsection
