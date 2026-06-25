@@ -56,7 +56,6 @@
         <div class="p-gutter border-b border-border-subtle flex justify-between items-center bg-surface-muted">
             <div>
                 <h3 class="text-title-lg font-bold text-on-surface">Riwayat Pengajuan Terbaru</h3>
-                <p class="text-label-md text-outline mt-0.5">Menampilkan maksimal 5 aktivitas peminjaman terakhir Anda.</p>
             </div>
             <a href="{{ route('mahasiswa.riwayatMahasiswa') }}" class="text-sm bg-surface-container hover:bg-surface-container-high text-primary font-semibold px-4 py-2 rounded-xl transition-colors flex items-center gap-1">
                 <span>Lihat Semua</span>
