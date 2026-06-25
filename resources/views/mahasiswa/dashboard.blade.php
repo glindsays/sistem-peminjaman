@@ -56,7 +56,6 @@
         <div class="p-gutter border-b border-border-subtle flex justify-between items-center bg-surface-muted">
             <div>
                 <h3 class="text-title-lg font-bold text-on-surface">Riwayat Pengajuan Terbaru</h3>
-                <p class="text-label-md text-outline mt-0.5">Menampilkan maksimal 5 aktivitas peminjaman terakhir Anda.</p>
             </div>
             <a href="{{ route('mahasiswa.riwayatMahasiswa') }}" class="text-sm bg-surface-container hover:bg-surface-container-high text-primary font-semibold px-4 py-2 rounded-xl transition-colors flex items-center gap-1">
                 <span>Lihat Semua</span>
@@ -96,15 +95,15 @@
                                         <span class="w-1.5 h-1.5 rounded-full bg-warning animate-pulse"></span>
                                         Pending
                                     </span>
-                                @elseif($riwayat->status_izin == 'Approved')
+                                @elseif($riwayat->status_izin == 'Disetujui')
                                     <span class="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-bold bg-emerald-50 text-success rounded-full border border-emerald-200">
                                         <span class="w-1.5 h-1.5 rounded-full bg-success"></span>
-                                        Approved
+                                        Disetujui
                                     </span>
                                 @else
                                     <span class="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-bold bg-rose-50 text-danger rounded-full border border-rose-200">
                                         <span class="w-1.5 h-1.5 rounded-full bg-danger"></span>
-                                        Rejected
+                                        Ditolak
                                     </span>
                                 @endif
                             </td>

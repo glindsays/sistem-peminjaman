@@ -91,6 +91,12 @@
         @endforelse
     </div>
 
+    @if($barang->hasPages())
+    <div class="flex justify-center">
+        {{ $barang->links() }}
+    </div>
+    @endif
+
 </div>
 
 <script>

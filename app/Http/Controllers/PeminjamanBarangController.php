@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\PeminjamanBarang;
 use App\Models\Barang;
+use App\Models\HariLibur;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -11,7 +12,7 @@ class PeminjamanBarangController extends Controller
 {
     public function index()
     {
-        $pengajuan = PeminjamanBarang::with(['user', 'barang'])->latest()->get();
+        $pengajuan = PeminjamanBarang::with(['user', 'barang'])->latest()->paginate(10)->withQueryString();
         return view('dosen.peminjaman_barang.index', compact('pengajuan'));
     }
 
@@ -36,9 +37,14 @@ class PeminjamanBarangController extends Controller
         $request->validate([
             'barang_id' => 'required|exists:barang,id',
             'jumlah_barang' => 'required|integer|min:1',
-            'tgl_peminjaman' => 'required|date',
+            'tgl_peminjaman' => 'required|date|after_or_equal:today',
             'tgl_pengembalian' => 'required|date|after_or_equal:tgl_peminjaman',
         ]);
+
+        // Cek Hari Libur
+        if (HariLibur::where('tanggal', $request->tgl_peminjaman)->exists()) {
+            return back()->withInput()->withErrors(['tgl_peminjaman' => 'Tanggal tersebut adalah hari libur.']);
+        }
 
         $barang = Barang::findOrFail($request->barang_id);
 

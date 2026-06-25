@@ -8,11 +8,25 @@ use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $users = User::with('role')->get();
-        
-        return view('admin.user.index', compact('users'));
+        $query = User::with('role');
+
+        if ($request->filled('search')) {
+            $query->where(function ($q) use ($request) {
+                $q->where('name', 'like', '%' . $request->search . '%')
+                  ->orWhere('email', 'like', '%' . $request->search . '%');
+            });
+        }
+
+        if ($request->filled('role')) {
+            $query->whereHas('role', fn($q) => $q->where('nama_role', $request->role));
+        }
+
+        $users = $query->paginate(10)->withQueryString();
+        $daftarRole = Role::all();
+
+        return view('admin.user.index', compact('users', 'daftarRole'));
     }
 
     public function edit(User $user)

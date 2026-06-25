@@ -26,10 +26,11 @@ class RuangController extends Controller
             $query->where('status', $request->status);
         }
 
-        $ruang = $query->get();
+        $perPage = Auth::user()->role_id == 1 ? 10 : 16;
+        $ruang = $query->paginate($perPage)->withQueryString();
 
         // Jika user adalah admin, arahkan ke view admin
-        if (Auth::user()->role_id == 1) { // Sesuaikan jika role_id admin bukan 1
+        if (Auth::user()->role_id == 1) {
             return view('admin.ruang.index', compact('ruang'));
         }
 

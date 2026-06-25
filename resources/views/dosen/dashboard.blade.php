@@ -56,7 +56,6 @@
         <div class="p-gutter border-b border-border-subtle flex justify-between items-center bg-surface-muted">
             <div>
                 <h3 class="text-title-lg font-bold text-on-surface">Antrean Validasi Peminjaman</h3>
-                <p class="text-label-md text-outline mt-0.5">Pengajuan berstatus 'Pending' otomatis diprioritaskan tampil di atas.</p>
             </div>
             <a href="{{ route('dosen.riwayat') }}" class="text-sm bg-surface-container hover:bg-surface-container-high text-primary font-semibold px-4 py-2 rounded-xl transition-colors flex items-center gap-1">
                 <span>Lihat Semua</span>
@@ -74,7 +73,7 @@
                         <th class="p-4">Fasilitas</th>
                         <th class="p-4">Acara & Penyelenggara</th>
                         <th class="p-4">Waktu Sesi</th>
-                        <th class="p-4 text-center">Status / Aksi</th>
+                        <th class="p-4 text-center">Status</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y border-border-subtle text-body-md text-on-surface">
@@ -117,14 +116,11 @@
 
                             <td class="p-4 text-center">
                                 @if($antrean->status_izin == 'Pending')
-                                    <a href="#" class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold bg-warning text-white rounded-xl shadow-sm hover:brightness-105 active:scale-95 transition-all">
-                                        <span class="material-symbols-outlined text-[14px] animate-pulse">rate_review</span>
-                                        <span>Proses Izin</span>
-                                    </a>
+                                    <span class="inline-block px-2.5 py-1 text-xs font-bold bg-amber-50 text-warning rounded-full border border-amber-200">Pending</span>
+                                @elseif($antrean->status_izin == 'Disetujui')
+                                    <span class="inline-block px-2.5 py-1 text-xs font-bold bg-emerald-50 text-success rounded-full border border-emerald-200">Disetujui</span>
                                 @else
-                                    <span class="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-bold rounded-full border {{ $antrean->status_izin == 'Approved' ? 'bg-emerald-50 text-success border-emerald-200' : 'bg-rose-50 text-danger border-rose-200' }}">
-                                        {{ $antrean->status_izin }}
-                                    </span>
+                                    <span class="inline-block px-2.5 py-1 text-xs font-bold bg-rose-50 text-danger rounded-full border border-rose-200">Ditolak</span>
                                 @endif
                             </td>
                         </tr>
@@ -143,4 +139,5 @@
     </div>
 
 </div>
+
 @endsection

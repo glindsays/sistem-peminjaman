@@ -35,7 +35,7 @@
 
         <div class="mb-8 border-b border-gray-200 pb-4">
             <div class="flex gap-6 mb-6">
-                <button onclick="switchTab('ruang')" id="btnRuang" class="cursor-pointer pb-2 font-bold text-blue-600 border-b-2 border-blue-600">Ruangan</button>
+                <button onclick="switchTab('ruang')" id="btnRuang" class="cursor-pointer pb-2 font-bold text-slate-900 border-b-2 border-slate-900">Ruangan</button>
                 <button onclick="switchTab('barang')" id="btnBarang" class="cursor-pointer pb-2 font-bold text-gray-500 hover:text-gray-800 border-b-2 border-transparent">Barang</button>
             </div>
             <div class="flex flex-col md:flex-row gap-3 w-full">
@@ -55,7 +55,7 @@
             </div>
         </div>
 
-        <div id="fasilitasContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 min-h-[400px] items-start w-full">
+        <div id="fasilitasContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 min-h-[400px] items-stretch w-full">
             @foreach($fasilitas as $item)
             <div class="fasilitas-card bg-white border border-gray-200 rounded-2xl p-4 md:p-5 shadow-sm hover:shadow-md transition-all flex-col hidden w-full overflow-hidden" 
                  data-nama="{{ strtolower($item->nama) }}" 
@@ -69,7 +69,7 @@
                     <span class="{{ strtolower($item->status) == 'tersedia' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700' }} text-[10px] md:text-xs px-2 py-1 md:px-3 rounded-full font-bold capitalize whitespace-nowrap">{{ $item->status }}</span>
                 </div>
                 
-                <h3 class="font-bold text-base md:text-lg mb-1 text-slate-900 break-words">{{ $item->nama }}</h3>
+                <h3 class="font-bold text-base md:text-lg mb-1 text-slate-900 line-clamp-2">{{ $item->nama }}</h3>
                 <p class="text-xs md:text-sm text-gray-500 mb-4 md:mb-6 font-medium truncate">{{ $item->kategori == 'ruang' ? ($item->lokasi ?? 'Lokasi tidak tersedia') : ($item->uppk ?? 'UPPK Umum') }}</p>
                 
                 <div class="border-t border-gray-100 pt-3 mt-auto">
@@ -77,6 +77,12 @@
                 </div>
             </div>
             @endforeach
+
+            <div id="emptyState" class="hidden col-span-full py-16 text-center text-gray-500">
+                <span class="material-symbols-outlined text-[48px] text-gray-300 block mb-2">search_off</span>
+                <span class="font-bold text-lg block text-slate-700">Fasilitas Tidak Ditemukan</span>
+                <span class="text-sm mt-1 block">Coba ubah kata kunci pencarian atau filter yang aktif.</span>
+            </div>
         </div>
 
         <div id="paginationContainer" class="mt-8 md:mt-12 flex flex-wrap justify-center items-center gap-2 w-full"></div>
@@ -92,8 +98,8 @@
         let filteredCards = [];
 
         function switchTab(kategori) {
-            document.getElementById('btnRuang').className = kategori === 'ruang' ? 'cursor-pointer pb-2 font-bold text-blue-600 border-b-2 border-blue-600' : 'cursor-pointer pb-2 font-bold text-gray-500 hover:text-gray-800 border-b-2 border-transparent';
-            document.getElementById('btnBarang').className = kategori === 'barang' ? 'cursor-pointer pb-2 font-bold text-blue-600 border-b-2 border-blue-600' : 'cursor-pointer pb-2 font-bold text-gray-500 hover:text-gray-800 border-b-2 border-transparent';
+            document.getElementById('btnRuang').className = kategori === 'ruang' ? 'cursor-pointer pb-2 font-bold text-slate-900 border-b-2 border-slate-900' : 'cursor-pointer pb-2 font-bold text-gray-500 hover:text-gray-800 border-b-2 border-transparent';
+            document.getElementById('btnBarang').className = kategori === 'barang' ? 'cursor-pointer pb-2 font-bold text-slate-900 border-b-2 border-slate-900' : 'cursor-pointer pb-2 font-bold text-gray-500 hover:text-gray-800 border-b-2 border-transparent';
             
             document.getElementById('filterGedung').classList.toggle('hidden', kategori !== 'ruang');
             document.getElementById('filterUPPK').classList.toggle('hidden', kategori !== 'barang');
@@ -107,7 +113,7 @@
 
         function filterItems() {
             const val = document.getElementById('searchInput').value.toLowerCase();
-            const activeTab = document.getElementById('btnRuang').className.includes('text-blue-600') ? 'ruang' : 'barang';
+            const activeTab = document.getElementById('btnRuang').className.includes('text-slate-900') ? 'ruang' : 'barang';
             const filterVal = (activeTab === 'ruang' ? document.getElementById('filterGedung').value : document.getElementById('filterUPPK').value).toLowerCase();
 
             filteredCards = [];
@@ -140,6 +146,9 @@
                 }
             });
 
+            const emptyState = document.getElementById('emptyState');
+            emptyState.classList.toggle('hidden', filteredCards.length > 0);
+
             const pagContainer = document.getElementById('paginationContainer');
             pagContainer.innerHTML = '';
 
@@ -147,14 +156,17 @@
                 const btnPrev = document.createElement('button');
                 btnPrev.innerHTML = '&laquo;';
                 btnPrev.disabled = currentPage === 1;
-                btnPrev.className = `px-3 py-1 md:px-4 md:py-2 border rounded-lg transition-colors text-sm md:text-base ${currentPage === 1 ? 'bg-gray-50 text-gray-300 cursor-not-allowed' : 'bg-white text-blue-600 hover:bg-blue-50'}`;
+                btnPrev.className = `px-3 py-1.5 border rounded-lg transition-colors text-sm ${currentPage === 1 ? 'bg-gray-100 text-gray-300 cursor-not-allowed border-gray-200' : 'bg-white hover:bg-gray-50 border-gray-200'}`;
+                if (currentPage !== 1) btnPrev.style.color = '#004482';
                 btnPrev.onclick = () => { if(currentPage > 1) { currentPage--; renderPagination(); window.scrollTo(0, document.getElementById('fasilitasContainer').offsetTop - 100); } };
                 pagContainer.appendChild(btnPrev);
 
                 for (let i = 1; i <= totalPages; i++) {
                     const btn = document.createElement('button');
                     btn.innerText = i;
-                    btn.className = `px-3 py-1 md:px-4 md:py-2 border rounded-lg transition-colors text-sm md:text-base ${currentPage === i ? 'bg-blue-600 text-white font-bold' : 'bg-white text-blue-600 hover:bg-blue-50'}`;
+                    btn.className = `px-3 py-1.5 border rounded-lg transition-colors text-sm font-bold ${currentPage === i ? 'text-white' : 'bg-white hover:bg-gray-50 border-gray-200'}`;
+                    if (currentPage === i) { btn.style.backgroundColor = '#004482'; btn.style.borderColor = '#004482'; }
+                    else { btn.style.color = '#004482'; }
                     btn.onclick = () => { currentPage = i; renderPagination(); window.scrollTo(0, document.getElementById('fasilitasContainer').offsetTop - 100); };
                     pagContainer.appendChild(btn);
                 }
@@ -162,7 +174,8 @@
                 const btnNext = document.createElement('button');
                 btnNext.innerHTML = '&raquo;';
                 btnNext.disabled = currentPage === totalPages;
-                btnNext.className = `px-3 py-1 md:px-4 md:py-2 border rounded-lg transition-colors text-sm md:text-base ${currentPage === totalPages ? 'bg-gray-50 text-gray-300 cursor-not-allowed' : 'bg-white text-blue-600 hover:bg-blue-50'}`;
+                btnNext.className = `px-3 py-1.5 border rounded-lg transition-colors text-sm ${currentPage === totalPages ? 'bg-gray-100 text-gray-300 cursor-not-allowed border-gray-200' : 'bg-white hover:bg-gray-50 border-gray-200'}`;
+                if (currentPage !== totalPages) btnNext.style.color = '#004482';
                 btnNext.onclick = () => { if(currentPage < totalPages) { currentPage++; renderPagination(); window.scrollTo(0, document.getElementById('fasilitasContainer').offsetTop - 100); } };
                 pagContainer.appendChild(btnNext);
             }

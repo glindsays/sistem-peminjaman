@@ -17,12 +17,12 @@ class DashboardController extends Controller
         $userId = Auth::id();
 
         $pendingRuang = PeminjamanRuang::where('user_id', $userId)->where('status_izin', 'Pending')->count();
-        $approvedRuang = PeminjamanRuang::where('user_id', $userId)->where('status_izin', 'Approved')->count();
-        $rejectedRuang = PeminjamanRuang::where('user_id', $userId)->where('status_izin', 'Rejected')->count();
+        $approvedRuang = PeminjamanRuang::where('user_id', $userId)->where('status_izin', 'Disetujui')->count();
+        $rejectedRuang = PeminjamanRuang::where('user_id', $userId)->where('status_izin', 'Ditolak')->count();
 
         $pendingBarang = PeminjamanBarang::where('user_id', $userId)->where('status_izin', 'Pending')->count();
-        $approvedBarang = PeminjamanBarang::where('user_id', $userId)->where('status_izin', 'Approved')->count();
-        $rejectedBarang = PeminjamanBarang::where('user_id', $userId)->where('status_izin', 'Rejected')->count();
+        $approvedBarang = PeminjamanBarang::where('user_id', $userId)->where('status_izin', 'Disetujui')->count();
+        $rejectedBarang = PeminjamanBarang::where('user_id', $userId)->where('status_izin', 'Ditolak')->count();
 
         $totalPending = $pendingRuang + $pendingBarang;
         $totalApproved = $approvedRuang + $approvedBarang;
@@ -31,7 +31,7 @@ class DashboardController extends Controller
 
         $riwayatRuang = PeminjamanRuang::where('user_id', $userId)
             ->with('ruang')
-            ->orderBy('tgl_peminjaman', 'desc')
+            ->latest()
             ->take(5)
             ->get()
             ->map(function ($item) {
@@ -42,7 +42,7 @@ class DashboardController extends Controller
 
         $riwayatBarang = PeminjamanBarang::where('user_id', $userId)
             ->with('barang')
-            ->orderBy('tgl_peminjaman', 'desc')
+            ->latest()
             ->take(5)
             ->get()
             ->map(function ($item) {
@@ -52,7 +52,7 @@ class DashboardController extends Controller
             });
 
         $riwayatGabungan = $riwayatRuang->concat($riwayatBarang)
-            ->sortByDesc('tgl_peminjaman')
+            ->sortByDesc('created_at')
             ->take(5);
 
         return view('mahasiswa.dashboard', compact(
@@ -88,12 +88,12 @@ class DashboardController extends Controller
     public function dosen()
     {
         $pendingRuang = PeminjamanRuang::where('status_izin', 'Pending')->count();
-        $approvedRuang = PeminjamanRuang::where('status_izin', 'Approved')->count();
-        $rejectedRuang = PeminjamanRuang::where('status_izin', 'Rejected')->count();
+        $approvedRuang = PeminjamanRuang::where('status_izin', 'Disetujui')->count();
+        $rejectedRuang = PeminjamanRuang::where('status_izin', 'Ditolak')->count();
 
         $pendingBarang = PeminjamanBarang::where('status_izin', 'Pending')->count();
-        $approvedBarang = PeminjamanBarang::where('status_izin', 'Approved')->count();
-        $rejectedBarang = PeminjamanBarang::where('status_izin', 'Rejected')->count();
+        $approvedBarang = PeminjamanBarang::where('status_izin', 'Disetujui')->count();
+        $rejectedBarang = PeminjamanBarang::where('status_izin', 'Ditolak')->count();
 
         $totalPending = $pendingRuang + $pendingBarang;
         $totalApproved = $approvedRuang + $approvedBarang;

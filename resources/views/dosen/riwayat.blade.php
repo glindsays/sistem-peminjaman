@@ -29,7 +29,7 @@
     </div>
 
     <div class="bg-surface-container-lowest border border-border-subtle rounded-xl shadow-soft overflow-hidden">
-        
+
         @if($tabAktif === 'ruang')
         <div class="overflow-x-auto">
             <table class="w-full text-left border-collapse">
@@ -41,7 +41,7 @@
                         <th class="p-4">Nama Acara / Ormawa</th>
                         <th class="p-4">Tanggal Pinjam</th>
                         <th class="p-4">Waktu Sesi</th>
-                        <th class="p-4 text-center">Status / Aksi</th>
+                        <th class="p-4 text-center">Status</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y border-border-subtle text-body-md text-on-surface">
@@ -71,14 +71,11 @@
                             </td>
                             <td class="p-4 text-center">
                                 @if($ruang->status_izin == 'Pending')
-                                    <a href="#" class="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-bold bg-warning text-white rounded-lg shadow-xs hover:brightness-105 transition-all">
-                                        <span class="material-symbols-outlined text-[14px]">rate_review</span>
-                                        <span>Proses</span>
-                                    </a>
+                                    <span class="inline-block px-2.5 py-1 text-xs font-bold bg-amber-50 text-warning rounded-full border border-amber-200">Pending</span>
+                                @elseif($ruang->status_izin == 'Disetujui')
+                                    <span class="inline-block px-2.5 py-1 text-xs font-bold bg-emerald-50 text-success rounded-full border border-emerald-200">Disetujui</span>
                                 @else
-                                    <span class="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-bold rounded-full border {{ $ruang->status_izin == 'Approved' ? 'bg-emerald-50 text-success border-emerald-200' : 'bg-rose-50 text-danger border-rose-200' }}">
-                                        {{ $ruang->status_izin }}
-                                    </span>
+                                    <span class="inline-block px-2.5 py-1 text-xs font-bold bg-rose-50 text-danger rounded-full border border-rose-200">Ditolak</span>
                                 @endif
                             </td>
                         </tr>
@@ -105,7 +102,7 @@
                         <th class="p-4 text-center">Jumlah</th>
                         <th class="p-4">Nama Acara / Ormawa</th>
                         <th class="p-4">Tanggal Pinjam</th>
-                        <th class="p-4 text-center">Status / Aksi</th>
+                        <th class="p-4 text-center">Status</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y border-border-subtle text-body-md text-on-surface">
@@ -133,14 +130,11 @@
                             </td>
                             <td class="p-4 text-center">
                                 @if($barang->status_izin == 'Pending')
-                                    <a href="#" class="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-bold bg-warning text-white rounded-lg shadow-xs hover:brightness-105 transition-all">
-                                        <span class="material-symbols-outlined text-[14px]">rate_review</span>
-                                        <span>Proses</span>
-                                    </a>
+                                    <span class="inline-block px-2.5 py-1 text-xs font-bold bg-amber-50 text-warning rounded-full border border-amber-200">Pending</span>
+                                @elseif($barang->status_izin == 'Disetujui')
+                                    <span class="inline-block px-2.5 py-1 text-xs font-bold bg-emerald-50 text-success rounded-full border border-emerald-200">Disetujui</span>
                                 @else
-                                    <span class="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-bold rounded-full border {{ $barang->status_izin == 'Approved' ? 'bg-emerald-50 text-success border-emerald-200' : 'bg-rose-50 text-danger border-rose-200' }}">
-                                        {{ $barang->status_izin }}
-                                    </span>
+                                    <span class="inline-block px-2.5 py-1 text-xs font-bold bg-rose-50 text-danger rounded-full border border-rose-200">Ditolak</span>
                                 @endif
                             </td>
                         </tr>
@@ -159,4 +153,7 @@
 
     </div>
 </div>
+
+<div id="app-data" data-success="{{ session('success') }}" data-error="{{ session('error') }}" class="hidden"></div>
+
 @endsection
