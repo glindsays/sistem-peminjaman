@@ -42,7 +42,6 @@
                         <th class="p-4">Tanggal Pinjam</th>
                         <th class="p-4">Waktu Sesi</th>
                         <th class="p-4 text-center">Status</th>
-                        <th class="p-4 text-center">Aksi</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y border-border-subtle text-body-md text-on-surface">
@@ -79,28 +78,10 @@
                                     <span class="inline-block px-2.5 py-1 text-xs font-bold bg-rose-50 text-danger rounded-full border border-rose-200">Ditolak</span>
                                 @endif
                             </td>
-                            <td class="p-4 text-center">
-                                @if($ruang->status_izin == 'Pending')
-                                    <div class="flex items-center justify-center gap-2">
-                                        <form action="{{ route('dosen.peminjaman.updateStatus', $ruang->id) }}" method="POST">
-                                            @csrf @method('PATCH')
-                                            <input type="hidden" name="status_izin" value="Disetujui">
-                                            <button type="button" onclick="confirmAction(event, 'Approve', 'Setujui peminjaman ruangan ini?')" class="px-3 py-1.5 rounded-lg bg-emerald-50 text-success hover:bg-emerald-600 hover:text-white font-bold text-xs transition-colors shadow-sm">Approve</button>
-                                        </form>
-                                        <form action="{{ route('dosen.peminjaman.updateStatus', $ruang->id) }}" method="POST">
-                                            @csrf @method('PATCH')
-                                            <input type="hidden" name="status_izin" value="Ditolak">
-                                            <button type="button" onclick="confirmAction(event, 'Reject', 'Tolak peminjaman ruangan ini?')" class="px-3 py-1.5 rounded-lg bg-rose-50 text-danger hover:bg-rose-600 hover:text-white font-bold text-xs transition-colors shadow-sm">Reject</button>
-                                        </form>
-                                    </div>
-                                @else
-                                    <span class="text-xs text-outline font-medium italic bg-surface-container-low px-3 py-1.5 rounded-lg">Selesai Review</span>
-                                @endif
-                            </td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="8" class="p-12 text-center text-on-surface-variant">Belum ada data pengajuan peminjaman ruangan.</td>
+                            <td colspan="7" class="p-12 text-center text-on-surface-variant">Belum ada data pengajuan peminjaman ruangan.</td>
                         </tr>
                     @endforelse
                 </tbody>
@@ -122,7 +103,6 @@
                         <th class="p-4">Nama Acara / Ormawa</th>
                         <th class="p-4">Tanggal Pinjam</th>
                         <th class="p-4 text-center">Status</th>
-                        <th class="p-4 text-center">Aksi</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y border-border-subtle text-body-md text-on-surface">
@@ -157,28 +137,10 @@
                                     <span class="inline-block px-2.5 py-1 text-xs font-bold bg-rose-50 text-danger rounded-full border border-rose-200">Ditolak</span>
                                 @endif
                             </td>
-                            <td class="p-4 text-center">
-                                @if($barang->status_izin == 'Pending')
-                                    <div class="flex items-center justify-center gap-2">
-                                        <form action="{{ route('dosen.peminjaman_barang.updateStatus', $barang->id) }}" method="POST">
-                                            @csrf @method('PATCH')
-                                            <input type="hidden" name="status_izin" value="Disetujui">
-                                            <button type="button" onclick="confirmAction(event, 'Approve', 'Setujui peminjaman barang ini?')" class="px-3 py-1.5 rounded-lg bg-emerald-50 text-success hover:bg-emerald-600 hover:text-white font-bold text-xs transition-colors shadow-sm">Approve</button>
-                                        </form>
-                                        <form action="{{ route('dosen.peminjaman_barang.updateStatus', $barang->id) }}" method="POST">
-                                            @csrf @method('PATCH')
-                                            <input type="hidden" name="status_izin" value="Ditolak">
-                                            <button type="button" onclick="confirmAction(event, 'Reject', 'Tolak peminjaman barang ini?')" class="px-3 py-1.5 rounded-lg bg-rose-50 text-danger hover:bg-rose-600 hover:text-white font-bold text-xs transition-colors shadow-sm">Reject</button>
-                                        </form>
-                                    </div>
-                                @else
-                                    <span class="text-xs text-outline font-medium italic bg-surface-container-low px-3 py-1.5 rounded-lg">Selesai Review</span>
-                                @endif
-                            </td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="8" class="p-12 text-center text-on-surface-variant">Belum ada data pengajuan peminjaman barang.</td>
+                            <td colspan="7" class="p-12 text-center text-on-surface-variant">Belum ada data pengajuan peminjaman barang.</td>
                         </tr>
                     @endforelse
                 </tbody>
@@ -194,30 +156,4 @@
 
 <div id="app-data" data-success="{{ session('success') }}" data-error="{{ session('error') }}" class="hidden"></div>
 
-<script>
-    const Toast = Swal.mixin({
-        toast: true, position: 'top-end', showConfirmButton: false, timer: 3000, timerProgressBar: true,
-        didOpen: (toast) => {
-            toast.addEventListener('mouseenter', Swal.stopTimer);
-            toast.addEventListener('mouseleave', Swal.resumeTimer);
-        }
-    });
-    const appData = document.getElementById('app-data');
-    if (appData.dataset.success) Toast.fire({ icon: 'success', title: appData.dataset.success });
-    if (appData.dataset.error) Toast.fire({ icon: 'error', title: appData.dataset.error });
-
-    function confirmAction(event, actionType, message) {
-        event.preventDefault();
-        const form = event.target.closest('form');
-        Swal.fire({
-            title: 'Konfirmasi', text: message,
-            icon: actionType === 'Approve' ? 'question' : 'warning',
-            showCancelButton: true,
-            confirmButtonColor: actionType === 'Approve' ? '#10b981' : '#ef4444',
-            cancelButtonColor: '#6b7280',
-            confirmButtonText: 'Ya, Lanjutkan', cancelButtonText: 'Batal',
-            customClass: { popup: 'rounded-2xl', confirmButton: 'rounded-xl font-bold', cancelButton: 'rounded-xl font-bold' }
-        }).then((result) => { if (result.isConfirmed) form.submit(); });
-    }
-</script>
 @endsection
