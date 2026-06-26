@@ -54,7 +54,7 @@
                     @if($barangTerpilih)
                         <div class="relative">
                             <select id="barang_id_select" disabled class="w-full px-4 py-3 bg-surface-container border border-border-subtle rounded-lg text-body-md text-primary font-bold opacity-80 cursor-not-allowed appearance-none">
-                                <option selected>{{ $barangTerpilih->nama_barang }} (Terkunci)</option>
+                                <option selected>{{ $barangTerpilih->nama_barang }} </option>
                             </select>
                             <span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-outline pointer-events-none">lock</span>
                         </div>
@@ -97,11 +97,16 @@
                         <input type="date" name="tgl_peminjaman" id="tgl_peminjaman" value="{{ old('tgl_peminjaman') }}" min="{{ date('Y-m-d') }}" class="w-full px-4 py-3 bg-surface-container-low border border-border-subtle rounded-lg text-body-md text-on-surface focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all" required>
                         @error('tgl_peminjaman') <p class="text-xs text-danger mt-1">{{ $message }}</p> @enderror
                     </div>
+                    
                     <div class="space-y-2">
                         <label for="tgl_pengembalian" class="text-label-md font-bold text-on-surface-variant block uppercase tracking-wider">Tanggal Target Pengembalian</label>
                         <input type="date" name="tgl_pengembalian" id="tgl_pengembalian" value="{{ old('tgl_pengembalian') }}" min="{{ date('Y-m-d') }}" class="w-full px-4 py-3 bg-surface-container-low border border-border-subtle rounded-lg text-body-md text-on-surface focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all" required>
                         @error('tgl_pengembalian') <p class="text-xs text-danger mt-1">{{ $message }}</p> @enderror
                     </div>
+                </div>
+
+                <div class="mt-2">
+                    <span id="error-tanggal" class="text-xs font-bold block"></span>
                 </div>
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -119,7 +124,7 @@
 
                 <div class="flex items-center justify-end gap-3 pt-4 border-t border-border-subtle">
                     <a href="{{ route('mahasiswa.barang.index') }}" class="px-5 py-3 text-body-md font-semibold text-outline hover:text-on-surface transition-colors">Batal</a>
-                    <button type="submit" class="bg-primary text-on-primary font-bold px-6 py-3 rounded-lg shadow-sm hover:brightness-110 active:scale-[0.97] transition-all flex items-center gap-2 cursor-pointer">
+                    <button type="submit" id="btn-submit" class="bg-primary text-on-primary font-bold px-6 py-3 rounded-lg shadow-sm hover:brightness-110 active:scale-[0.97] transition-all flex items-center gap-2 cursor-pointer">
                         <span class="material-symbols-outlined text-body-lg">send</span>
                         <span>Kirim Formulir</span>
                     </button>
@@ -130,4 +135,61 @@
 
     </div>
 </div>
+<script>
+const tglPinjamInput = document.getElementById('tgl_peminjaman');
+const tglKembaliInput = document.getElementById('tgl_pengembalian');
+const errorContainer = document.getElementById('error-tanggal'); 
+const btnSubmit = document.getElementById('btn-submit');
+
+function validasiKalenderAkademik() {
+    if (!errorContainer) return;
+
+    const tglPinjam = tglPinjamInput.value;
+    const tglKembali = tglKembaliInput.value;
+
+    if (!tglPinjam && !tglKembali) return;
+
+    errorContainer.textContent = 'Mengecek kalender akademik kampus...';
+    errorContainer.style.color = 'orange';
+
+    const cekPinjam = tglPinjam 
+        ? fetch(`/mahasiswa/ajax/campus/calendar?tanggal=${tglPinjam}`).then(r => r.json())
+        : Promise.resolve({ bisa_pinjam_fasilitas: true });
+
+    const cekKembali = tglKembali 
+        ? fetch(`/mahasiswa/ajax/campus/calendar?tanggal=${tglKembali}`).then(r => r.json())
+        : Promise.resolve({ bisa_pinjam_fasilitas: true });
+
+    Promise.all([cekPinjam, cekKembali])
+        .then(([resPinjam, resKembali]) => {
+            if (resPinjam.bisa_pinjam_fasilitas === false) {
+                errorContainer.textContent = `Tanggal Mulai Pinjam: ${resPinjam.keterangan}`;
+                errorContainer.style.color = '#EF4444'; 
+                setTombolSubmit(true); 
+            } else if (resKembali.bisa_pinjam_fasilitas === false) {
+                errorContainer.textContent = `Tanggal Pengembalian: ${resKembali.keterangan}`;
+                errorContainer.style.color = '#EF4444'; 
+                setTombolSubmit(true);
+            } else {
+                setTombolSubmit(false); 
+            }
+        })
+        .catch(error => {
+            console.error('API Error:', error);
+            errorContainer.textContent = '⚠️ Terjadi kesalahan pada validasi data API.';
+            errorContainer.style.color = '#EF4444'; 
+            setTombolSubmit(true);
+        });
+}
+
+function setTombolSubmit(isLocked) {
+    if (!btnSubmit) return;
+    btnSubmit.disabled = isLocked;
+    btnSubmit.style.opacity = isLocked ? '0.5' : '1';
+    btnSubmit.style.cursor = isLocked ? 'not-allowed' : 'pointer';
+}
+
+if (tglPinjamInput) tglPinjamInput.addEventListener('change', validasiKalenderAkademik);
+if (tglKembaliInput) tglKembaliInput.addEventListener('change', validasiKalenderAkademik);
+</script>
 @endsection
