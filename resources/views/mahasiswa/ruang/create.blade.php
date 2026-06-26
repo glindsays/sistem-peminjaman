@@ -95,10 +95,11 @@
                 </div>
 
                 <div class="space-y-2">
-                    <label for="tgl_peminjaman" class="text-label-md font-bold text-on-surface-variant block uppercase tracking-wider">Tanggal Pelaksanaan</label>
+                    <label for="tgl_peminjaman_input" class="text-label-md font-bold text-on-surface-variant block uppercase tracking-wider">Tanggal Pelaksanaan</label>
                     <div class="relative">
-                        <input type="date" name="tgl_peminjaman" id="tgl_peminjaman" value="{{ old('tgl_peminjaman') }}" min="{{ date('Y-m-d') }}" class="w-full px-4 py-3 bg-surface-container-low border border-border-subtle rounded-lg text-body-md text-on-surface focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all" required>
-                    </div>
+                        <input type="date" name="tgl_peminjaman" id="tgl_peminjaman_input" value="{{ old('tgl_peminjaman') }}" min="{{ date('Y-m-d') }}" class="w-full px-4 py-3 bg-surface-container-low border border-border-subtle rounded-lg text-body-md text-on-surface focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all" required>
+                    </div>                  
+                    <span id="error-tanggal" class="text-xs font-bold block mt-1"></span>                   
                     @error('tgl_peminjaman') <p class="text-xs text-danger mt-1">{{ $message }}</p> @enderror
                 </div>
 
@@ -117,7 +118,7 @@
 
                 <div class="flex items-center justify-end gap-3 pt-4 border-t border-border-subtle">
                     <a href="{{ route('mahasiswa.ruang.index') }}" class="px-5 py-3 text-body-md font-semibold text-outline hover:text-on-surface transition-colors">Batal</a>
-                    <button type="submit" class="bg-primary text-on-primary font-bold px-6 py-3 rounded-lg shadow-sm hover:brightness-110 active:scale-[0.97] transition-all flex items-center gap-2 cursor-pointer">
+                    <button type="submit" id="btn-submit" class="bg-primary text-on-primary font-bold px-6 py-3 rounded-lg shadow-sm hover:brightness-110 active:scale-[0.97] transition-all flex items-center gap-2 cursor-pointer">
                         <span class="material-symbols-outlined text-body-lg">send</span>
                         <span>Kirim Permohonan</span>
                     </button>
@@ -128,4 +129,52 @@
 
     </div>
 </div>
+<script>
+document.getElementById('tgl_peminjaman_input').addEventListener('change', function() {
+    const tanggal = this.value;
+    const errorContainer = document.getElementById('error-tanggal'); 
+    const btnSubmit = document.getElementById('btn-submit');
+
+    if (!tanggal) return;
+
+    errorContainer.textContent = 'Mengecek kalender akademik kampus..';
+    errorContainer.style.color = 'orange';
+
+    fetch(`/mahasiswa/ajax/campus/calendar?tanggal=${tanggal}`, {
+        headers: {
+            'Accept': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`Sistem API Terkunci Sanctum Token (Status: ${response.status})`);
+        }
+        return response.json();
+    })
+    .then(data => {
+        if (data.bisa_pinjam_fasilitas === false) {
+            errorContainer.textContent = `${data.keterangan}`;
+            errorContainer.style.color = '#EF4444'; 
+            btnSubmit.disabled = true;
+            btnSubmit.style.opacity = '0.5';
+            btnSubmit.style.cursor = 'not-allowed';
+        } else {
+            errorContainer.textContent = `✅ ${data.keterangan}`;
+            errorContainer.style.color = '#10B981'; 
+            btnSubmit.disabled = false;
+            btnSubmit.style.opacity = '1';
+            btnSubmit.style.cursor = 'pointer';
+        }
+    })
+    .catch(err => {
+        errorContainer.textContent = `Gagal Validasi: ${err.message}. Tombol kirim dikunci otomatis demi keamanan database.`;
+        errorContainer.style.color = '#EF4444';
+        btnSubmit.disabled = true;
+        btnSubmit.style.opacity = '0.5';
+        btnSubmit.style.cursor = 'not-allowed';
+        console.error('Detail Log Error:', err);
+    });
+});
+</script>
 @endsection

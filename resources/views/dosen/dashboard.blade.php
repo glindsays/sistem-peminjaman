@@ -5,7 +5,7 @@
     
     <div>
         <h1 class="text-headline-lg font-bold text-on-surface">Overview Dashboard Dosen</h1>
-        <p class="text-body-md text-on-surface-variant mt-1">Selamat datang, Koor / Dosen Pembina. Periksa dan berikan validasi persetujuan izin peminjaman di bawah ini.</p>
+        <p class="text-body-md text-on-surface-variant mt-1">Selamat datang, Dosen Pembina. Periksa dan berikan validasi persetujuan izin peminjaman di bawah ini.</p>
     </div>
 
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-gutter">
