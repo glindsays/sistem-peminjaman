@@ -73,7 +73,7 @@
                                         </form>
                                     </div>
                                 @else
-                                    <span class="text-xs text-outline font-medium italic bg-surface-container-low px-3 py-1.5 rounded-lg">Selesai Review</span>
+                                    <span class="block w-full rounded-lg border border-border-subtle bg-surface-container-low px-3 py-2 text-[11px] leading-5 text-outline italic whitespace-normal sm:text-xs sm:leading-normal">Selesai Review</span>
                                 @endif
                             </td>
                         </tr>
@@ -125,7 +125,7 @@
                             </form>
                         </div>
                     @else
-                        <span class="text-xs text-outline font-medium italic bg-surface-container-low px-3 py-1.5 rounded-lg block text-center">Selesai Review</span>
+                        <span class="block w-full rounded-lg border border-border-subtle bg-surface-container-low px-3 py-2 text-[11px] leading-5 text-outline italic whitespace-normal text-center sm:text-xs sm:leading-normal">Selesai Review</span>
                     @endif
                 </div>
             @empty

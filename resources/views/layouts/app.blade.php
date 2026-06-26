@@ -16,7 +16,7 @@
     @include('partials.navbar')
 
     <div class="pl-0 pt-16 md:pl-64 md:pt-0 min-h-screen flex flex-col transition-all duration-300">
-        <main class="flex-1 p-6 md:p-8">
+        <main class="flex-1 p-4 sm:p-6 md:p-8 max-w-full">
             @yield('content')
         </main>
     </div>

@@ -30,7 +30,7 @@
         </div>
     </section>
 
-    <main class="py-8 md:py-12 px-6 md:px-12 max-w-7xl mx-auto w-full flex-1">
+    <main class="py-8 md:py-12 px-4 sm:px-6 md:px-12 max-w-7xl mx-auto w-full flex-1">
         <h2 class="text-xl md:text-2xl font-bold text-slate-900 mb-6">Cek Ketersediaan Fasilitas</h2>
 
         <div class="mb-8 border-b border-gray-200 pb-4">
@@ -55,7 +55,7 @@
             </div>
         </div>
 
-        <div id="fasilitasContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 min-h-[400px] items-stretch w-full">
+        <div id="fasilitasContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 min-h-[320px] sm:min-h-[400px] items-stretch w-full">
             @foreach($fasilitas as $item)
             <div class="fasilitas-card bg-white border border-gray-200 rounded-2xl p-4 md:p-5 shadow-sm hover:shadow-md transition-all flex-col hidden w-full overflow-hidden" 
                  data-nama="{{ strtolower($item->nama) }}" 
@@ -73,7 +73,9 @@
                 <p class="text-xs md:text-sm text-gray-500 mb-4 md:mb-6 font-medium truncate">{{ $item->kategori == 'ruang' ? ($item->lokasi ?? 'Lokasi tidak tersedia') : ($item->uppk ?? 'UPPK Umum') }}</p>
                 
                 <div class="border-t border-gray-100 pt-3 mt-auto">
-                    <span class="text-xs md:text-sm font-semibold text-slate-700">Stok: <span class="font-bold">{{ $item->jumlah_kapasitas }}</span></span>
+                    <span class="text-xs md:text-sm font-semibold text-slate-700">
+                        {{ $item->kategori == 'ruang' ? 'Kapasitas' : 'Stok' }}: <span class="font-bold">{{ $item->jumlah_kapasitas }}</span>
+                    </span>
                 </div>
             </div>
             @endforeach

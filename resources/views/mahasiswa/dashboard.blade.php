@@ -78,7 +78,7 @@
         </div>
 
         <div class="overflow-x-auto">
-            <table class="w-full text-left border-collapse">
+            <table class="min-w-[720px] w-full text-left border-collapse">
                 <thead>
                     <tr class="border-b border-border-subtle text-label-md text-outline font-bold bg-surface-container-low uppercase tracking-wider">
                         <th class="p-4 w-16 text-center">No</th>
