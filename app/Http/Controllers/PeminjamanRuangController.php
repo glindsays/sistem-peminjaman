@@ -44,34 +44,11 @@ class PeminjamanRuangController extends Controller
             'waktu_selesai'      => 'required|date_format:H:i|after:waktu_mulai',
         ]);
 
-        // $apiUrl = url('/api/v1/campus/calendar');
-    
-        // try {
-        //     $response = Http::withToken(env('INTERNAL_API_TOKEN'))
-        //         ->get($apiUrl, [
-        //             'tanggal' => $request->tgl_peminjaman
-        //         ]);
-                
-        //     if ($response->successful()) {
-        //         $apiData = $response->json();
-                
-        //         if (isset($apiData['bisa_pinjam_fasilitas']) && $apiData['bisa_pinjam_fasilitas'] === false) {
-        //             return back()->withInput()->withErrors([
-        //                 'tgl_peminjaman' => $apiData['keterangan']
-        //             ]);
-        //         }
-        //     }
-        // } catch (\Exception $e) {
-        //     return back()->withInput()->withErrors(['tgl_peminjaman' => 'Gagal terhubung ke API Kalender Kampus.']);
-        // }
-
-        // Cek Status Ruangan (hanya boleh pinjam jika status Tersedia)
         $ruang = Ruang::findOrFail($request->ruang_id);
         if (strtolower($ruang->status) !== 'tersedia') {
             return back()->withErrors(['ruang_id' => 'Ruangan ini sedang dalam perbaikan dan tidak dapat dipinjam.']);
         }
 
-        // Cek Bentrok Jadwal
         $isBentrok = PeminjamanRuang::where('ruang_id', $request->ruang_id)
             ->where('tgl_peminjaman', $request->tgl_peminjaman)
             ->where('status_izin', '!=', 'Ditolak')

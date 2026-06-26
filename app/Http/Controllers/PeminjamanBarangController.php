@@ -42,27 +42,6 @@ class PeminjamanBarangController extends Controller
             'tgl_pengembalian' => 'required|date|after_or_equal:tgl_peminjaman',
         ]);
 
-        $apiUrl = url('/api/v1/campus/calendar');
-    
-        try {
-            $response = Http::withToken(env('INTERNAL_API_TOKEN'))
-                ->get($apiUrl, [
-                    'tanggal' => $request->tgl_peminjaman
-                ]);
-                
-            if ($response->successful()) {
-                $apiData = $response->json();
-                
-                if (isset($apiData['bisa_pinjam_fasilitas']) && $apiData['bisa_pinjam_fasilitas'] === false) {
-                    return back()->withInput()->withErrors([
-                        'tgl_peminjaman' => $apiData['keterangan']
-                    ]);
-                }
-            }
-        } catch (\Exception $e) {
-            return back()->withInput()->withErrors(['tgl_peminjaman' => 'Gagal terhubung ke API Kalender Kampus.']);
-        }
-
         $barang = Barang::findOrFail($request->barang_id);
 
         if (strtolower($barang->status) !== 'tersedia') {

@@ -63,7 +63,7 @@
                     @if($ruangTerpilih)
                         <div class="relative">
                             <select id="ruang_id_select" disabled class="w-full px-4 py-3 bg-surface-container border border-border-subtle rounded-lg text-body-md text-primary font-bold opacity-80 cursor-not-allowed appearance-none">
-                                <option selected>{{ $ruangTerpilih->nama_ruangan }} (Locked)</option>
+                                <option selected>{{ $ruangTerpilih->nama_ruangan }} </option>
                             </select>
                             <span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-outline pointer-events-none">lock</span>
                         </div>
