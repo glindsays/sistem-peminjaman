@@ -37,7 +37,7 @@ class PeminjamanRuangController extends Controller
     public function store(Request $request)
     {
         if (!Auth::user()->is_active) {
-            return back()->withErrors(['is_active' => 'Akun Anda sedang dinonaktifkan oleh Admin. Anda tidak dapat melakukan pengajuan peminjaman ruang.']);
+            return back()->withErrors(['is_active' => 'Akun Anda sedang dinonaktifkan oleh Admin. Anda tidak dapat melakukan pengajuan.']);
         }
 
         $request->validate([

@@ -105,9 +105,9 @@
                                     <a href="{{ route('admin.ruang.edit', $item->id) }}" class="inline-flex items-center gap-1 px-3 py-2 bg-surface-container hover:bg-surface-container-high text-primary rounded-xl text-xs font-semibold shadow-xs transition-all active:scale-95">
                                         <span class="material-symbols-outlined text-[16px]">edit_square</span> Edit
                                     </a>
-                                    <form action="{{ route('admin.ruang.destroy', $item->id) }}" method="POST" class="inline">
+                                    <form id="delete-form-{{ $item->id }}" action="{{ route('admin.ruang.destroy', $item->id) }}" method="POST" class="inline">
                                         @csrf @method('DELETE')
-                                        <button type="submit" onclick="return confirm('Apakah Anda yakin ingin menghapus ruangan ini?')" class="inline-flex items-center gap-1 px-3 py-2 bg-rose-50 hover:bg-error-container text-danger hover:text-on-error-container border border-rose-200 rounded-xl text-xs font-semibold shadow-xs transition-all active:scale-95 cursor-pointer">
+                                        <button type="button" onclick="openDeleteModal('delete-form-{{ $item->id }}', '{{ addslashes($item->nama_ruangan) }}')" class="inline-flex items-center gap-1 px-3 py-2 bg-rose-50 hover:bg-error-container text-danger hover:text-on-error-container border border-rose-200 rounded-xl text-xs font-semibold shadow-xs transition-all active:scale-95 cursor-pointer">
                                             <span class="material-symbols-outlined text-[16px]">delete</span> Hapus
                                         </button>
                                     </form>
@@ -154,9 +154,9 @@
                         <a href="{{ route('admin.ruang.edit', $item->id) }}" class="flex-1 inline-flex items-center justify-center gap-1 px-3 py-2 bg-surface-container hover:bg-surface-container-high text-primary rounded-xl text-xs font-semibold transition-all">
                             <span class="material-symbols-outlined text-[16px]">edit_square</span> Edit
                         </a>
-                        <form action="{{ route('admin.ruang.destroy', $item->id) }}" method="POST" class="flex-1">
+                        <form id="delete-form-mob-{{ $item->id }}" action="{{ route('admin.ruang.destroy', $item->id) }}" method="POST" class="flex-1">
                             @csrf @method('DELETE')
-                            <button type="submit" onclick="return confirm('Hapus ruangan ini?')" class="w-full inline-flex items-center justify-center gap-1 px-3 py-2 bg-rose-50 text-danger border border-rose-200 rounded-xl text-xs font-semibold transition-all cursor-pointer">
+                            <button type="button" onclick="openDeleteModal('delete-form-mob-{{ $item->id }}', '{{ addslashes($item->nama_ruangan) }}')" class="w-full inline-flex items-center justify-center gap-1 px-3 py-2 bg-rose-50 text-danger border border-rose-200 rounded-xl text-xs font-semibold transition-all cursor-pointer">
                                 <span class="material-symbols-outlined text-[16px]">delete</span> Hapus
                             </button>
                         </form>
@@ -179,6 +179,24 @@
     @endif
 </div>
 
+{{-- Delete Confirmation Modal --}}
+<div id="deleteModal" class="fixed inset-0 z-50 hidden items-center justify-center">
+    <div class="absolute inset-0 bg-black/50" onclick="closeDeleteModal()"></div>
+    <div class="relative bg-white rounded-2xl shadow-xl p-6 w-full max-w-sm mx-4">
+        <div class="flex flex-col items-center text-center gap-3">
+            <div class="w-12 h-12 rounded-full bg-rose-100 flex items-center justify-center">
+                <span class="material-symbols-outlined text-danger text-[28px]">delete_forever</span>
+            </div>
+            <h2 class="text-title-md font-bold text-on-surface">Konfirmasi Hapus</h2>
+            <p class="text-body-md text-on-surface-variant">Apakah Anda yakin ingin menghapus ruangan <span id="deleteItemName" class="font-bold text-on-surface"></span>? Tindakan ini tidak dapat dibatalkan.</p>
+        </div>
+        <div class="flex gap-3 mt-6">
+            <button type="button" onclick="closeDeleteModal()" class="flex-1 px-4 py-2.5 bg-surface-container hover:bg-surface-container-high text-on-surface-variant rounded-xl text-sm font-semibold transition-all cursor-pointer">Batal</button>
+            <button type="button" id="deleteConfirmBtn" class="flex-1 px-4 py-2.5 bg-danger hover:brightness-110 text-white rounded-xl text-sm font-semibold transition-all cursor-pointer">Ya, Hapus</button>
+        </div>
+    </div>
+</div>
+
 <script>
     let searchInput = document.querySelector('input[name="search"]');
     let timeout = null;
@@ -186,5 +204,19 @@
         clearTimeout(timeout);
         timeout = setTimeout(() => document.getElementById('filterForm').submit(), 600);
     });
+
+    function openDeleteModal(formId, itemName) {
+        document.getElementById('deleteItemName').textContent = itemName;
+        document.getElementById('deleteConfirmBtn').onclick = () => document.getElementById(formId).submit();
+        const modal = document.getElementById('deleteModal');
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+    }
+
+    function closeDeleteModal() {
+        const modal = document.getElementById('deleteModal');
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+    }
 </script>
 @endsection

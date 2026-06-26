@@ -109,12 +109,12 @@
                                         <span>Ubah Role</span>
                                     </a>
 
-                                    <form action="{{ route('admin.users.destroy', $user->id) }}" method="POST" class="inline">
+                                    <form id="deactivate-form-{{ $user->id }}" action="{{ route('admin.users.destroy', $user->id) }}" method="POST" class="inline">
                                         @csrf
                                         @method('DELETE')
                                         @if($user->is_active)
-                                            <button type="submit" 
-                                                    onclick="return confirm('Apakah Anda yakin ingin menonaktifkan akun {{ $user->name }}?')"
+                                            <button type="button"
+                                                    onclick="openDeactivateModal('deactivate-form-{{ $user->id }}', '{{ addslashes($user->name) }}')"
                                                     class="inline-flex items-center gap-1 px-3 py-2 bg-rose-50 hover:bg-error-container text-danger hover:text-on-error-container border border-rose-200 rounded-xl text-xs font-semibold shadow-xs transition-all active:scale-95 cursor-pointer">
                                                 <span class="material-symbols-outlined text-[16px]">block</span>
                                                 <span>Matikan</span>
@@ -151,6 +151,24 @@
     @endif
 </div>
 
+{{-- Deactivate Confirmation Modal --}}
+<div id="deactivateModal" class="fixed inset-0 z-50 hidden items-center justify-center">
+    <div class="absolute inset-0 bg-black/50" onclick="closeDeactivateModal()"></div>
+    <div class="relative bg-white rounded-2xl shadow-xl p-6 w-full max-w-sm mx-4">
+        <div class="flex flex-col items-center text-center gap-3">
+            <div class="w-12 h-12 rounded-full bg-rose-100 flex items-center justify-center">
+                <span class="material-symbols-outlined text-danger text-[28px]">block</span>
+            </div>
+            <h2 class="text-title-md font-bold text-on-surface">Nonaktifkan Akun</h2>
+            <p class="text-body-md text-on-surface-variant">Apakah Anda yakin ingin menonaktifkan akun <span id="deactivateUserName" class="font-bold text-on-surface"></span>? Pengguna tidak akan bisa masuk ke sistem.</p>
+        </div>
+        <div class="flex gap-3 mt-6">
+            <button type="button" onclick="closeDeactivateModal()" class="flex-1 px-4 py-2.5 bg-surface-container hover:bg-surface-container-high text-on-surface-variant rounded-xl text-sm font-semibold transition-all cursor-pointer">Batal</button>
+            <button type="button" id="deactivateConfirmBtn" class="flex-1 px-4 py-2.5 bg-danger hover:brightness-110 text-white rounded-xl text-sm font-semibold transition-all cursor-pointer">Ya, Nonaktifkan</button>
+        </div>
+    </div>
+</div>
+
 <script>
     let searchInput = document.querySelector('input[name="search"]');
     let timeout = null;
@@ -158,5 +176,19 @@
         clearTimeout(timeout);
         timeout = setTimeout(() => document.getElementById('filterForm').submit(), 600);
     });
+
+    function openDeactivateModal(formId, userName) {
+        document.getElementById('deactivateUserName').textContent = userName;
+        document.getElementById('deactivateConfirmBtn').onclick = () => document.getElementById(formId).submit();
+        const modal = document.getElementById('deactivateModal');
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+    }
+
+    function closeDeactivateModal() {
+        const modal = document.getElementById('deactivateModal');
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+    }
 </script>
 @endsection
