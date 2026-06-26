@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 
 class PeminjamanRuangController extends Controller
 {
+
     public function index()
     {
         $pengajuan = PeminjamanRuang::with(['user', 'ruang'])->latest()->paginate(10)->withQueryString();
@@ -34,6 +35,10 @@ class PeminjamanRuangController extends Controller
 
     public function store(Request $request)
     {
+        if (!Auth::user()->is_active) {
+            return back()->withErrors(['is_active' => 'Akun Anda sedang dinonaktifkan oleh Admin. Anda tidak dapat melakukan pengajuan peminjaman ruang.']);
+        }
+
         $request->validate([
             'ruang_id'           => 'required|exists:ruang,id',
             'nama_acara'         => 'required|string|max:255',

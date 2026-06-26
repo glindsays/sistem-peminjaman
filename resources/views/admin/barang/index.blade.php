@@ -177,6 +177,7 @@
     @endif
 </div>
 
+
 <script>
     let searchInput = document.querySelector('input[name="search"]');
     let timeout = null;
