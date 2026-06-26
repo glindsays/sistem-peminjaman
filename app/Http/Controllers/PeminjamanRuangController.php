@@ -42,10 +42,11 @@ class PeminjamanRuangController extends Controller
             'ruang_id'           => 'required|exists:ruang,id',
             'nama_acara'         => 'required|string|max:255',
             'nama_penyelenggara' => 'required|string|max:255',
-            'tgl_peminjaman'     => 'required|date|after_or_equal:today',
+            'tgl_peminjaman'     => 'required|date|after:today',
             'waktu_mulai'        => ['required', 'date_format:H:i', 'regex:/^((0[7-9]|1[0-9]|2[0-1]):(00|30)|22:00)$/'],
             'waktu_selesai'      => ['required', 'date_format:H:i', 'regex:/^((0[7-9]|1[0-9]|2[0-1]):(00|30)|22:00)$/', 'after:waktu_mulai'],
         ], [
+            'tgl_peminjaman.after' => 'Tanggal peminjaman minimal harus besok.',
             'waktu_mulai.regex' => 'Peminjaman hanya dapat dilakukan antara pukul 07.00 hingga 22.00 dengan kelipatan 30 menit.',
             'waktu_selesai.regex' => 'Peminjaman hanya dapat dilakukan antara pukul 07.00 hingga 22.00 dengan kelipatan 30 menit.',
             'waktu_mulai.date_format' => 'Format waktu mulai harus berupa jam:menit, misalnya 07:00 atau 07:30.',
@@ -80,17 +81,17 @@ class PeminjamanRuangController extends Controller
             return back()->withErrors(['ruang_id' => 'Ruangan ini sedang dalam perbaikan dan tidak dapat dipinjam.']);
         }
 
-        // Cek Bentrok Jadwal
+        // Cek bentrok jadwal hanya terhadap peminjaman yang sudah disetujui
         $isBentrok = PeminjamanRuang::where('ruang_id', $request->ruang_id)
             ->where('tgl_peminjaman', $request->tgl_peminjaman)
-            ->where('status_izin', '!=', 'Ditolak')
+            ->where('status_izin', 'Disetujui')
             ->where(function ($query) use ($request) {
                 $query->where('waktu_mulai', '<', $request->waktu_selesai)
                       ->where('waktu_selesai', '>', $request->waktu_mulai);
             })->exists();
 
         if ($isBentrok) {
-            return back()->withInput()->withErrors(['waktu_mulai' => 'Maaf, ruangan sudah dipesan pada jam tersebut.']);
+            return back()->withInput()->withErrors(['waktu_mulai' => 'Ruangan sudah dipesan pada waktu tersebut.']);
         }
 
         PeminjamanRuang::create([
@@ -118,6 +119,18 @@ class PeminjamanRuangController extends Controller
         $peminjaman->update([
             'status_izin' => $request->status_izin
         ]);
+
+        if ($request->status_izin === 'Disetujui') {
+            PeminjamanRuang::where('id', '!=', $peminjaman->id)
+                ->where('ruang_id', $peminjaman->ruang_id)
+                ->where('tgl_peminjaman', $peminjaman->tgl_peminjaman)
+                ->where('status_izin', 'Pending')
+                ->where(function ($query) use ($peminjaman) {
+                    $query->where('waktu_mulai', '<', $peminjaman->waktu_selesai)
+                          ->where('waktu_selesai', '>', $peminjaman->waktu_mulai);
+                })
+                ->update(['status_izin' => 'Ditolak']);
+        }
 
         return redirect()->route('dosen.peminjaman.index')->with('success', "Status pengajuan berhasil diubah menjadi: {$request->status_izin}!");
     }

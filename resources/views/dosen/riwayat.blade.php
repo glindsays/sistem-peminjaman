@@ -39,8 +39,8 @@
                         <th class="p-4">Pemohon</th>
                         <th class="p-4">Nama Ruangan</th>
                         <th class="p-4">Nama Acara / Ormawa</th>
-                        <th class="p-4">Tanggal Pinjam</th>
-                        <th class="p-4">Waktu Sesi</th>
+                        <th class="p-4">Waktu Peminjaman</th>
+                        <th class="p-4">Waktu Selesai</th>
                         <th class="p-4 text-center">Status</th>
                     </tr>
                 </thead>
@@ -63,11 +63,13 @@
                                     <span class="text-label-md text-outline mt-0.5">{{ $ruang->nama_penyelenggara }}</span>
                                 </div>
                             </td>
-                            <td class="p-4 text-on-surface-variant font-medium">
-                                {{ \Carbon\Carbon::parse($ruang->tgl_peminjaman)->format('d M Y') }}
+                            <td class="p-4 text-on-surface-variant font-medium whitespace-nowrap">
+                                <div>{{ \Carbon\Carbon::parse($ruang->tgl_peminjaman)->format('d M Y') }}</div>
+                                <div class="text-label-md text-outline font-normal mt-0.5">{{ substr($ruang->waktu_mulai, 0, 5) }}</div>
                             </td>
-                            <td class="p-4 text-outline font-medium">
-                                {{ substr($ruang->waktu_mulai, 0, 5) }} - {{ substr($ruang->waktu_selesai, 0, 5) }}
+                            <td class="p-4 text-on-surface-variant font-medium whitespace-nowrap">
+                                <div>{{ \Carbon\Carbon::parse($ruang->tgl_peminjaman)->format('d M Y') }}</div>
+                                <div class="text-label-md text-outline font-normal mt-0.5">{{ substr($ruang->waktu_selesai, 0, 5) }}</div>
                             </td>
                             <td class="p-4 text-center">
                                 @if($ruang->status_izin == 'Pending')
@@ -101,7 +103,8 @@
                         <th class="p-4">Nama Barang</th>
                         <th class="p-4 text-center">Jumlah</th>
                         <th class="p-4">Nama Acara / Ormawa</th>
-                        <th class="p-4">Tanggal Pinjam</th>
+                        <th class="p-4">Waktu Peminjaman</th>
+                        <th class="p-4">Waktu Pengembalian</th>
                         <th class="p-4 text-center">Status</th>
                     </tr>
                 </thead>
@@ -125,8 +128,13 @@
                                     <span class="text-label-md text-outline mt-0.5">{{ $barang->nama_penyelenggara }}</span>
                                 </div>
                             </td>
-                            <td class="p-4 text-on-surface-variant font-medium">
-                                {{ \Carbon\Carbon::parse($barang->tgl_peminjaman)->format('d M Y') }}
+                            <td class="p-4 text-on-surface-variant font-medium whitespace-nowrap">
+                                <div>{{ \Carbon\Carbon::parse($barang->tgl_peminjaman)->format('d M Y') }}</div>
+                                <div class="text-label-md text-outline font-normal mt-0.5">{{ substr($barang->waktu_mulai, 0, 5) }}</div>
+                            </td>
+                            <td class="p-4 text-on-surface-variant font-medium whitespace-nowrap">
+                                <div>{{ \Carbon\Carbon::parse($barang->tgl_pengembalian)->format('d M Y') }}</div>
+                                <div class="text-label-md text-outline font-normal mt-0.5">{{ substr($barang->waktu_selesai, 0, 5) }}</div>
                             </td>
                             <td class="p-4 text-center">
                                 @if($barang->status_izin == 'Pending')

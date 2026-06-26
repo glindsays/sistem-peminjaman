@@ -17,7 +17,8 @@
                         <th class="px-6 py-4 font-bold">Pemohon</th>
                         <th class="px-6 py-4 font-bold">Barang & Jumlah</th>
                         <th class="px-6 py-4 font-bold">Detail Acara</th>
-                        <th class="px-6 py-4 font-bold">Jadwal Pinjam</th>
+                        <th class="px-6 py-4 font-bold">Waktu Peminjaman</th>
+                        <th class="px-6 py-4 font-bold">Waktu Pengembalian</th>
                         <th class="px-6 py-4 font-bold">Status</th>
                         <th class="px-6 py-4 font-bold text-center">Aksi</th>
                     </tr>
@@ -39,7 +40,14 @@
                             </td>
                             <td class="px-6 py-4 align-top whitespace-nowrap">
                                 <div class="text-sm text-on-surface font-medium">
-                                    {{ \Carbon\Carbon::parse($p->tgl_peminjaman)->format('d M Y') }} <br> s/d <br> {{ \Carbon\Carbon::parse($p->tgl_pengembalian)->format('d M Y') }}
+                                    {{ \Carbon\Carbon::parse($p->tgl_peminjaman)->format('d M Y') }} <br>
+                                    {{ substr($p->waktu_mulai, 0, 5) }}
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 align-top whitespace-nowrap">
+                                <div class="text-sm text-on-surface font-medium">
+                                    {{ \Carbon\Carbon::parse($p->tgl_pengembalian)->format('d M Y') }} <br>
+                                    {{ substr($p->waktu_selesai, 0, 5) }}
                                 </div>
                             </td>
                             <td class="px-6 py-4 align-top">
@@ -79,7 +87,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="6" class="px-6 py-12 text-center text-on-surface-variant">
+                            <td colspan="7" class="px-6 py-12 text-center text-on-surface-variant">
                                 <span class="font-bold text-body-lg block">Belum Ada Pengajuan Masuk</span>
                                 <span class="block text-label-md text-outline mt-1">Data peminjaman inventaris barang akan muncul di sini.</span>
                             </td>
@@ -109,7 +117,8 @@
                     <div class="bg-surface-container-low rounded-xl p-3 space-y-1.5 text-body-md">
                         <div><span class="text-outline text-label-md uppercase tracking-wider">Barang</span><div class="font-bold text-on-surface">{{ $p->barang->nama_barang }}</div><div class="text-label-md font-bold text-primary">{{ $p->jumlah_barang }} Unit</div></div>
                         <div><span class="text-outline text-label-md uppercase tracking-wider">Acara</span><div class="font-semibold text-on-surface">{{ $p->nama_acara }}</div><div class="text-label-md text-outline">{{ $p->nama_penyelenggara }}</div></div>
-                        <div><span class="text-outline text-label-md uppercase tracking-wider">Jadwal</span><div class="font-semibold text-on-surface">{{ \Carbon\Carbon::parse($p->tgl_peminjaman)->format('d M Y') }} &ndash; {{ \Carbon\Carbon::parse($p->tgl_pengembalian)->format('d M Y') }}</div></div>
+                        <div><span class="text-outline text-label-md uppercase tracking-wider">Waktu Peminjaman</span><div class="font-semibold text-on-surface">{{ \Carbon\Carbon::parse($p->tgl_peminjaman)->format('d M Y') }} {{ substr($p->waktu_mulai, 0, 5) }}</div></div>
+                        <div><span class="text-outline text-label-md uppercase tracking-wider">Waktu Pengembalian</span><div class="font-semibold text-on-surface">{{ \Carbon\Carbon::parse($p->tgl_pengembalian)->format('d M Y') }} {{ substr($p->waktu_selesai, 0, 5) }}</div></div>
                     </div>
                     @if($p->status_izin == 'Pending')
                         <div class="flex gap-2">

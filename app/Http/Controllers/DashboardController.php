@@ -86,7 +86,7 @@ class DashboardController extends Controller
         return view('mahasiswa.riwayat', compact('riwayatRuang', 'riwayatBarang', 'tabAktif'));
     }
 
-    public function dosen()
+    public function dosen(Request $request)
     {
         $pendingRuang = PeminjamanRuang::where('status_izin', 'Pending')->count();
         $approvedRuang = PeminjamanRuang::where('status_izin', 'Disetujui')->count();
@@ -102,6 +102,7 @@ class DashboardController extends Controller
         $totalPengajuan = $totalPending + $totalApproved + $totalRejected;
 
         $antreanRuang = PeminjamanRuang::with(['user', 'ruang'])
+            ->orderByRaw("FIELD(status_izin, 'Pending', 'Disetujui', 'Ditolak')")
             ->orderBy('created_at', 'desc')
             ->get()
             ->map(function ($item) {
@@ -111,6 +112,7 @@ class DashboardController extends Controller
             });
 
         $antreanBarang = PeminjamanBarang::with(['user', 'barang'])
+            ->orderByRaw("FIELD(status_izin, 'Pending', 'Disetujui', 'Ditolak')")
             ->orderBy('created_at', 'desc')
             ->get()
             ->map(function ($item) {
@@ -119,14 +121,24 @@ class DashboardController extends Controller
                 return $item;
             });
 
-        $antreanMasuk = $antreanRuang->concat($antreanBarang)
+        $antreanMasukCollection = $antreanRuang->concat($antreanBarang)
             ->sort(function ($a, $b) {
                 if ($a->status_izin === 'Pending' && $b->status_izin !== 'Pending') return -1;
                 if ($a->status_izin !== 'Pending' && $b->status_izin === 'Pending') return 1;
                 return $b->created_at <=> $a->created_at;
             })
-            ->values()
-            ->take(5);
+            ->values();
+
+        $perPage = 10;
+        $currentPage = \request()->query('page', 1);
+        $currentItems = $antreanMasukCollection->forPage($currentPage, $perPage);
+        $antreanMasuk = new \Illuminate\Pagination\LengthAwarePaginator(
+            $currentItems,
+            $antreanMasukCollection->count(),
+            $perPage,
+            $currentPage,
+            ['path' => \Illuminate\Pagination\LengthAwarePaginator::resolveCurrentPath()]
+        );
 
         return view('dosen.dashboard', compact('totalPengajuan','totalPending','totalApproved','totalRejected','antreanMasuk'));
     }

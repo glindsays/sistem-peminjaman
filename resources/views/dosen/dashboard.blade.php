@@ -72,7 +72,8 @@
                         <th class="p-4">Kategori</th>
                         <th class="p-4">Fasilitas</th>
                         <th class="p-4">Acara & Penyelenggara</th>
-                        <th class="p-4">Waktu Sesi</th>
+                        <th class="p-4">Waktu Peminjaman</th>
+                        <th class="p-4">Waktu Selesai</th>
                         <th class="p-4 text-center">Status</th>
                     </tr>
                 </thead>
@@ -107,10 +108,16 @@
                                 </div>
                             </td>
 
-                            <td class="p-4 font-medium text-on-surface-variant">
+                            <td class="p-4 font-medium text-on-surface-variant whitespace-nowrap">
                                 <div>{{ \Carbon\Carbon::parse($antrean->tgl_peminjaman)->format('d M Y') }}</div>
                                 <div class="text-label-md text-outline font-normal mt-0.5">
-                                    {{ substr($antrean->waktu_mulai, 0, 5) }} - {{ substr($antrean->waktu_selesai, 0, 5) }}
+                                    {{ substr($antrean->waktu_mulai, 0, 5) }}
+                                </div>
+                            </td>
+                            <td class="p-4 font-medium text-on-surface-variant whitespace-nowrap">
+                                <div>{{ \Carbon\Carbon::parse($antrean->tipe === 'Ruangan' ? $antrean->tgl_peminjaman : $antrean->tgl_pengembalian)->format('d M Y') }}</div>
+                                <div class="text-label-md text-outline font-normal mt-0.5">
+                                    {{ substr($antrean->waktu_selesai, 0, 5) }}
                                 </div>
                             </td>
 

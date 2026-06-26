@@ -37,10 +37,12 @@ class BarangController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'nama_barang' => 'required|string|max:255',
+            'nama_barang' => 'required|string|max:255|unique:barang,nama_barang',
             'jumlah'      => 'required|integer|min:0',
             'status'      => 'required|string|max:50', //misal: 'Tersedia' atau 'Dipinjam'
             'uppk'        => 'required|string|max:255',
+        ], [
+            'nama_barang.unique' => 'Nama barang sudah digunakan oleh fasilitas lain.',
         ]);
 
         Barang::create($request->all());
@@ -59,10 +61,12 @@ class BarangController extends Controller
         $barang = $barang instanceof Barang ? $barang : Barang::findOrFail($barang);
 
         $request->validate([
-            'nama_barang' => 'required|string|max:255',
+            'nama_barang' => 'required|string|max:255|unique:barang,nama_barang,' . $barang->id,
             'jumlah'      => 'required|integer|min:0',
             'status'      => 'required|string|max:50',
             'uppk'        => 'required|string|max:255',
+        ], [
+            'nama_barang.unique' => 'Nama barang sudah digunakan oleh fasilitas lain.',
         ]);
 
         $barang->update($request->all());

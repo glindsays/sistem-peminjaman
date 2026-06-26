@@ -46,11 +46,13 @@ class RuangController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'nama_ruangan' => 'required|string|max:255',
+            'nama_ruangan' => 'required|string|max:255|unique:ruang,nama_ruangan',
             'kapasitas'    => 'required|integer|min:1',
             'lokasi'       => 'required|string|max:255',
             'status'       => 'required|string|max:50',
             'uppk'         => 'required|string|max:255',
+        ], [
+            'nama_ruangan.unique' => 'Nama ruangan sudah digunakan oleh fasilitas lain.',
         ]);
 
         Ruang::create($request->all());
@@ -66,11 +68,13 @@ class RuangController extends Controller
     public function update(Request $request, Ruang $ruang)
     {
         $request->validate([
-            'nama_ruangan' => 'required|string|max:255',
+            'nama_ruangan' => 'required|string|max:255|unique:ruang,nama_ruangan,' . $ruang->id,
             'kapasitas'    => 'required|integer|min:1',
             'lokasi'       => 'required|string|max:255',
             'status'       => 'required|string|max:50',
             'uppk'         => 'required|string|max:255',
+        ], [
+            'nama_ruangan.unique' => 'Nama ruangan sudah digunakan oleh fasilitas lain.',
         ]);
 
         $ruang->update($request->all());

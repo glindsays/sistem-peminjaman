@@ -41,11 +41,12 @@ class PeminjamanBarangController extends Controller
         $request->validate([
             'barang_id' => 'required|exists:barang,id',
             'jumlah_barang' => 'required|integer|min:1',
-            'tgl_peminjaman' => 'required|date|after_or_equal:today',
+            'tgl_peminjaman' => 'required|date|after:today',
             'tgl_pengembalian' => 'required|date|after_or_equal:tgl_peminjaman',
             'waktu_mulai' => ['required', 'date_format:H:i', 'regex:/^((0[7-9]|1[0-9]|2[0-1]):(00|30)|22:00)$/'],
             'waktu_selesai' => ['required', 'date_format:H:i', 'regex:/^((0[7-9]|1[0-9]|2[0-1]):(00|30)|22:00)$/'],
         ], [
+            'tgl_peminjaman.after' => 'Tanggal peminjaman minimal harus besok.',
             'waktu_mulai.regex' => 'Peminjaman hanya dapat dilakukan antara pukul 07.00 hingga 22.00 dengan kelipatan 30 menit.',
             'waktu_selesai.regex' => 'Peminjaman hanya dapat dilakukan antara pukul 07.00 hingga 22.00 dengan kelipatan 30 menit.',
             'waktu_mulai.date_format' => 'Format waktu mulai harus berupa jam:menit, misalnya 07:00 atau 07:30.',
