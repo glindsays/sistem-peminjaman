@@ -77,9 +77,9 @@
                     </tr>
                 </thead>
                 <tbody class="divide-y border-border-subtle text-body-md text-on-surface">
-                    @forelse($antreanMasuk as $index => $antrean)
+                    @forelse($antreanMasuk as $antrean)
                         <tr class="hover:bg-surface-container-low transition-colors">
-                            <td class="p-4 text-center text-outline font-medium">{{ $index + 1 }}</td>
+                            <td class="p-4 text-center text-outline font-medium">{{ $loop->iteration }}</td>
                             
                             <td class="p-4">
                                 <div class="flex flex-col">

@@ -91,9 +91,9 @@
                     </tr>
                 </thead>
                 <tbody class="divide-y border-border-subtle text-body-md text-on-surface">
-                    @forelse($riwayatGabungan as $index => $riwayat)
+                    @forelse($riwayatGabungan as $riwayat)
                         <tr class="hover:bg-surface-container-low transition-colors">
-                            <td class="p-4 text-center text-outline font-medium">{{ $index + 1 }}</td>
+                            <td class="p-4 text-center text-outline font-medium">{{ $loop->iteration }}</td>
                             <td class="p-4">
                                 <span class="px-2.5 py-1 text-xs font-semibold rounded-md {{ $riwayat->tipe == 'Ruangan' ? 'bg-primary-fixed text-primary' : 'bg-secondary-fixed text-secondary' }}">
                                     {{ $riwayat->tipe }}

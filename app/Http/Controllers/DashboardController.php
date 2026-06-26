@@ -53,6 +53,7 @@ class DashboardController extends Controller
 
         $riwayatGabungan = $riwayatRuang->concat($riwayatBarang)
             ->sortByDesc('created_at')
+            ->values()
             ->take(5);
 
         return view('mahasiswa.dashboard', compact(
@@ -124,6 +125,7 @@ class DashboardController extends Controller
                 if ($a->status_izin !== 'Pending' && $b->status_izin === 'Pending') return 1;
                 return $b->created_at <=> $a->created_at;
             })
+            ->values()
             ->take(5);
 
         return view('dosen.dashboard', compact('totalPengajuan','totalPending','totalApproved','totalRejected','antreanMasuk'));
@@ -183,6 +185,7 @@ class DashboardController extends Controller
                 if ($a->status_izin !== 'Pending' && $b->status_izin === 'Pending') return 1;
                 return $b->created_at <=> $a->created_at;
             })
+            ->values()
             ->take(5);
 
         return view('admin.dashboard', compact(
