@@ -35,8 +35,8 @@ class PeminjamanBarangController extends Controller
     }
     public function store(Request $request)
     {
-        if (!Auth::user()->is_active) {
-            return back()->withErrors(['is_active' => 'Akun Anda sedang dinonaktifkan oleh Admin. Anda tidak dapat melakukan pengajuan.']);
+        if (Auth::check() && !Auth::user()->is_active) {
+            return back()->withErrors(['is_active' => 'Akun Anda dinonaktifkan oleh Admin, Anda tidak dapat mengajukan peminjaman.']);
         }
         
         $request->validate([

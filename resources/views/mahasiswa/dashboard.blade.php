@@ -8,6 +8,20 @@
         <p class="text-body-md text-on-surface-variant mt-1">Selamat datang kembali! Pantau status pengajuan peminjaman fasilitas Anda di sini.</p>
     </div>
 
+    @auth
+        @if(!Auth::user()->is_active)
+            <div class="rounded-2xl border border-rose-200 bg-rose-50 p-4 text-sm text-rose-900">
+                <div class="flex items-center gap-3">
+                    <span class="material-symbols-outlined text-rose-700">warning</span>
+                    <div>
+                        <p class="font-semibold">Akun Dinonaktifkan</p>
+                        <p class="mt-1">Akun Anda saat ini dinonaktifkan oleh Admin. Anda tidak dapat melakukan peminjaman fasilitas.</p>
+                    </div>
+                </div>
+            </div>
+        @endif
+    @endauth
+
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-gutter">
         
         <div class="bg-surface-container-lowest border border-border-subtle p-5 rounded-xl shadow-soft flex items-center gap-4">

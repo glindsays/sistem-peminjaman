@@ -46,7 +46,21 @@
         </div>
 
         <div class="lg:col-span-2 bg-surface-container-lowest border border-border-subtle rounded-2xl p-6 shadow-soft">
-            <form action="{{ route('mahasiswa.barang.store') }}" method="POST" class="space-y-5">
+            @auth
+                @if(!Auth::user()->is_active)
+                    <div class="mb-6 rounded-2xl border border-rose-200 bg-rose-50 p-4 text-sm text-rose-900">
+                        <div class="flex items-center gap-3">
+                            <span class="material-symbols-outlined text-rose-700">warning</span>
+                            <div>
+                                <p class="font-semibold">Akun Dinonaktifkan</p>
+                                <p class="mt-1">Akun Anda saat ini dinonaktifkan oleh Admin. Anda tidak dapat melakukan peminjaman fasilitas.</p>
+                            </div>
+                        </div>
+                    </div>
+                @endif
+            @endauth
+
+            <form action="{{ route('mahasiswa.barang.store') }}" method="POST" class="space-y-5" id="form-peminjaman-barang">
                 @csrf
 
                 <div class="space-y-2">
@@ -124,7 +138,7 @@
 
                 <div class="flex items-center justify-end gap-3 pt-4 border-t border-border-subtle">
                     <a href="{{ route('mahasiswa.barang.index') }}" class="px-5 py-3 text-body-md font-semibold text-outline hover:text-on-surface transition-colors">Batal</a>
-                    <button type="submit" id="btn-submit" class="bg-primary text-on-primary font-bold px-6 py-3 rounded-lg shadow-sm hover:brightness-110 active:scale-[0.97] transition-all flex items-center gap-2 cursor-pointer">
+                    <button type="submit" id="btn-submit" @auth @if(!Auth::user()->is_active) disabled @endif @endauth class="bg-primary text-on-primary font-bold px-6 py-3 rounded-lg shadow-sm hover:brightness-110 active:scale-[0.97] transition-all flex items-center gap-2 cursor-pointer @auth @if(!Auth::user()->is_active) opacity-50 cursor-not-allowed hover:brightness-100 @endif @endauth">
                         <span class="material-symbols-outlined text-body-lg">send</span>
                         <span>Kirim Formulir</span>
                     </button>
