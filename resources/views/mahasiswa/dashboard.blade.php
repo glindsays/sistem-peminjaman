@@ -9,7 +9,7 @@
     </div>
 
     @auth
-        @if(!Auth::user()->is_active)
+        @if(!auth()->user()->is_active)
             <div class="rounded-2xl border border-rose-200 bg-rose-50 p-4 text-sm text-rose-900">
                 <div class="flex items-center gap-3">
                     <span class="material-symbols-outlined text-rose-700">warning</span>
@@ -86,6 +86,7 @@
                         <th class="p-4">Nama Fasilitas</th>
                         <th class="p-4">Nama Acara</th>
                         <th class="p-4">Tanggal Pinjam</th>
+                        <th class="p-4">Jam Peminjaman</th>
                         <th class="p-4 text-center">Status</th>
                     </tr>
                 </thead>
@@ -102,6 +103,9 @@
                             <td class="p-4 font-medium truncate max-w-[200px]">{{ $riwayat->nama_acara }}</td>
                             <td class="p-4 text-on-surface-variant font-medium">
                                 {{ \Carbon\Carbon::parse($riwayat->tgl_peminjaman)->format('d M Y') }}
+                            </td>
+                            <td class="p-4 text-on-surface-variant font-medium whitespace-nowrap">
+                                {{ isset($riwayat->waktu_mulai) ? str_replace(':', '.', substr($riwayat->waktu_mulai, 0, 5)) : '-' }} - {{ isset($riwayat->waktu_selesai) ? str_replace(':', '.', substr($riwayat->waktu_selesai, 0, 5)) : '-' }}
                             </td>
                             <td class="p-4 text-center">
                                 @if($riwayat->status_izin == 'Pending')
@@ -124,7 +128,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="6" class="p-12 text-center text-on-surface-variant">
+                            <td colspan="7" class="p-12 text-center text-on-surface-variant">
                                 <span class="material-symbols-outlined text-[48px] text-outline block mb-2">folder_open</span>
                                 <span class="text-body-lg font-medium block">Belum ada riwayat pengajuan</span>
                                 <span class="text-label-md text-outline mt-1 block">Silakan lakukan peminjaman melalui menu katalog di sidebar.</span>

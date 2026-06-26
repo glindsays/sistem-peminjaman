@@ -124,14 +124,33 @@
                 </div>
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    @php
+                        $pilihanWaktu = [];
+                        for ($jam = 7; $jam <= 22; $jam++) {
+                            $pilihanWaktu[] = sprintf('%02d:00', $jam);
+                            if ($jam < 22) {
+                                $pilihanWaktu[] = sprintf('%02d:30', $jam);
+                            }
+                        }
+                    @endphp
                     <div class="space-y-2">
                         <label for="waktu_mulai" class="text-label-md font-bold text-on-surface-variant block uppercase tracking-wider">Waktu Ambil (Jam)</label>
-                        <input type="time" name="waktu_mulai" id="waktu_mulai" value="{{ old('waktu_mulai') }}" class="w-full px-4 py-3 bg-surface-container-low border border-border-subtle rounded-lg text-body-md text-on-surface focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all" required>
+                        <select name="waktu_mulai" id="waktu_mulai" class="w-full px-4 py-3 bg-surface-container-low border border-border-subtle rounded-lg text-body-md text-on-surface focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all" required>
+                            <option value="">-- Pilih Waktu Ambil --</option>
+                            @foreach($pilihanWaktu as $waktu)
+                                <option value="{{ $waktu }}" {{ old('waktu_mulai') === $waktu ? 'selected' : '' }}>{{ str_replace(':', '.', $waktu) }}</option>
+                            @endforeach
+                        </select>
                         @error('waktu_mulai') <p class="text-xs text-danger mt-1">{{ $message }}</p> @enderror
                     </div>
                     <div class="space-y-2">
                         <label for="waktu_selesai" class="text-label-md font-bold text-on-surface-variant block uppercase tracking-wider">Waktu Pengembalian (Jam)</label>
-                        <input type="time" name="waktu_selesai" id="waktu_selesai" value="{{ old('waktu_selesai') }}" class="w-full px-4 py-3 bg-surface-container-low border border-border-subtle rounded-lg text-body-md text-on-surface focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all" required>
+                        <select name="waktu_selesai" id="waktu_selesai" class="w-full px-4 py-3 bg-surface-container-low border border-border-subtle rounded-lg text-body-md text-on-surface focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all" required>
+                            <option value="">-- Pilih Waktu Pengembalian --</option>
+                            @foreach($pilihanWaktu as $waktu)
+                                <option value="{{ $waktu }}" {{ old('waktu_selesai') === $waktu ? 'selected' : '' }}>{{ str_replace(':', '.', $waktu) }}</option>
+                            @endforeach
+                        </select>
                         @error('waktu_selesai') <p class="text-xs text-danger mt-1">{{ $message }}</p> @enderror
                     </div>
                 </div>
@@ -152,8 +171,28 @@
 <script>
 const tglPinjamInput = document.getElementById('tgl_peminjaman');
 const tglKembaliInput = document.getElementById('tgl_pengembalian');
-const errorContainer = document.getElementById('error-tanggal'); 
+const errorContainer = document.getElementById('error-tanggal');
 const btnSubmit = document.getElementById('btn-submit');
+const kalenderApiUrl = "{{ url('mahasiswa/ajax/campus/calendar') }}";
+
+function fetchKalender(tanggal) {
+    return fetch(`${kalenderApiUrl}?tanggal=${tanggal}`, {
+        method: 'GET',
+        headers: {
+            'Accept': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest',
+        },
+        credentials: 'same-origin'
+    })
+    .then(response => {
+        if (!response.ok) {
+            return response.text().then(text => {
+                throw new Error(text || `HTTP ${response.status}`);
+            });
+        }
+        return response.json();
+    });
+}
 
 function validasiKalenderAkademik() {
     if (!errorContainer) return;
@@ -167,31 +206,34 @@ function validasiKalenderAkademik() {
     errorContainer.style.color = 'orange';
 
     const cekPinjam = tglPinjam 
-        ? fetch(`/mahasiswa/ajax/campus/calendar?tanggal=${tglPinjam}`).then(r => r.json())
+        ? fetchKalender(tglPinjam)
         : Promise.resolve({ bisa_pinjam_fasilitas: true });
 
     const cekKembali = tglKembali 
-        ? fetch(`/mahasiswa/ajax/campus/calendar?tanggal=${tglKembali}`).then(r => r.json())
+        ? fetchKalender(tglKembali)
         : Promise.resolve({ bisa_pinjam_fasilitas: true });
 
     Promise.all([cekPinjam, cekKembali])
         .then(([resPinjam, resKembali]) => {
             if (resPinjam.bisa_pinjam_fasilitas === false) {
                 errorContainer.textContent = `Tanggal Mulai Pinjam: ${resPinjam.keterangan}`;
-                errorContainer.style.color = '#EF4444'; 
-                setTombolSubmit(true); 
+                errorContainer.style.color = '#EF4444';
+                setTombolSubmit(true);
             } else if (resKembali.bisa_pinjam_fasilitas === false) {
                 errorContainer.textContent = `Tanggal Pengembalian: ${resKembali.keterangan}`;
-                errorContainer.style.color = '#EF4444'; 
+                errorContainer.style.color = '#EF4444';
                 setTombolSubmit(true);
             } else {
-                setTombolSubmit(false); 
+                const amanMessage = tglKembali ? resKembali.keterangan : resPinjam.keterangan;
+                errorContainer.textContent = `✅ ${amanMessage}`;
+                errorContainer.style.color = '#10B981';
+                setTombolSubmit(false);
             }
         })
         .catch(error => {
             console.error('API Error:', error);
-            errorContainer.textContent = '⚠️ Terjadi kesalahan pada validasi data API.';
-            errorContainer.style.color = '#EF4444'; 
+            errorContainer.textContent = '⚠️ Gagal terhubung ke API kalender kampus. Silakan coba lagi.';
+            errorContainer.style.color = '#EF4444';
             setTombolSubmit(true);
         });
 }

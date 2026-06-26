@@ -7,7 +7,6 @@ use App\Models\Barang;
 use App\Models\HariLibur;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Http;
 
 class PeminjamanBarangController extends Controller
 {
@@ -44,27 +43,28 @@ class PeminjamanBarangController extends Controller
             'jumlah_barang' => 'required|integer|min:1',
             'tgl_peminjaman' => 'required|date|after_or_equal:today',
             'tgl_pengembalian' => 'required|date|after_or_equal:tgl_peminjaman',
+            'waktu_mulai' => ['required', 'date_format:H:i', 'regex:/^((0[7-9]|1[0-9]|2[0-1]):(00|30)|22:00)$/'],
+            'waktu_selesai' => ['required', 'date_format:H:i', 'regex:/^((0[7-9]|1[0-9]|2[0-1]):(00|30)|22:00)$/'],
+        ], [
+            'waktu_mulai.regex' => 'Peminjaman hanya dapat dilakukan antara pukul 07.00 hingga 22.00 dengan kelipatan 30 menit.',
+            'waktu_selesai.regex' => 'Peminjaman hanya dapat dilakukan antara pukul 07.00 hingga 22.00 dengan kelipatan 30 menit.',
+            'waktu_mulai.date_format' => 'Format waktu mulai harus berupa jam:menit, misalnya 07:00 atau 07:30.',
+            'waktu_selesai.date_format' => 'Format waktu pengembalian harus berupa jam:menit, misalnya 07:00 atau 07:30.',
         ]);
 
-        $apiUrl = url('/api/v1/campus/calendar');
-    
-        try {
-            $response = Http::withToken(env('INTERNAL_API_TOKEN'))
-                ->get($apiUrl, [
-                    'tanggal' => $request->tgl_peminjaman
+        $libur = HariLibur::where('tanggal', $request->tgl_peminjaman)->first();
+        if ($libur) {
+            return back()->withInput()->withErrors([
+                'tgl_peminjaman' => "Hari Libur: {$libur->keterangan}"
+            ]);
+        }
+
+        if ($request->tgl_peminjaman === $request->tgl_pengembalian) {
+            if (strtotime($request->waktu_mulai) >= strtotime($request->waktu_selesai)) {
+                return back()->withInput()->withErrors([
+                    'waktu_selesai' => 'Waktu selesai harus setelah waktu pengambilan pada tanggal yang sama.'
                 ]);
-                
-            if ($response->successful()) {
-                $apiData = $response->json();
-                
-                if (isset($apiData['bisa_pinjam_fasilitas']) && $apiData['bisa_pinjam_fasilitas'] === false) {
-                    return back()->withInput()->withErrors([
-                        'tgl_peminjaman' => $apiData['keterangan']
-                    ]);
-                }
             }
-        } catch (\Exception $e) {
-            return back()->withInput()->withErrors(['tgl_peminjaman' => 'Gagal terhubung ke API Kalender Kampus.']);
         }
 
         $barang = Barang::findOrFail($request->barang_id);

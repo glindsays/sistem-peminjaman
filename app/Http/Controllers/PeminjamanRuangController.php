@@ -4,10 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\PeminjamanRuang;
 use App\Models\Ruang;
-use App\Models\HariLibur;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Http;
 
 class PeminjamanRuangController extends Controller
 {
@@ -37,7 +35,7 @@ class PeminjamanRuangController extends Controller
     public function store(Request $request)
     {
         if (Auth::check() && !Auth::user()->is_active) {
-            return back()->withErrors(['is_active' => 'Akun Anda dinonaktifkan oleh Admin, Anda tidak dapat mengajukan peminjaman.']);
+            return back()->withErrors(['is_active' => 'Akun Anda sedang dinonaktifkan oleh Admin, Anda tidak dapat mengajukan peminjaman ruang.']);
         }
 
         $request->validate([
@@ -45,8 +43,14 @@ class PeminjamanRuangController extends Controller
             'nama_acara'         => 'required|string|max:255',
             'nama_penyelenggara' => 'required|string|max:255',
             'tgl_peminjaman'     => 'required|date|after_or_equal:today',
-            'waktu_mulai'        => 'required|date_format:H:i',
-            'waktu_selesai'      => 'required|date_format:H:i|after:waktu_mulai',
+            'waktu_mulai'        => ['required', 'date_format:H:i', 'regex:/^((0[7-9]|1[0-9]|2[0-1]):(00|30)|22:00)$/'],
+            'waktu_selesai'      => ['required', 'date_format:H:i', 'regex:/^((0[7-9]|1[0-9]|2[0-1]):(00|30)|22:00)$/', 'after:waktu_mulai'],
+        ], [
+            'waktu_mulai.regex' => 'Peminjaman hanya dapat dilakukan antara pukul 07.00 hingga 22.00 dengan kelipatan 30 menit.',
+            'waktu_selesai.regex' => 'Peminjaman hanya dapat dilakukan antara pukul 07.00 hingga 22.00 dengan kelipatan 30 menit.',
+            'waktu_mulai.date_format' => 'Format waktu mulai harus berupa jam:menit, misalnya 07:00 atau 07:30.',
+            'waktu_selesai.date_format' => 'Format waktu selesai harus berupa jam:menit, misalnya 07:00 atau 07:30.',
+            'waktu_selesai.after' => 'Waktu selesai harus lebih besar dari waktu mulai.',
         ]);
 
         // $apiUrl = url('/api/v1/campus/calendar');

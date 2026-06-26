@@ -60,8 +60,8 @@
                         <div class="flex items-center gap-3">
                             <span class="material-symbols-outlined text-rose-700">warning</span>
                             <div>
-                                <p class="font-semibold">Akun Dinonaktifkan</p>
-                                <p class="mt-1">Akun Anda saat ini dinonaktifkan oleh Admin. Anda tidak dapat melakukan peminjaman fasilitas.</p>
+                                <p class="font-semibold">Akun Anda tidak aktif</p>
+                                <p class="mt-1">Akun Anda tidak aktif. Pengajuan ruang dikunci.</p>
                             </div>
                         </div>
                     </div>
@@ -118,14 +118,33 @@
                 </div>
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    @php
+                        $pilihanWaktu = [];
+                        for ($jam = 7; $jam <= 22; $jam++) {
+                            $pilihanWaktu[] = sprintf('%02d:00', $jam);
+                            if ($jam < 22) {
+                                $pilihanWaktu[] = sprintf('%02d:30', $jam);
+                            }
+                        }
+                    @endphp
                     <div class="space-y-2">
                         <label for="waktu_mulai" class="text-label-md font-bold text-on-surface-variant block uppercase tracking-wider">Waktu Mulai (Jam)</label>
-                        <input type="time" name="waktu_mulai" id="waktu_mulai" value="{{ old('waktu_mulai') }}" class="w-full px-4 py-3 bg-surface-container-low border border-border-subtle rounded-lg text-body-md text-on-surface focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all" required>
+                        <select name="waktu_mulai" id="waktu_mulai" class="w-full px-4 py-3 bg-surface-container-low border border-border-subtle rounded-lg text-body-md text-on-surface focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all" required>
+                            <option value="">-- Pilih Waktu Mulai --</option>
+                            @foreach($pilihanWaktu as $waktu)
+                                <option value="{{ $waktu }}" {{ old('waktu_mulai') === $waktu ? 'selected' : '' }}>{{ str_replace(':', '.', $waktu) }}</option>
+                            @endforeach
+                        </select>
                         @error('waktu_mulai') <p class="text-xs text-danger mt-1">{{ $message }}</p> @enderror
                     </div>
                     <div class="space-y-2">
                         <label for="waktu_selesai" class="text-label-md font-bold text-on-surface-variant block uppercase tracking-wider">Waktu Selesai (Jam)</label>
-                        <input type="time" name="waktu_selesai" id="waktu_selesai" value="{{ old('waktu_selesai') }}" class="w-full px-4 py-3 bg-surface-container-low border border-border-subtle rounded-lg text-body-md text-on-surface focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all" required>
+                        <select name="waktu_selesai" id="waktu_selesai" class="w-full px-4 py-3 bg-surface-container-low border border-border-subtle rounded-lg text-body-md text-on-surface focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all" required>
+                            <option value="">-- Pilih Waktu Selesai --</option>
+                            @foreach($pilihanWaktu as $waktu)
+                                <option value="{{ $waktu }}" {{ old('waktu_selesai') === $waktu ? 'selected' : '' }}>{{ str_replace(':', '.', $waktu) }}</option>
+                            @endforeach
+                        </select>
                         @error('waktu_selesai') <p class="text-xs text-danger mt-1">{{ $message }}</p> @enderror
                     </div>
                 </div>

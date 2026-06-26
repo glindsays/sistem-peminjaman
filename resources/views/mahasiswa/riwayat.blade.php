@@ -39,7 +39,7 @@
                         <th class="p-4">Nama Ruangan</th>
                         <th class="p-4">Nama Acara</th>
                         <th class="p-4">Tanggal Pinjam</th>
-                        <th class="p-4">Waktu Sesi</th>
+                        <th class="p-4">Waktu</th>
                         <th class="p-4 text-center">Status</th>
                     </tr>
                 </thead>
@@ -54,8 +54,8 @@
                             <td class="p-4 text-on-surface-variant font-medium">
                                 {{ \Carbon\Carbon::parse($ruang->tgl_peminjaman)->format('d M Y') }}
                             </td>
-                            <td class="p-4 text-outline font-medium">
-                                {{ substr($ruang->waktu_mulai, 0, 5) }} - {{ substr($ruang->waktu_selesai, 0, 5) }}
+                            <td class="p-4 text-outline font-medium whitespace-nowrap">
+                                {{ isset($ruang->waktu_mulai) ? str_replace(':', '.', substr($ruang->waktu_mulai, 0, 5)) : '-' }} - {{ isset($ruang->waktu_selesai) ? str_replace(':', '.', substr($ruang->waktu_selesai, 0, 5)) : '-' }}
                             </td>
                             <td class="p-4 text-center">
                                 <span class="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-bold rounded-full border {{ $ruang->status_izin == 'Pending' ? 'bg-amber-50 text-warning border-amber-200' : ($ruang->status_izin == 'Disetujui' ? 'bg-emerald-50 text-success border-emerald-200' : 'bg-rose-50 text-danger border-rose-200') }}">
@@ -85,6 +85,7 @@
                         <th class="p-4 w-24 text-center">Jumlah</th>
                         <th class="p-4">Nama Acara</th>
                         <th class="p-4">Tanggal Pinjam</th>
+                        <th class="p-4">Waktu</th>
                         <th class="p-4 text-center">Status</th>
                     </tr>
                 </thead>
@@ -99,6 +100,9 @@
                             <td class="p-4 font-medium">{{ $barang->nama_acara }}</td>
                             <td class="p-4 text-on-surface-variant font-medium">
                                 {{ \Carbon\Carbon::parse($barang->tgl_peminjaman)->format('d M Y') }}
+                            </td>
+                            <td class="p-4 text-on-surface-variant font-medium whitespace-nowrap">
+                                {{ isset($barang->waktu_mulai) ? str_replace(':', '.', substr($barang->waktu_mulai, 0, 5)) : '-' }} - {{ isset($barang->waktu_selesai) ? str_replace(':', '.', substr($barang->waktu_selesai, 0, 5)) : '-' }}
                             </td>
                             <td class="p-4 text-center">
                                 <span class="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-bold rounded-full border {{ $barang->status_izin == 'Pending' ? 'bg-amber-50 text-warning border-amber-200' : ($barang->status_izin == 'Disetujui' ? 'bg-emerald-50 text-success border-emerald-200' : 'bg-rose-50 text-danger border-rose-200') }}">
