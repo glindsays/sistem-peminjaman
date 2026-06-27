@@ -162,17 +162,14 @@ class DashboardController extends Controller
 
     public function admin()
     {
-        // Statistik untuk 4 Card
         $pendingRuang = PeminjamanRuang::where('status_izin', 'Pending')->count();
         $pendingBarang = PeminjamanBarang::where('status_izin', 'Pending')->count();
         $totalPending = $pendingRuang + $pendingBarang;
 
-        // Tambahan untuk Card sesuai proposal
         $totalRuangan = Ruang::count();
         $totalBarang = Barang::count();
         $totalUser = User::count();
 
-        // Data untuk Tabel Antrean (logika lamamu)
         $antreanRuang = PeminjamanRuang::with(['user', 'ruang'])
             ->orderBy('created_at', 'desc')
             ->get()

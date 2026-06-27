@@ -9,7 +9,6 @@ use Illuminate\Support\Facades\Auth;
 class RuangController extends Controller
 {
     public function __construct() {
-        // Menggunakan 'uppk' sebagai zonasi gedung sesuai kode view kamu
         view()->share('daftarGedung', Ruang::select('uppk')->distinct()->pluck('uppk'));
     }
 
@@ -17,11 +16,9 @@ class RuangController extends Controller
     {
         $query = Ruang::query();
         
-        // Filter pencarian dan gedung
         if ($request->filled('search')) $query->where('nama_ruangan', 'like', '%' . $request->search . '%');
         if ($request->filled('lokasi')) $query->where('uppk', $request->lokasi);
         
-        // Filter status
         if ($request->filled('status')) {
             $query->whereRaw('LOWER(status) = ?', [strtolower(trim($request->status))]);
         }
@@ -29,12 +26,10 @@ class RuangController extends Controller
         $perPage = Auth::check() && Auth::user()->role_id == 1 ? 10 : 16;
         $ruang = $query->paginate($perPage)->withQueryString();
 
-        // Jika user adalah admin, arahkan ke view admin
         if (Auth::check() && Auth::user()->role_id == 1) {
             return view('admin.ruang.index', compact('ruang'));
         }
 
-        // Jika mahasiswa, arahkan ke katalog mahasiswa
         return view('mahasiswa.ruang.index', compact('ruang'));
     }
 

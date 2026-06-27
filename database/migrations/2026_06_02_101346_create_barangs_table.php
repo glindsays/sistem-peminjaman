@@ -6,17 +6,13 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('barang', function (Blueprint $table) {
             $table->id();
             $table->string('nama_barang');
             $table->integer('jumlah'); 
-            // Nanti di logika kodingan , jika stoknya tinggal 0, statusnya bisa otomatis berubah lewat Controller.
-            $table->string('status')->default('tersedia'); // tersedia, habis, perbaikan
+            $table->string('status')->default('tersedia');
             $table->string('uppk');
             $table->timestamps();
         });

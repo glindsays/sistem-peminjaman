@@ -39,7 +39,7 @@ class BarangController extends Controller
         $request->validate([
             'nama_barang' => 'required|string|max:255|unique:barang,nama_barang',
             'jumlah'      => 'required|integer|min:0',
-            'status'      => 'required|string|max:50', //misal: 'Tersedia' atau 'Dipinjam'
+            'status'      => 'required|string|max:50',
             'uppk'        => 'required|string|max:255',
         ], [
             'nama_barang.unique' => 'Nama barang sudah digunakan oleh fasilitas lain.',
