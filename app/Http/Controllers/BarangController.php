@@ -91,7 +91,7 @@ class BarangController extends Controller
         }
 
         if ($request->filled('status')) {
-            $query->where('status', $request->status);
+            $query->whereRaw('LOWER(status) = ?', [strtolower(trim($request->status))]);
         }
 
         $barang = $query->paginate(16)->withQueryString();

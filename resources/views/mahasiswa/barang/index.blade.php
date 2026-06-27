@@ -75,14 +75,15 @@
 
                 <div class="mt-6 pt-4 border-t border-border-subtle flex items-center justify-between gap-3">
                     <div>
-                        @if($item->status == 'tersedia' && $item->jumlah > 0)
+                        @php($statusBarang = strtolower((string) $item->status))
+                        @if($statusBarang == 'tersedia' && $item->jumlah > 0)
                             <span class="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-bold bg-emerald-50 text-success rounded-full border border-emerald-200">Tersedia</span>
                         @else
                             <span class="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-bold bg-rose-50 text-danger rounded-full border border-rose-200">Tidak Tersedia</span>
                         @endif
                     </div>
 
-                    @if($item->status == 'tersedia' && $item->jumlah > 0)
+                    @if($statusBarang == 'tersedia' && $item->jumlah > 0)
                         <a href="{{ route('mahasiswa.barang.create') }}?barang_id={{ $item->id }}" 
                            class="inline-flex items-center gap-1.5 bg-primary text-on-primary px-4 py-2 rounded-xl text-xs font-bold hover:brightness-110 active:scale-95 transition-all">
                             <span>Ajukan Pinjam</span>

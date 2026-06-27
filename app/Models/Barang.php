@@ -13,6 +13,7 @@ class Barang extends Model
 
     protected $table = 'barang'; 
 
+
     public function peminjamanBarang()
     {
         return $this->hasMany(PeminjamanBarang::class, 'barang_id');

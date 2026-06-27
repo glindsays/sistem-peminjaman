@@ -23,14 +23,14 @@ class RuangController extends Controller
         
         // Filter status
         if ($request->filled('status')) {
-            $query->where('status', $request->status);
+            $query->whereRaw('LOWER(status) = ?', [strtolower(trim($request->status))]);
         }
 
-        $perPage = Auth::user()->role_id == 1 ? 10 : 16;
+        $perPage = Auth::check() && Auth::user()->role_id == 1 ? 10 : 16;
         $ruang = $query->paginate($perPage)->withQueryString();
 
         // Jika user adalah admin, arahkan ke view admin
-        if (Auth::user()->role_id == 1) {
+        if (Auth::check() && Auth::user()->role_id == 1) {
             return view('admin.ruang.index', compact('ruang'));
         }
 
